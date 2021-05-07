@@ -1,0 +1,43 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class TecladoFonetico {
+    static ArrayList<String> fonemas = new ArrayList<String>(Arrays.asList(
+        "BA", "BE", "BO", "CA", "CE", "CO", "DA", "DE", "DO", "FA", "FE", "FO", "GA", "GE", "GO", "HA", "HE", "HO"
+        ));
+    
+    ArrayList<String> fonemasDaSenha = new ArrayList<String>();
+    TecladoFonetico(String password) {
+        assert password.length() % 2 == 0;
+        for (int i = 0; i < password.length()/2; i++) {
+            String fonema = password.substring(i*2, i*2+2);
+            this.fonemasDaSenha.add(fonema);
+        }
+        assert verificarFonemas() : "A senha contém fonemas inválidos.";
+        System.out.println(gerarCombinacoes());
+    }
+
+    boolean verificarFonemas() {
+        for (int i = 0; i < fonemasDaSenha.size(); i++) {
+            if (fonemas.contains(fonemasDaSenha.get(i)) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    ArrayList<List<String>> gerarCombinacoes() {
+        ArrayList<String> fonemasDisponiveis = (ArrayList<String>)fonemas.clone();
+        Collections.shuffle(fonemasDisponiveis);
+        // System.out.println(((fonemasDisponiveis.size()/3))*3);
+        ArrayList<List<String>> combinacoes = new ArrayList<List<String>>();
+        for (int i = 0; i < fonemasDisponiveis.size()/3; i++) {
+            // System.out.println((i+1)*3);
+            // System.out.println(fonemasDisponiveis.subList(i*3, (i+1)*3));
+            combinacoes.add(i, fonemasDisponiveis.subList(i*3, (i+1)*3));
+        }
+        return combinacoes;
+    }
+}

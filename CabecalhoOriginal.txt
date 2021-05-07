@@ -1,0 +1,42 @@
+import javax.swing.*;
+
+import java.awt.Color;
+
+public class CabecalhoPanel extends JPanel {
+    
+    JLabel extraInfoLabel = new JLabel();
+
+    public CabecalhoPanel(String loginName, String userGroup, String username) {
+        this.setLayout(null);
+
+        JLabel loginLabel = new JLabel("Login: " + loginName);
+        loginLabel.setBounds(0, 0, 200, 20);
+        loginLabel.setBackground(Color.blue);
+        loginLabel.setOpaque(true);
+        add(loginLabel);
+
+        JLabel groupLabel = new JLabel("Grupo: " + userGroup);
+        groupLabel.setBounds(0, 25, 200, 20);
+        groupLabel.setBackground(Color.red);
+        groupLabel.setOpaque(true);
+        add(groupLabel);
+
+        JLabel usernameLabel = new JLabel("Nome de usuário: " + username);
+        usernameLabel.setBounds(0, 50, 200, 20);
+        usernameLabel.setBackground(Color.green);
+        usernameLabel.setOpaque(true);
+        add(usernameLabel);
+
+        extraInfoLabel.setBounds(0, 75, 200, 20);
+        extraInfoLabel.setBackground(Color.lightGray);
+        extraInfoLabel.setOpaque(true);
+        add(extraInfoLabel);
+        
+        setBounds(0, 0, 200, 100);
+    }
+
+    public void updateExtraInfo(String label, String content) {
+        extraInfoLabel.setText(label + ": " + content);
+    }
+    
+  }
