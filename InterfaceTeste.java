@@ -158,18 +158,26 @@ class InterfaceTeste {
   // static JPanel p2 = abc();
   static JPanel login = new IdentUsuPanel(new VerificaChavePanel(p1));
 
-  public static void main(String args[]) {
-    // for (int i = 0; i < 5; i++) {
-    //   System.out.println(PasswordHandler.generateSalt());
-    //   System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()).get());
-    // }
-    
-    // TecladoFonetico t;
-    // t = new TecladoFonetico("BA");
-    // t = new TecladoFonetico("BABEFOFA");
-    // t = new TecladoFonetico("XA");
-    // frame.add(new IdentUsuPanel(new TecladoFoneticoPanel(new VerificaChavePanel(new MenuPrincipalPanel()))));
-    // frame.add(new TecladoFoneticoPanel(new TecladoFoneticoCompletoPanel(null)));
+  static void prepararInterfaceAutenticacao() {
+    frame.add(new IdentUsuPanel(new TecladoFoneticoPanel(new VerificaChavePanel(new MenuPrincipalPanel()))));
+  }
+  static void mostrarTela() {
+    frame.invalidate();
+    frame.validate();
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setSize(700, 550);
+    frame.setResizable(false);
+    frame.setVisible(true);
+  }
+
+  static void testePasswordHandler() {
+    for (int i = 0; i < 5; i++) {
+      System.out.println(PasswordHandler.generateSalt());
+      System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()).get());
+    }
+  }
+
+  static void testIndexHandler() {
     IndexHandler ih = new IndexHandler();
     Path p = FileSystems.getDefault().getPath("", "indice_exemplo.txt");
 
@@ -178,16 +186,9 @@ class InterfaceTeste {
       System.out.println(fileInfo);
       System.out.println(fileInfo.checkAccess("Joao", "0"));
     }
-    // ih.parseIndex(indexFilePath)
-    // frame.add(new ConsultarArquivosPanel());
-    // // frame.add(new MenuPrincipalPanel());
-    // // frame.add(new CabecalhoPanel());
-    // frame.invalidate();
-    // frame.validate();
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    // frame.setSize(700, 550);
-    // frame.setResizable(false);
-    // // frame.setLayout(null);
-    // frame.setVisible(true);
+  }
+  public static void main(String args[]) {
+    prepararInterfaceAutenticacao();
+    mostrarTela();
   }
 }
