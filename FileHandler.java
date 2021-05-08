@@ -40,23 +40,5 @@ public class FileHandler {
         return signature.verify(digitalSignature);
     }
 //
-//    public static void main(String[] args) throws Exception {
-//        byte[] fileContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-pkcs8-des.key"));
-//        AuthenticationHandler handler = new AuthenticationHandler();
-//        PrivateKey privateKey = handler.privateKeyFromFile(fileContent, "user01".getBytes());
-//
-//        byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-//        Certificate certificate = handler.certificateFromFile(certificateContent);
-//
-//
-//        FileHandler fileHandler = new FileHandler();
-//        byte[] envelope = Files.readAllBytes(Paths.get("./Pacote-T4/Files/index.env"));
-//        SecretKey key = fileHandler.decryptEnvelope(privateKey, envelope);
-//
-//        byte[] encrypted = Files.readAllBytes(Paths.get("./Pacote-T4/Files/index.enc"));
-//        byte[] file = fileHandler.decryptFile(key, encrypted);
-//
-//        byte[] signature = Files.readAllBytes(Paths.get("./Pacote-T4/Files/index.asd"));
-//        System.out.println(fileHandler.verifyFileAuthenticity(signature, file, certificate));
-//    }
+
 }
