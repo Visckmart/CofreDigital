@@ -1,4 +1,6 @@
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
@@ -29,6 +31,16 @@ public class MenuPrincipalPanel extends JPanel {
         add(bt2);
         
         JButton bt3 = new JButton("<html><p style='text-align:center;'>Consultar pasta de arquivos<br>secretos do usuário</p></html>");
+        bt3.addActionListener(new ActionListener() {
+              public void actionPerformed(ActionEvent e) {
+                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt3);
+                ConsultarArquivosPanel cap = new ConsultarArquivosPanel();
+                cap.setFileList(InterfaceTeste.testIndexHandler());
+                frame.setContentPane(cap);
+                frame.invalidate();
+                frame.validate();
+              }
+            });
         bt3.setFont(new Font(null, Font.PLAIN, 15));
         bt3.setBounds(offsetX, offsetY + (height/4) * 2, width, height/4);
         add(bt3);
