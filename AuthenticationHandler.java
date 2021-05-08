@@ -14,13 +14,13 @@ import java.util.Base64;
 import java.util.Random;
 
 public class AuthenticationHandler {
-    private Signature signature;
-    private SecureRandom rng;
-    private Cipher cipher;
-    private KeyGenerator keyGenerator;
-    private KeyFactory keyFactory;
-    private CertificateFactory certificateFactory;
-    private Base64.Decoder decoder;
+    private final Signature signature;
+    private final SecureRandom rng;
+    private final Cipher cipher;
+    private final KeyGenerator keyGenerator;
+    private final KeyFactory keyFactory;
+    private final CertificateFactory certificateFactory;
+    private final Base64.Decoder decoder;
     public AuthenticationHandler() throws Exception {
         signature = Signature.getInstance("SHA1withRSA");
         rng = SecureRandom.getInstance("SHA1PRNG");
@@ -72,4 +72,14 @@ public class AuthenticationHandler {
 
         return certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
     }
+
+//    public static void main(String[] args) throws Exception {
+//        byte[] fileContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-pkcs8-des.key"));
+//        AuthenticationHandler handler = new AuthenticationHandler();
+//        PrivateKey privateKey = handler.privateKeyFromFile(fileContent, "user01".getBytes());
+//
+//        byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
+//        Certificate certificate = handler.certificateFromFile(certificateContent);
+//        System.out.println(handler.verifyPrivateKey(privateKey, certificate));
+//    }
 }
