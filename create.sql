@@ -1,0 +1,26 @@
+CREATE TABLE IF NOT EXISTS USUARIOS (
+	email varchar(255) PRIMARY KEY,
+	senha varchar(2048),
+	salt varchar(1024),
+	certificado varchar(10000)
+);
+
+CREATE TABLE IF NOT EXISTS GRUPOS (
+	gid INTEGER PRIMARY KEY
+);
+
+CREATE TABLE IF NOT EXISTS MENSAGENS (
+	codigo INTEGER PRIMARY KEY,
+	mensagem varchar(2048)
+);
+
+CREATE TABLE IF NOT EXISTS REGISTROS (
+	timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+	usuario  varchar(255),
+	codigo INTEGER,
+	FOREIGN KEY (usuario)
+		REFERENCES USUARIO (email),
+	FOREIGN KEY (codigo)
+		REFERENCES MENSAGENS (codigo),
+	PRIMARY KEY(timestamp, usuario)
+);
