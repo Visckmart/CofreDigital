@@ -9,12 +9,14 @@ import javax.swing.JPasswordField;
 
 public class VerificaChavePanel extends JPanel {
     
-    public VerificaChavePanel(JPanel next) {
+    String emailAddress;
+    public VerificaChavePanel(String emailAddress) {
         this.setLayout(null);
+        this.emailAddress = emailAddress;
         this.prepareTitle();
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararCampoFraseSecreta(210, 300, 280, 35);
-        this.prepararBotaoLogin(285, 375, 130, 35, next);
+        this.prepararBotaoLogin(285, 375, 130, 35);
     }
     
     void prepareTitle() {
@@ -65,18 +67,21 @@ public class VerificaChavePanel extends JPanel {
         this.add(clear);
     }
     
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height, JPanel next) {
+    void nextStep() {
+        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+        frame.setContentPane(new MenuPrincipalPanel());
+        frame.invalidate();
+        frame.validate();
+    }
+
+    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         JButton loginButton = new JButton("Continuar   >");
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(loginButton);
-                frame.setContentPane(next);
-                frame.invalidate();
-                frame.validate();
+                nextStep();
             }
         });
-        // loginButton.setEnabled(false);
         this.add(loginButton);
     }
     

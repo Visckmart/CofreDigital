@@ -15,13 +15,15 @@ public class TecladoFoneticoPanel extends JPanel {
     JButton[] keys = new JButton[6];
     JTextPane feedbackField = new JTextPane();
 
-    public TecladoFoneticoPanel(JPanel next) {
+    String emailAddress;
+    public TecladoFoneticoPanel(String emailAddress) {
         this.setLayout(null);
-
+        
+        this.emailAddress = emailAddress;
         this.prepareTitle();
         this.prepararCampoDeSenha(257, 200, 185, 35);
         this.prepararBotoes(150, 250, 400, 115);
-        this.prepararBotaoLogin(285, 375, 130, 35, next);
+        this.prepararBotaoLogin(285, 375, 130, 35);
         
         // String[] z = {"X", "Y", "NO-TA-10", "J", "K", "L"};
         // this.atualizarBotoes(z);
@@ -133,18 +135,30 @@ public class TecladoFoneticoPanel extends JPanel {
     }
     
     JButton loginButton;
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height, JPanel next) {
+    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         loginButton = new JButton("Continuar   >");
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(loginButton);
-                frame.setContentPane(next);
-                frame.invalidate();
-                frame.validate();
+                nextStep();
+                // JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(loginButton);
+                // frame.setContentPane(next);
+                // frame.invalidate();
+                // frame.validate();
             }
         });
         this.add(loginButton);
+    }
+    void nextStep() {
+        boolean correctPassword = UserLoginHandler.checkPhoneticPassword(tf.gruposDigitados, emailAddress);
+        if (correctPassword == false) {
+            
+        }
+        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+        frame.setContentPane(new VerificaChavePanel(emailAddress));
+        frame.invalidate();
+        frame.validate();
+
     }
     void atualizarBotoes(List<String> fonemas) {
         assert fonemas.size() == keys.length : "Atualização de botões não contém o número correto de fonemas";
