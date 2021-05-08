@@ -1,5 +1,7 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -46,4 +48,41 @@ class PasswordHandler {
             return Optional.empty();
         }
     }
+
+    // BA BE BI
+    // CA CE CI
+    
+    // BA CA
+    // BA CE
+    // BA CI
+    // BE CA
+    // BE CE
+    // BE CI
+    // BI CA
+    // BI CE
+    // BI CI
+    // static ArrayList<ArrayList<String>> combinarFonemas(ArrayList<ArrayList<String>> gruposDigitados) {
+    //     ArrayList<ArrayList<String>> combinacoes = new ArrayList<ArrayList<String>>();
+    //     if (gruposDigitados.size() <= 1) {
+    //         combinacoes.add(gruposDigitados.get(0));
+    //     } else if (gruposDigitados.size() == 2) {
+    //         ArrayList<String> combinacao = new ArrayList<String>();
+    //         for (int i = 0; i < gruposDigitados.size(); i++) {
+    //             combinacao.add(gruposDigitados.get(i).get(i));
+    //         }
+    //         System.out.println
+    //     }
+    //     return combinacoes;
+    // }
+    
+    // static boolean checkPassword(List<List<String>> gruposDigitados) {
+    //     ArrayList<String> s = new ArrayList<String>();
+    //     for (List<String> grupo : gruposDigitados) {
+    //         String x = "";
+    //         for (String fonema : grupo) {
+    //             x += fonema;
+    //         }
+    //     }
+    //     return true;
+    // }
 }

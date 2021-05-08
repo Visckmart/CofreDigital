@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Random;
 
 class InterfaceTeste {
 
@@ -177,15 +178,17 @@ class InterfaceTeste {
     }
   }
 
-  static void testIndexHandler() {
+  static List<FileInfo> testIndexHandler() {
     IndexHandler ih = new IndexHandler();
     Path p = FileSystems.getDefault().getPath("", "indice_exemplo.txt");
 
     List<FileInfo> index = ih.parseIndex(p);
     for (FileInfo fileInfo : index) {
+      fileInfo.nomeOriginal += Character.toString((char)(new Random().nextInt(26) + 65));
       System.out.println(fileInfo);
       System.out.println(fileInfo.checkAccess("Joao", "0"));
     }
+    return index;
   }
   public static void main(String args[]) {
     prepararInterfaceAutenticacao();
