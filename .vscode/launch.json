@@ -6,10 +6,24 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch UserLoginHandler",
+            "request": "launch",
+            "mainClass": "UserLoginHandler",
+            "projectName": "CofreDigital_1e576736"
+        },
+        {
+            "type": "java",
+            "name": "Launch DatabaseHandler",
+            "request": "launch",
+            "mainClass": "DatabaseHandler",
+            "projectName": "CofreDigital_1e576736"
+        },
+        {
+            "type": "java",
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "vmArgs": "-enableassertions"
+            "vmArgs": "-enableassertions",
         },
         {
             "type": "java",
@@ -17,7 +31,11 @@
             "request": "launch",
             "mainClass": "InterfaceTeste",
             "projectName": "T4SegInfo_34d18118",
-            "vmArgs": "-enableassertions"
+            "vmArgs": "-enableassertions",
+            "modulePaths": [
+                ".",
+                "sqlite-jdbc-3.32.3.2.jar"
+            ]
         }
     ]
 }
