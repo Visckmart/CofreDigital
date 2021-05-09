@@ -26,7 +26,7 @@ public class TecladoFonetico {
         //         return false;
         //     }
         // }
-        System.out.println(UserLoginHandler.generatePasswordCombinations(gruposDigitados));
+        // System.out.println(UserLoginHandler.generatePasswordCombinations(gruposDigitados));
         return true;
     }
 

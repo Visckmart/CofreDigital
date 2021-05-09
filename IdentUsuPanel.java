@@ -56,15 +56,23 @@ public class IdentUsuPanel extends JPanel {
     void nextStep() {
         String emailAddress = emailTF.getText();
         System.out.println(emailAddress);
-        boolean b = UserLoginHandler.checkEmailAddress(emailAddress);
-        System.out.println(b);
-        if (b == false) {
-            errorLabel.setText("E-mail inválido.");
+        // boolean b = UserLoginHandler.checkEmailAddress(emailAddress);
+        // System.out.println(b);
+        // if (b == false) {
+        //     errorLabel.setText("E-mail inválido.");
+        // }
+        try {
+            UserState x = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+            System.out.println(x);
+            if (x == UserState.VALID) {
+                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
+                frame.invalidate();
+                frame.validate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
-        frame.invalidate();
-        frame.validate();
     }
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         JButton loginButton = new JButton("Continuar   >");

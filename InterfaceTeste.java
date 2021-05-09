@@ -72,6 +72,7 @@ class InterfaceTeste {
 
   public static void main(String args[]) {
     // DatabaseHandler.createNewDatabase("test.db");
+    // System.out.println(PasswordHandler.encodePassword("DABECADA", "sal"));
     prepararInterfaceAutenticacao();
     mostrarTela();
   }

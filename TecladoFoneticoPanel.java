@@ -120,7 +120,7 @@ public class TecladoFoneticoPanel extends JPanel {
                         x += 2;
                         updatePasswordFeedback(x);
                         tf.registrarDigitacao(xi * 3 + xj);
-                        System.out.println(tf.checarSenha("BABECACE"));
+                        // System.out.println(tf.checarSenha("BABECACE"));
                         tf.atualizarCombinacoes();
                         t.atualizarBotoes(tf.obterTextoDosBotoes());
                         // frame.setContentPane(p2);
@@ -150,14 +150,21 @@ public class TecladoFoneticoPanel extends JPanel {
         this.add(loginButton);
     }
     void nextStep() {
-        boolean correctPassword = UserLoginHandler.checkPhoneticPassword(tf.gruposDigitados, emailAddress);
-        if (correctPassword == false) {
-            
+        boolean correctPassword;
+        try {
+            correctPassword = UserLoginHandler.checkPhoneticPassword(tf.gruposDigitados, emailAddress);
+            if (correctPassword == true) {
+                System.out.println("Correct");
+                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                frame.setContentPane(new VerificaChavePanel(emailAddress));
+                frame.invalidate();
+                frame.validate();
+            } else {
+                System.out.println("Wrong");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(new VerificaChavePanel(emailAddress));
-        frame.invalidate();
-        frame.validate();
 
     }
     void atualizarBotoes(List<String> fonemas) {

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -72,7 +73,18 @@ public class UserLoginHandler {
         System.out.println(generatePasswordCombinations(temp));
         // System.out.println("a");
     }
-    static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) {
-        return true;
+
+    static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
+        String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
+        System.out.println(pwdAndSalt[0] + " | " + pwdAndSalt[1]);
+        for (String password : generatePasswordCombinations(gruposFoneticosDigitados).get(0)) {
+            // System.out.println(password);
+            Optional<String> encodedPassword = PasswordHandler.encodePassword(password, pwdAndSalt[1]);
+            if (encodedPassword.get().equals(pwdAndSalt[0])) {
+                System.out.println("Certa");
+                return true;
+            }
+        }
+        return false;
     }
 }
