@@ -13,33 +13,36 @@ public class UserLoginHandler {
     }
 
     static List<List<String>> generatePasswordCombinations(List<List<String>> gruposDigitados) {
-        System.out.println(gruposDigitados.size());
-        if (gruposDigitados.size() == 1) {
+        int qtdGrupos = gruposDigitados.size();
+        if (qtdGrupos == 1) {
             return gruposDigitados;
-        } else if (gruposDigitados.size() == 2) {
-            List<List<String>> r = new ArrayList<List<String>>();
-            ArrayList<String> temp = new ArrayList<String>();
-            List<List<String>> slice = gruposDigitados.subList(1, gruposDigitados.size());
+        }
+        if (qtdGrupos == 2) {
+            ArrayList<String> grupo = new ArrayList<String>();
+            
+            List<List<String>> slice = gruposDigitados.subList(1, qtdGrupos);
             List<String> combs = generatePasswordCombinations(slice).get(0);
+            
             for (String fonema: gruposDigitados.get(0)) {
-                ArrayList<String> newList = new ArrayList<String>();
                 for (String string : combs) {
-                    temp.add(fonema + string);
-                    // newList.add(string);
+                    grupo.add(fonema + string);
                 }
-                // temp.add(newList);
             }
-            System.out.println(temp);
-            r.add(temp);
-            return r;
+
+            List<List<String>> combinations = new ArrayList<List<String>>();
+            combinations.add(grupo);
+            return combinations;
+
         } else {
-            List<List<String>> temp = new ArrayList<List<String>>();
-            List<List<String>> slice = gruposDigitados.subList(1, gruposDigitados.size());
-            temp.add(gruposDigitados.get(0));
+            List<List<String>> novosGrupos = new ArrayList<List<String>>();
+            novosGrupos.add(gruposDigitados.get(0));
+
+            List<List<String>> slice = gruposDigitados.subList(1, qtdGrupos);
             for (List<String> list : generatePasswordCombinations(slice)) {
-                temp.add(list);
+                novosGrupos.add(list);
             }
-            return generatePasswordCombinations(temp);
+            
+            return generatePasswordCombinations(novosGrupos);
         }
     }
 
@@ -60,6 +63,11 @@ public class UserLoginHandler {
         c.add("H");
         c.add("I");
         temp.add(c);
+        ArrayList<String> d = new ArrayList<String>();
+        d.add("J");
+        d.add("K");
+        d.add("L");
+        temp.add(d);
 
         System.out.println(generatePasswordCombinations(temp));
         // System.out.println("a");
