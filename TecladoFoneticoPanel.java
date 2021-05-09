@@ -152,7 +152,7 @@ public class TecladoFoneticoPanel extends JPanel {
     void nextStep() {
         boolean correctPassword;
         try {
-            correctPassword = UserLoginHandler.checkPhoneticPassword(tf.gruposDigitados, emailAddress);
+            correctPassword = PasswordHandler.checkPhoneticPassword(tf.gruposDigitados, emailAddress);
             if (correctPassword == true) {
                 System.out.println("Correct");
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
@@ -161,6 +161,9 @@ public class TecladoFoneticoPanel extends JPanel {
                 frame.validate();
             } else {
                 System.out.println("Wrong");
+                tf.limparDigitacao();
+                updatePasswordFeedback(0);
+                atualizarBotoes(tf.obterTextoDosBotoes());
             }
         } catch (Exception e) {
             e.printStackTrace();

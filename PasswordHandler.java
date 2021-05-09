@@ -49,6 +49,57 @@ class PasswordHandler {
         }
     }
 
+    private static List<List<String>> generatePasswordCombinations(List<List<String>> gruposDigitados) {
+        int qtdGrupos = gruposDigitados.size();
+        if (qtdGrupos == 1) {
+            return gruposDigitados;
+        }
+        
+        if (qtdGrupos == 2) {
+            ArrayList<String> grupo = new ArrayList<String>();
+            
+            List<List<String>> slice = gruposDigitados.subList(1, qtdGrupos);
+            List<String> combs = generatePasswordCombinations(slice).get(0);
+            
+            for (String fonema: gruposDigitados.get(0)) {
+                for (String string : combs) {
+                    grupo.add(fonema + string);
+                }
+            }
+
+            List<List<String>> combinations = new ArrayList<List<String>>();
+            combinations.add(grupo);
+            return combinations;
+
+        } else {
+            List<List<String>> novosGrupos = new ArrayList<List<String>>();
+            novosGrupos.add(gruposDigitados.get(0));
+
+            List<List<String>> slice = gruposDigitados.subList(1, qtdGrupos);
+            for (List<String> list : generatePasswordCombinations(slice)) {
+                novosGrupos.add(list);
+            }
+            
+            return generatePasswordCombinations(novosGrupos);
+        }
+    }
+
+    static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
+        String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
+        String passwordHash = pwdAndSalt[0];
+        String salt = pwdAndSalt[1];
+        System.out.println(passwordHash + " | " + salt);
+
+        List<String> allCombinations = generatePasswordCombinations(gruposFoneticosDigitados).get(0);
+        for (String phoneticCombination : allCombinations) {
+            Optional<String> encodedPassword = PasswordHandler.encodePassword(phoneticCombination, salt);
+            if (encodedPassword.get().equals(pwdAndSalt[0])) { return true; }
+        }
+        return false;
+    }
+    
+    
+
     // BA BE BI
     // CA CE CI
     

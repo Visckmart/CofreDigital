@@ -15,6 +15,10 @@ public class TecladoFonetico {
         atualizarCombinacoes();
     }
 
+    void limparDigitacao() {
+        gruposDigitados.clear();
+        atualizarCombinacoes();
+    }
     void registrarDigitacao(int indiceBotao) {
         ArrayList<String> x = new ArrayList<String>(combinacoes.get(indiceBotao));
         System.out.println("Registrando " + x.toString());
@@ -45,7 +49,7 @@ public class TecladoFonetico {
     List<String> obterTextoDosBotoes() {
         ArrayList<String> textoBotoes = new ArrayList<String>();
         for (List<String> comb : combinacoes) {
-            textoBotoes.add(String.join("-", comb));
+            textoBotoes.add(String.join(" ", comb));
         }
         return textoBotoes;
     }
