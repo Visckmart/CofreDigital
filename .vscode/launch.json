@@ -12,11 +12,14 @@
             "projectName": "CofreDigital_1e576736"
         },
         {
-            "type": "java",
+            "type": "javac",
             "name": "Launch DatabaseHandler",
             "request": "launch",
             "mainClass": "DatabaseHandler",
-            "projectName": "CofreDigital_1e576736"
+            "projectName": "CofreDigital_1e576736",
+            "classPaths": [
+                "sqlite-jdbc-3.32.3.2.jar"
+            ]
         },
         {
             "type": "java",
@@ -31,11 +34,7 @@
             "request": "launch",
             "mainClass": "InterfaceTeste",
             "projectName": "T4SegInfo_34d18118",
-            "vmArgs": "-enableassertions",
-            "modulePaths": [
-                ".",
-                "sqlite-jdbc-3.32.3.2.jar"
-            ]
+            "vmArgs": "-enableassertions"
         }
     ]
 }
