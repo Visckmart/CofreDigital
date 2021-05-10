@@ -1,11 +1,12 @@
-class FileInfo {
+package Utilities;
+public class FileInfo {
 
-    String nomeProtegido;
-    String nomeOriginal;
-    String dono;
-    String grupo;
+    public String nomeProtegido;
+    public String nomeOriginal;
+    public String dono;
+    public String grupo;
 
-    FileInfo(String indexLine) {
+    public FileInfo(String indexLine) {
         String[] lineInfo = indexLine.split(" ");
         this.nomeProtegido = lineInfo[0];
         this.nomeOriginal = lineInfo[1];
@@ -13,7 +14,7 @@ class FileInfo {
         this.grupo = lineInfo[3];
     }
     
-    boolean checkAccess(String user, String group) {
+    public boolean checkAccess(String user, String group) {
         // System.out.printf("%s %s  %s %s\n", user, this.dono, group, this.grupo);
         return user.equals(this.dono) || group.equals(this.grupo);
     }

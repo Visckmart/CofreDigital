@@ -1,38 +1,27 @@
+package UserAuthentication;
 import javax.swing.*;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.awt.Color;
-import javax.swing.JPasswordField;
+
+import Database.DatabaseHandler;
+import Utilities.LogHandler;
+import Utilities.UserState;
 
 public class IdentUsuPanel extends JPanel {
     
     public IdentUsuPanel() {
         this.setLayout(null);
 
-        this.prepareTitle();
+        add(TitlePanel.getInstance());
         this.prepararCampoEmail(225, 270, 250, 35);
         this.prepararLabelErro(225, 310, 250, 30);
         this.prepararBotaoLogin(285, 375, 130, 35);
         LogHandler.log(2001, null);
     }
 
-    void prepareTitle() {
-        JLabel title = new JLabel("Cofre Digital");
-        title.setBounds(175, 25, 350, 75);
-        title.setFont(new Font(null, Font.BOLD, 50));
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        add(title);
-
-        JLabel authors = new JLabel("<html><p style='text-align:center;'>Thiago Lamenza e Victor Martins<br>Segurança da Informação – Grupo 7</p></html>");
-        authors.setBounds(150, 100, 400, 50);
-        authors.setFont(new Font(null, Font.PLAIN, 18));
-        authors.setHorizontalAlignment(SwingConstants.CENTER);
-        add(authors);
-    }
+    
     
     JTextField emailTF;
 

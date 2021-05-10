@@ -1,9 +1,13 @@
+package Database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import Utilities.LogHandler;
+import Utilities.UserState;
 
 public class DatabaseHandler {
     private static DatabaseHandler instance;
@@ -18,10 +22,10 @@ public class DatabaseHandler {
         return instance;
     }
 
-    Connection connection;
+    public Connection connection;
     public DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:test.db");
+        connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
     }
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {

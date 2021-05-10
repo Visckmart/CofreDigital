@@ -1,3 +1,4 @@
+package General;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +36,7 @@ public class MenuPrincipalPanel extends JPanel {
               public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt3);
                 ConsultarArquivosPanel cap = new ConsultarArquivosPanel();
-                cap.setFileList(InterfaceTeste.testIndexHandler());
+                cap.setFileList(IndexHandler.testIndexHandler());
                 frame.setContentPane(cap);
                 frame.invalidate();
                 frame.validate();

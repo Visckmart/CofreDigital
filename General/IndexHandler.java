@@ -1,10 +1,14 @@
+package General;
 import java.io.BufferedReader;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
+import Utilities.FileInfo;
 
 public class IndexHandler {
     
@@ -23,4 +27,17 @@ public class IndexHandler {
         }
         return index;
     }
+    
+    static List<FileInfo> testIndexHandler() {
+        IndexHandler ih = new IndexHandler();
+        Path p = FileSystems.getDefault().getPath("", "indice_exemplo.txt");
+    
+        List<FileInfo> index = ih.parseIndex(p);
+        for (FileInfo fileInfo : index) {
+          fileInfo.nomeOriginal += Character.toString((char)(new Random().nextInt(26) + 65));
+          System.out.println(fileInfo);
+          System.out.println(fileInfo.checkAccess("Joao", "0"));
+        }
+        return index;
+      }
 }

@@ -1,4 +1,11 @@
 import javax.swing.*;
+
+import Authentication.PasswordHandler;
+import General.IndexHandler;
+import UserAuthentication.IdentUsuPanel;
+import UserAuthentication.TecladoFoneticoPanel;
+import Utilities.FileInfo;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
  
@@ -33,7 +40,7 @@ class InterfaceTeste {
   }
 
   static JFrame frame = new JFrame("Cofre Digital por Thiago Lamenza e Victor Martins");
-  static JPanel p1 = new TecladoFoneticoPanel(null);
+  // static JPanel p1 = new TecladoFoneticoPanel(null);
   // static JPanel p2 = abc();
   // static JPanel login = new IdentUsuPanel(new VerificaChavePanel(p1));
 
@@ -55,19 +62,6 @@ class InterfaceTeste {
       System.out.println(PasswordHandler.generateSalt());
       System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()).get());
     }
-  }
-
-  static List<FileInfo> testIndexHandler() {
-    IndexHandler ih = new IndexHandler();
-    Path p = FileSystems.getDefault().getPath("", "indice_exemplo.txt");
-
-    List<FileInfo> index = ih.parseIndex(p);
-    for (FileInfo fileInfo : index) {
-      fileInfo.nomeOriginal += Character.toString((char)(new Random().nextInt(26) + 65));
-      System.out.println(fileInfo);
-      System.out.println(fileInfo.checkAccess("Joao", "0"));
-    }
-    return index;
   }
 
   public static void main(String args[]) {

@@ -10,6 +10,8 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import UserAuthentication.TecladoFonetico;
+
 public class TecladoFoneticoCompletoPanel extends JPanel {
     
     JButton[] keys = new JButton[18];

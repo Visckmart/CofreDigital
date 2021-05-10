@@ -1,11 +1,13 @@
+package UserAuthentication;
 import javax.swing.*;
 
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JPasswordField;
+
+import General.MenuPrincipalPanel;
 
 public class VerificaChavePanel extends JPanel {
     
@@ -13,25 +15,12 @@ public class VerificaChavePanel extends JPanel {
     public VerificaChavePanel(String emailAddress) {
         this.setLayout(null);
         this.emailAddress = emailAddress;
-        this.prepareTitle();
+        add(TitlePanel.getInstance());
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararCampoFraseSecreta(210, 300, 280, 35);
         this.prepararBotaoLogin(285, 375, 130, 35);
     }
     
-    void prepareTitle() {
-        JLabel title = new JLabel("Cofre Digital");
-        title.setBounds(175, 25, 350, 75);
-        title.setFont(new Font(null, Font.BOLD, 50));
-        title.setHorizontalAlignment(SwingConstants.CENTER);
-        add(title);
-
-        JLabel authors = new JLabel("<html><p style='text-align:center;'>Thiago Lamenza e Victor Martins<br>Segurança da Informação – Grupo 7</p></html>");
-        authors.setBounds(150, 100, 400, 50);
-        authors.setFont(new Font(null, Font.PLAIN, 18));
-        authors.setHorizontalAlignment(SwingConstants.CENTER);
-        add(authors);
-    }
     private void prepararCampoFraseSecreta(int offsetX, int offsetY, int width, int height) {
         JLabel passwordLabel = new JLabel("Frase secreta: ");
         passwordLabel.setBounds(offsetX, offsetY, width*4/10, height);

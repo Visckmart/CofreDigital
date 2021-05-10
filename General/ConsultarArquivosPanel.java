@@ -1,13 +1,12 @@
-import java.awt.Font;
+package General;
 import java.util.List;
-import java.awt.event.*;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
+
+import Utilities.FileInfo;
   
 public class ConsultarArquivosPanel extends JPanel {
     

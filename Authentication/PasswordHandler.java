@@ -1,3 +1,4 @@
+package Authentication;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -5,8 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-class PasswordHandler {
-    static String generateSalt() {
+import Database.DatabaseHandler;
+
+public class PasswordHandler {
+    public static String generateSalt() {
         String salt = "";
         Random rand = new Random();
         for (int i = 0; i < 10; i++) {
@@ -32,7 +35,7 @@ class PasswordHandler {
         return hexString.toString();
     }
     
-    static Optional<String> encodePassword(String password, String salt) {
+    public static Optional<String> encodePassword(String password, String salt) {
         assert password != null && salt != null : "Argumentos insucifientes para criptografar senha.";
         assert password.length() > 0 && salt.length() > 0 : "Argumentos inválidos para criptografar senha.";
         
@@ -84,7 +87,7 @@ class PasswordHandler {
         }
     }
 
-    static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
+    public static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
         String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
         String passwordHash = pwdAndSalt[0];
         String salt = pwdAndSalt[1];
@@ -97,43 +100,4 @@ class PasswordHandler {
         }
         return false;
     }
-    
-    
-
-    // BA BE BI
-    // CA CE CI
-    
-    // BA CA
-    // BA CE
-    // BA CI
-    // BE CA
-    // BE CE
-    // BE CI
-    // BI CA
-    // BI CE
-    // BI CI
-    // static ArrayList<ArrayList<String>> combinarFonemas(ArrayList<ArrayList<String>> gruposDigitados) {
-    //     ArrayList<ArrayList<String>> combinacoes = new ArrayList<ArrayList<String>>();
-    //     if (gruposDigitados.size() <= 1) {
-    //         combinacoes.add(gruposDigitados.get(0));
-    //     } else if (gruposDigitados.size() == 2) {
-    //         ArrayList<String> combinacao = new ArrayList<String>();
-    //         for (int i = 0; i < gruposDigitados.size(); i++) {
-    //             combinacao.add(gruposDigitados.get(i).get(i));
-    //         }
-    //         System.out.println
-    //     }
-    //     return combinacoes;
-    // }
-    
-    // static boolean checkPassword(List<List<String>> gruposDigitados) {
-    //     ArrayList<String> s = new ArrayList<String>();
-    //     for (List<String> grupo : gruposDigitados) {
-    //         String x = "";
-    //         for (String fonema : grupo) {
-    //             x += fonema;
-    //         }
-    //     }
-    //     return true;
-    // }
 }
