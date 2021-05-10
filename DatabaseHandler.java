@@ -41,11 +41,14 @@ public class DatabaseHandler {
             if (timestamp != null) {
                 Date date = new Date(timestamp.getTime());
                 if (date.compareTo(new Date()) > 0) {
+                    LogHandler.log(2004, email);
                     return UserState.BLOCKED;
                 }
             }
+            LogHandler.log(2003, email);
             return UserState.VALID;
         } else {
+            LogHandler.log(2005, email);
             return UserState.INVALID;
         }
     }

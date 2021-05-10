@@ -17,6 +17,7 @@ public class IdentUsuPanel extends JPanel {
         this.prepararCampoEmail(225, 270, 250, 35);
         this.prepararLabelErro(225, 310, 250, 30);
         this.prepararBotaoLogin(285, 375, 130, 35);
+        LogHandler.log(2001, null);
     }
 
     void prepareTitle() {
@@ -56,15 +57,11 @@ public class IdentUsuPanel extends JPanel {
     void nextStep() {
         String emailAddress = emailTF.getText();
         System.out.println(emailAddress);
-        // boolean b = UserLoginHandler.checkEmailAddress(emailAddress);
-        // System.out.println(b);
-        // if (b == false) {
-        //     errorLabel.setText("E-mail inválido.");
-        // }
         try {
             UserState x = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             System.out.println(x);
             if (x == UserState.VALID) {
+                LogHandler.log(2002, null);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
                 frame.invalidate();
