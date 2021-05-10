@@ -21,7 +21,7 @@ CREATE TABLE MENSAGENS (
 	codigo INTEGER PRIMARY KEY,
 	mensagem varchar(2048)
 );
--- INSERT INTO USUARIOS values('testemanualmente', 'senha', 'sal', 'certificado', NULL, NULL, 0);
+INSERT INTO USUARIOS values('aa', '2a52ff396ed64e9229420d39664499cfd0623eaa', 'sal99', 'certificado', NULL, NULL, 0);
 INSERT INTO MENSAGENS VALUES
 (1001, 'Sistema iniciado.'),
 (1002, 'Sistema encerrado.'),
@@ -85,13 +85,13 @@ INSERT INTO MENSAGENS VALUES
 
 DROP TABLE IF EXISTS REGISTROS;
 CREATE TABLE REGISTROS (
-	timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	hash varchar(10),
-	usuario  varchar(255),
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
 	codigo INTEGER,
+	usuario varchar(255),
+	arquivo varchar(255),
 	FOREIGN KEY (usuario)
 		REFERENCES USUARIO (email),
 	FOREIGN KEY (codigo)
-		REFERENCES MENSAGENS (codigo),
-	PRIMARY KEY(timestamp, hash)
+		REFERENCES MENSAGENS (codigo)
 );

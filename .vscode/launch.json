@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch InterfaceTeste",
+            "request": "launch",
+            "mainClass": "InterfaceTeste",
+            "projectName": "CofreDigital_1e576736"
+        },
+        {
+            "type": "java",
             "name": "Launch UserLoginHandler",
             "request": "launch",
             "mainClass": "UserLoginHandler",
@@ -26,7 +33,7 @@
             "name": "Launch Current File",
             "request": "launch",
             "mainClass": "${file}",
-            "vmArgs": "-enableassertions",
+            "vmArgs": "-enableassertions"
         },
         {
             "type": "java",
