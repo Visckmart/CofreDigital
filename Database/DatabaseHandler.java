@@ -8,9 +8,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+=======
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+>>>>>>> f7a916a750307e1df6ab8efd3a0666f25f609b9f
 
 import Utilities.LogHandler;
 import Utilities.UserState;
@@ -29,6 +34,7 @@ public class DatabaseHandler {
     }
 
     public Connection connection;
+    private DateTimeFormatter TimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
@@ -36,9 +42,12 @@ public class DatabaseHandler {
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
         Statement statement = connection.createStatement();
-        statement.setQueryTimeout(30);  // set timeout to 30 sec.
+        if(verifyUserEmail(email) != UserState.INVALID) {
+            throw new Exception("Usuário já existe!");
+        }
         String query = String.format("insert into USUARIOS values('%s', '%s', '%s', '%s', NULL, NULL, '%s');", email, encryptedPassword, salt, new String(certificate), gid);
         statement.executeUpdate(query);
+        statement.close();
     }
 
     public UserState verifyUserEmail(String email) throws Exception {
@@ -47,10 +56,11 @@ public class DatabaseHandler {
             "SELECT * from USUARIOS WHERE email = '" + email + "';"
         );
         if (rs.next()) {
-            Timestamp timestamp = rs.getTimestamp("timeout");
-            if (timestamp != null) {
-                Date date = new Date(timestamp.getTime());
-                if (date.compareTo(new Date()) > 0) {
+            String dateString = rs.getString("timeout");
+            rs.close();
+            if (dateString != null) {
+                LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
+                if (timestamp.compareTo(LocalDateTime.now()) > 0) {
                     LogHandler.log(2004, email);
                     return UserState.BLOCKED;
                 }
@@ -63,19 +73,43 @@ public class DatabaseHandler {
         }
     }
 
+
+    public void registerAttempts(String email, boolean success) throws Exception {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("select * from USUARIOS where email='"+email+"'");
+        if(rs.next()) {
+            int attempts = rs.getInt("attempts") + 1;
+            rs.close();
+            if(attempts >= 3 && !success) {
+                statement.executeUpdate("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email='"+email+"'");
+            }
+            else if(attempts < 3) {
+                if(success) {
+                    statement.executeUpdate("UPDATE USUARIOS SET attempts = 0, timeout = null where email='"+email+"'");
+                } else {
+                    statement.executeUpdate("UPDATE USUARIOS SET attempts = "+attempts+", timeout = null where email='"+email+"'");
+                }
+            }
+        }
+        else {
+            rs.close();
+            throw new Exception("Email não encontrado");
+        }
+    }
+
     public String[] getPasswordAndSalt(String email) throws Exception {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("select * from usuarios where email='"+email+"'");
         if(rs.next()) {
             String password = rs.getString("senha");
             String salt = rs.getString("salt");
+            rs.close();
             String[] value = { password, salt };
             return value;
         }
         throw new Exception("Email não encontrado");
     }
 
-    static DateTimeFormatter registerTimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public List<String[]> getAllRegisters() throws Exception {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
@@ -99,12 +133,12 @@ public class DatabaseHandler {
             }
             LocalDateTime date = LocalDateTime.parse(
                 rs.getString("timestamp"),
-                registerTimestampFormatter
+                TimestampFormatter
             );
             ZonedDateTime originalDate = ZonedDateTime.of(date, ZoneId.of("UTC"));
             ZonedDateTime adjustedDate = originalDate.withZoneSameInstant(ZoneId.of("UTC-3"));
             
-            String[] registro = { adjustedDate.format(registerTimestampFormatter), mensagem };
+            String[] registro = { adjustedDate.format(TimestampFormatter), mensagem };
             registros.add(registro);
 
             // System.out.println(rs.getString("timestamp"));
@@ -112,6 +146,7 @@ public class DatabaseHandler {
             // System.out.println(rs.getString("usuario"));
             // System.out.println(rs.getString("arquivo"));
         }
+        rs.close();
         return registros;
     }
 

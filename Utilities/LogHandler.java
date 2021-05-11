@@ -18,7 +18,7 @@ public class LogHandler {
                 "INSERT into REGISTROS (codigo, usuario, arquivo) values(%d, %s, %s);",
                 codigo, login_name, file_name
             );
-            System.out.println(query);
+//            System.out.println(query);
             statement.executeUpdate(query);
         } catch (Exception exc) {
             exc.printStackTrace();
