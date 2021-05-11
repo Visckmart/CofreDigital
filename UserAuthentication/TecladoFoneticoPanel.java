@@ -171,13 +171,13 @@ public class TecladoFoneticoPanel extends JPanel {
         try {
             correctPassword = PasswordHandler.checkPhoneticPassword(tecladoFonetico.gruposDigitados, emailAddress);
             if (correctPassword == true) {
-                System.out.println("Correct");
+                LogHandler.log(3003);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new VerificaChavePanel(emailAddress));
                 frame.invalidate();
                 frame.validate();
+                LogHandler.log(3002);
             } else {
-                System.out.println("Wrong");
                 errorLabel.setText("Senha incorreta.");
                 tecladoFonetico.limparDigitacao();
                 tecladoFonetico.renovarCombinacoes();
