@@ -4,13 +4,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -117,6 +115,14 @@ public class DatabaseHandler {
         return registros;
     }
 
+    public String getEncodedCertificate(String emailAddress) throws Exception {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+            "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
+        );
+        
+        return rs.getString("certificado");
+    }
     // public static void main(String[] args) throws Exception {
     //     DatabaseHandler handler = new DatabaseHandler();
     //     handler.registerUser("th@2132.com", "oi".getBytes(), "123", "232", 0);
