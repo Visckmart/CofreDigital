@@ -14,6 +14,7 @@ import javax.swing.JPasswordField;
 import Authentication.AuthenticationHandler;
 import Database.DatabaseHandler;
 import General.MenuPrincipalPanel;
+import Authentication.UserState;
 
 public class VerificaChavePanel extends JPanel {
     
@@ -108,6 +109,7 @@ public class VerificaChavePanel extends JPanel {
             AuthenticationHandler ah = new AuthenticationHandler();
             byte[] content = Files.readAllBytes(chosenFile.toPath());
             PrivateKey pk = ah.privateKeyFromFile(content, new String(passwordTF.getPassword()).getBytes(StandardCharsets.UTF_8));
+            UserState.privateKey = pk;
             System.out.println(pk);
             // System.out.println(DatabaseHandler.getInstance().getEncodedCertificate("aa"));
             JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);

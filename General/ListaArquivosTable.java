@@ -15,7 +15,7 @@ public class ListaArquivosTable extends JTable {
     ListaArquivosTable() {
         super(new DefaultTableModel(null, columnNames));
 
-        this.setBounds(30, 40, 200, 300);
+        this.setBounds(0, 0, 200, 300);
         this.setRowHeight(25);
         
         MouseAdapter doubleClickHandler = new MouseAdapter() {
@@ -36,7 +36,7 @@ public class ListaArquivosTable extends JTable {
         TableColumn column = null;
         for (int i = 0; i < columnNames.length; i++) {
             column = this.getColumnModel().getColumn(i);
-            if (i == 0) { column.setPreferredWidth(200); }
+            if (i == 0) { column.setPreferredWidth(150); }
             else { column.setPreferredWidth(50); }
         }
     }

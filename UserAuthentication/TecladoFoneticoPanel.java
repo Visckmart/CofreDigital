@@ -67,7 +67,7 @@ public class TecladoFoneticoPanel extends JPanel {
                 int btnX = xOffset + (btnHSpace * coluna);
                 int btnY = yOffset + (btnVSpace * linha);
                 botao.setBounds(btnX, btnY, btnHSpace - 5, btnVSpace - 5);
-                botao.setFont(new Font(null, Font.PLAIN, 17));
+                botao.setFont(new Font("Arial", Font.PLAIN, 17));
                 
                 int btnIndex = (linha * colunasBotoes) + coluna;
                 botao.addActionListener(new ActionListener() {

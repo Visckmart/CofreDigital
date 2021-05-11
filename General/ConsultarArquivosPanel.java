@@ -2,17 +2,25 @@ package General;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.crypto.SecretKey;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Authentication.AuthenticationHandler;
+import Authentication.UserState;
 import Utilities.FileInfo;
   
 public class ConsultarArquivosPanel extends JPanel {
@@ -40,16 +48,17 @@ public class ConsultarArquivosPanel extends JPanel {
         this.setLayout(null);
         // adding it to JScrollPane
         JScrollPane sp = new JScrollPane(j);
-        sp.setBounds(230, 175, 450, 330);
+        sp.setBounds(15, 210, 670, 280);
         add(sp);
-        prepararDirChooser(50, 175, 200, 50);
+        prepararDirChooser(210, 175, 175, 30);
+        prepareBackButton(15, 175, 175, 30);
     }
 
     void prepararDirChooser(int offsetX, int offsetY, int width, int height) {
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("./Pacote-T4"));
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        JButton input = new JButton("Escolher arquivo da chave privada...");
+        JButton input = new JButton("Escolher caminho...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -57,7 +66,24 @@ public class ConsultarArquivosPanel extends JPanel {
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     
                     // IndexHandler ih = new IndexHandler();
-                    // Path p = new Path(fc.getSelectedFile().getAbsolutePath(), "index."
+                    System.out.println(UserState.privateKey);
+                    Path p = FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.env");
+                    System.out.println(fc.getSelectedFile().getAbsolutePath());
+                    // File env = new File(fc.getSelectedFile().getAbsolutePath() + "/index.env");
+                    try {
+                        byte[] enve = Files.readAllBytes(p);
+                        SecretKey sk = new FileHandler().decryptEnvelope(UserState.privateKey, enve);
+                        System.out.println(sk);
+                        byte[] arq = Files.readAllBytes(FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.enc"));
+                        byte[] fileContent = new FileHandler().decryptFile(sk, arq);
+
+                        System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fileContent)));
+                        List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
+                        System.out.println(fileInfos);
+                        setFileList(fileInfos);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 
                     // setFileList(ih.parseIndex(p));
                 } else {
@@ -66,6 +92,20 @@ public class ConsultarArquivosPanel extends JPanel {
             }
         });
         add(input);
+    }
+
+    void prepareBackButton(int offsetX, int offsetY, int width, int height) {
+        JButton backButton = new JButton("Voltar ao menu");
+        backButton.setBounds(offsetX, offsetY, width, height);
+        backButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(backButton);
+                frame.setContentPane(new MenuPrincipalPanel());
+                frame.invalidate();
+                frame.validate();
+            }
+        });
+        add(backButton);
     }
 
     void setFileList(List<FileInfo> fileInfoList) {

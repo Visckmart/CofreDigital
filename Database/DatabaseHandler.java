@@ -3,7 +3,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Utilities.LogHandler;
-import Utilities.UserState;
+import Utilities.UserLoginState;
 
 public class DatabaseHandler {
     private static DatabaseHandler instance;
@@ -36,7 +35,7 @@ public class DatabaseHandler {
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
         Statement statement = connection.createStatement();
-        if(verifyUserEmail(email) != UserState.INVALID) {
+        if(verifyUserEmail(email) != UserLoginState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
         String query = String.format("insert into USUARIOS values('%s', '%s', '%s', '%s', NULL, NULL, '%s');", email, encryptedPassword, salt, new String(certificate), gid);
@@ -44,7 +43,7 @@ public class DatabaseHandler {
         statement.close();
     }
 
-    public UserState verifyUserEmail(String email) throws Exception {
+    public UserLoginState verifyUserEmail(String email) throws Exception {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
             "SELECT * from USUARIOS WHERE email = '" + email + "';"
@@ -56,14 +55,14 @@ public class DatabaseHandler {
                 LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                 if (timestamp.compareTo(LocalDateTime.now()) > 0) {
                     LogHandler.log(2004, email);
-                    return UserState.BLOCKED;
+                    return UserLoginState.BLOCKED;
                 }
             }
             LogHandler.log(2003, email);
-            return UserState.VALID;
+            return UserLoginState.VALID;
         } else {
             LogHandler.log(2005, email);
-            return UserState.INVALID;
+            return UserLoginState.INVALID;
         }
     }
 
