@@ -42,9 +42,9 @@ public class IdentUsuPanel extends JPanel {
         errorLabel.setBounds(offsetX, offsetY, width, height);
         this.add(errorLabel);
     }
-    
+    public JButton loginButton;
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        JButton loginButton = new JButton("Continuar   >");
+        loginButton = new JButton("Continuar   >");
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -61,9 +61,11 @@ public class IdentUsuPanel extends JPanel {
             if (userState == UserState.VALID) {
                 LogHandler.log(2003);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
+                TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
+                frame.setContentPane(tfp);
                 frame.invalidate();
                 frame.validate();
+                frame.getRootPane().setDefaultButton(tfp.loginButton);
                 LogHandler.log(2002);
             } else if (userState == UserState.BLOCKED) {
                 LogHandler.log(2004);
