@@ -8,14 +8,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-<<<<<<< HEAD
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-=======
-import java.util.*;
-import java.util.concurrent.ExecutionException;
->>>>>>> f7a916a750307e1df6ab8efd3a0666f25f609b9f
 
 import Utilities.LogHandler;
 import Utilities.UserState;
