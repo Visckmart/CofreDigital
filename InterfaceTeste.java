@@ -1,19 +1,7 @@
 import javax.swing.*;
 
 import Authentication.PasswordHandler;
-import General.IndexHandler;
 import UserAuthentication.IdentUsuPanel;
-import UserAuthentication.TecladoFoneticoPanel;
-import Utilities.FileInfo;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
- 
-import java.io.*;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Random;
 
 class InterfaceTeste {
 

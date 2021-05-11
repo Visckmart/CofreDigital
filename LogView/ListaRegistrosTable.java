@@ -37,15 +37,15 @@ public class ListaRegistrosTable extends JTable {
         TableColumn column = null;
         for (int i = 0; i < columnNames.length; i++) {
             column = this.getColumnModel().getColumn(i);
-            if (i == 0) { column.setPreferredWidth(50); }
-            else { column.setPreferredWidth(200); }
+            if (i == 0) { column.setPreferredWidth(25); }
+            else { column.setPreferredWidth(300); }
         }
     }
 
     public void setRegisterList(List<String[]> registerInfoList) {
         DefaultTableModel tableModel = (DefaultTableModel)this.getModel();
         tableModel.setRowCount(0);
-        for (int i = 0; i < registerInfoList.size(); i++) {
+        for (int i = registerInfoList.size() - 1; i >= 0; i--) {
             tableModel.addRow(registerInfoList.get(i));
         }
         tableModel.setRowCount(registerInfoList.size());

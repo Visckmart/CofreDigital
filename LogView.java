@@ -1,11 +1,6 @@
-// package LogView;
-
-import java.util.ArrayList;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 import Database.DatabaseHandler;
 import LogView.ListaRegistrosTable;
@@ -39,7 +34,7 @@ public class LogView {
 
 
     public static void main(String args[]) {
-        LogView lv = new LogView();
+        new LogView();
         // ArrayList<String[]> l = new ArrayList<String[]>();
         // String[] a = {"a", "b", "c", "d"};
         // l.add(a);
