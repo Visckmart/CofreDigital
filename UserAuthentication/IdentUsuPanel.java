@@ -56,18 +56,21 @@ public class IdentUsuPanel extends JPanel {
 
     void nextStep() {
         String emailAddress = emailTF.getText();
-        System.out.println(emailAddress);
         try {
-            UserState x = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-            System.out.println(x);
-            if (x == UserState.VALID) {
-                LogHandler.log(2002, null);
+            UserState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+            if (userState == UserState.VALID) {
+                LogHandler.log(2003);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
                 frame.invalidate();
                 frame.validate();
+                LogHandler.log(2002);
+            } else if (userState == UserState.BLOCKED) {
+                LogHandler.log(2004);
+                errorLabel.setText("Usuário bloqueado.");
             } else {
-                errorLabel.setText(x == UserState.BLOCKED ? "Usuário bloqueado." : "Usuário não cadastrado.");
+                LogHandler.log(2005);
+                errorLabel.setText("Usuário não identificado.");
             }
         } catch (Exception e) {
             e.printStackTrace();

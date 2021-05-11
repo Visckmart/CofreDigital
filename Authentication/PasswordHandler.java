@@ -9,8 +9,10 @@ import java.util.Random;
 import Database.DatabaseHandler;
 
 public class PasswordHandler {
+
     public static String generateSalt() {
         String salt = "";
+        
         Random rand = new Random();
         for (int i = 0; i < 10; i++) {
             int charCode = rand.nextInt(62);
@@ -22,6 +24,7 @@ public class PasswordHandler {
                 salt += Character.toString((char)(charCode - 52 + 48));
             }
         }
+        
         assert salt.length() == 10 : "Tamanho do salt está incorreto.";
         return salt;
     }
