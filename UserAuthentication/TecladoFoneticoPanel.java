@@ -28,8 +28,9 @@ public class TecladoFoneticoPanel extends JPanel {
         this.setLayout(null);
         add(TitlePanel.getInstance());
         this.prepararCampoDeSenha(257, 200, 185, 35);
-        this.prepararBotoes(150, 250, 400, 115);
-        this.prepararBotaoLogin(285, 375, 130, 35);
+        this.prepararLabelErro(225, 240, 250, 20);
+        this.prepararBotoes(150, 270, 400, 115);
+        this.prepararBotaoLogin(285, 400, 130, 35);
         
         updatePasswordFeedback(0);
         tecladoFonetico = new TecladoFonetico();
@@ -44,6 +45,15 @@ public class TecladoFoneticoPanel extends JPanel {
         feedbackField.setBackground(Color.black);
         feedbackField.setForeground(Color.white);
         add(feedbackField);
+        JButton clearButton = new JButton("X");
+        clearButton.setBounds(offsetX + width + 10, offsetY, height, height);
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tecladoFonetico.limparDigitacao();
+                updateInterface();
+            }
+        });
+        add(clearButton);
     }
     
     int linhasBotoes = 2;
@@ -71,6 +81,15 @@ public class TecladoFoneticoPanel extends JPanel {
         }
     }
     
+    JLabel errorLabel;
+    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
+        errorLabel = new JLabel();
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        errorLabel.setForeground(Color.red);
+        errorLabel.setBounds(offsetX, offsetY, width, height);
+        this.add(errorLabel);
+    }
+    
     JButton loginButton;
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         loginButton = new JButton("Continuar   >");
@@ -85,8 +104,14 @@ public class TecladoFoneticoPanel extends JPanel {
 
     void atualizarBotoes(List<String> fonemas) {
         assert fonemas.size() == keys.length : "Atualização de botões não contém o número correto de fonemas";
+        boolean bloquear = tecladoFonetico.getFonemasDigitados() * 2 >= 12;
         for (int i = 0; i < keys.length; i++) {
-            keys[i].setText(fonemas.get(i));
+            if (bloquear) {
+                keys[i].setEnabled(false);
+            } else {
+                keys[i].setEnabled(true);
+                keys[i].setText(fonemas.get(i));
+            }
         }
     }
 
@@ -131,10 +156,14 @@ public class TecladoFoneticoPanel extends JPanel {
         }
     }
     
-    void buttonPressed(int index) {
-        tecladoFonetico.registrarDigitacao(index);
+    void updateInterface() {
         updatePasswordFeedback(tecladoFonetico.getFonemasDigitados() * 2);
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
+    }
+    void buttonPressed(int index) {
+        errorLabel.setText("");
+        tecladoFonetico.registrarDigitacao(index);
+        updateInterface();
     }
     
     void nextStep() {
@@ -149,7 +178,9 @@ public class TecladoFoneticoPanel extends JPanel {
                 frame.validate();
             } else {
                 System.out.println("Wrong");
+                errorLabel.setText("Senha incorreta.");
                 tecladoFonetico.limparDigitacao();
+                tecladoFonetico.renovarCombinacoes();
                 updatePasswordFeedback(0);
                 atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
             }

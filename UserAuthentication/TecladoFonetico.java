@@ -30,7 +30,7 @@ public class TecladoFonetico {
 
     public void limparDigitacao() {
         gruposDigitados.clear();
-        renovarCombinacoes();
+        System.out.println("Limpando senha");
     }
 
     void renovarCombinacoes() {

@@ -43,6 +43,17 @@ public class IdentUsuPanel extends JPanel {
         this.add(errorLabel);
     }
     
+    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
+        JButton loginButton = new JButton("Continuar   >");
+        loginButton.setBounds(offsetX, offsetY, width, height);
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                nextStep();
+            }
+        });
+        this.add(loginButton);
+    }
+
     void nextStep() {
         String emailAddress = emailTF.getText();
         System.out.println(emailAddress);
@@ -55,20 +66,12 @@ public class IdentUsuPanel extends JPanel {
                 frame.setContentPane(new TecladoFoneticoPanel(emailAddress));
                 frame.invalidate();
                 frame.validate();
+            } else {
+                errorLabel.setText(x == UserState.BLOCKED ? "Usuário bloqueado." : "Usuário não cadastrado.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        JButton loginButton = new JButton("Continuar   >");
-        loginButton.setBounds(offsetX, offsetY, width, height);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                nextStep();
-            }
-        });
-        this.add(loginButton);
     }
     
     
