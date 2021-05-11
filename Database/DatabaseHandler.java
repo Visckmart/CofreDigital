@@ -145,32 +145,32 @@ public class DatabaseHandler {
     }
 
      public static void main(String[] args) throws Exception {
-         DatabaseHandler handler = new DatabaseHandler();
-         try {
-            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
-         } catch (Exception e) {
-             System.out.println(e.getMessage());
-         }
-         handler.registerAttempts("th@232.com", true);
-         // [123, 232]
-         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
-         // VALID (após os 2 minutos de espera)
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         handler.registerAttempts("th@232.com", false);
-         handler.registerAttempts("th@232.com", true);
-         // VALID
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         handler.registerAttempts("th@232.com", false);
-         // VALID
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         // BLOCKED
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", true);
-         // BLOCKED
-         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         DatabaseHandler handler = new DatabaseHandler();
+//         try {
+//            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
+//         } catch (Exception e) {
+//             System.out.println(e.getMessage());
+//         }
+//         handler.registerAttempts("th@232.com", true);
+//         // [123, 232]
+//         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
+//         // VALID (após os 2 minutos de espera)
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         handler.registerAttempts("th@232.com", false);
+//         handler.registerAttempts("th@232.com", true);
+//         // VALID
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         handler.registerAttempts("th@232.com", false);
+//         // VALID
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         // BLOCKED
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", true);
+//         // BLOCKED
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
 
 //         Statement statement = handler.connection.createStatement();
 //         ResultSet rs = statement.executeQuery("select * from mensagens");
