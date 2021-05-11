@@ -43,7 +43,7 @@ public class VerificaChavePanel extends JPanel {
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("./Pacote-T4"));
+        fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
         JButton input = new JButton("Escolher arquivo da chave privada...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
