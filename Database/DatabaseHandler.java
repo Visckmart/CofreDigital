@@ -1,4 +1,6 @@
 package Database;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -8,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import Authentication.PasswordHandler;
 import Utilities.LogHandler;
 import Utilities.UserState;
 
@@ -29,6 +32,16 @@ public class DatabaseHandler {
     public DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
+    }
+
+    public void seedUsers() throws Exception {
+        // Criando usuário padrão
+        String userEmail = "user01@inf1416.puc-rio.br";
+        if(verifyUserEmail(userEmail) == UserState.INVALID) {
+            byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
+            String password = PasswordHandler.encodePassword("123", "232").get();
+            registerUser(userEmail, certificate, password, "232", 0);
+        }
     }
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
@@ -181,6 +194,7 @@ public class DatabaseHandler {
 
     public static void main(String[] args) throws Exception {
          DatabaseHandler handler = new DatabaseHandler();
+         handler.seedUsers();
          try {
             handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
          } catch (Exception e) {
