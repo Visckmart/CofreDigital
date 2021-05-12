@@ -3,7 +3,7 @@ CREATE TABLE USUARIOS (
 	email varchar(255) PRIMARY KEY,
 	senha varchar(2048),
 	salt varchar(1024),
-	certificado varchar(10000),
+	certificado BLOB,
 	attempts INTEGER default 0,
 	timeout TIMESTAMP,
 	gid INTEGER,
