@@ -1,9 +1,5 @@
 package Database;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -28,33 +24,37 @@ public class DatabaseHandler {
     }
 
     public Connection connection;
-    private DateTimeFormatter TimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter TimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
     }
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
-        Statement statement = connection.createStatement();
+        PreparedStatement statement = connection.prepareStatement("insert into USUARIOS values(?, ?, ?, ?, NULL, NULL, ?);");
         if(verifyUserEmail(email) != UserState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
-        String query = String.format("insert into USUARIOS values('%s', '%s', '%s', '%s', NULL, NULL, '%s');", email, encryptedPassword, salt, new String(certificate), gid);
-        statement.executeUpdate(query);
+        statement.setString(1, email);
+        statement.setString(2, encryptedPassword);
+        statement.setString(3, salt);
+        statement.setBytes(4, certificate);
+        statement.setInt(5, gid);
+        statement.executeUpdate();
         statement.close();
     }
 
     public UserState verifyUserEmail(String email) throws Exception {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(
-            "SELECT * from USUARIOS WHERE email = '" + email + "';"
-        );
+        PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+
         if (rs.next()) {
             String dateString = rs.getString("timeout");
             rs.close();
             if (dateString != null) {
                 LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
-                if (timestamp.compareTo(LocalDateTime.now()) > 0) {
+                if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
                     LogHandler.log(2004, email);
                     return UserState.BLOCKED;
                 }
@@ -69,31 +69,56 @@ public class DatabaseHandler {
 
 
     public void registerAttempts(String email, boolean success) throws Exception {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("select * from USUARIOS where email='"+email+"'");
+        PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
         if(rs.next()) {
             int attempts = rs.getInt("attempts") + 1;
+            String dateString = rs.getString("timeout");
             rs.close();
             if(attempts >= 3 && !success) {
-                statement.executeUpdate("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email='"+email+"'");
+                if (dateString != null) {
+                    LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
+                    if(timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) < 0) {
+                        statement = connection.prepareStatement("UPDATE USUARIOS SET attempts=?, timeout=null where email=?");
+                        statement.setInt(1, 1);
+                        statement.setString(2, email);
+                    }
+                    else {
+                        statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email=?");
+                        statement.setString(1, email);
+                    }
+                } else {
+                    statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email=?");
+                    statement.setString(1, email);
+                }
+                statement.executeUpdate();
             }
             else if(attempts < 3) {
                 if(success) {
-                    statement.executeUpdate("UPDATE USUARIOS SET attempts = 0, timeout = null where email='"+email+"'");
+                    statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = 0, timeout = null where email=?");
+                    statement.setString(1, email);
                 } else {
-                    statement.executeUpdate("UPDATE USUARIOS SET attempts = "+attempts+", timeout = null where email='"+email+"'");
+                    statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = ?, timeout = null where email=?");
+                    statement.setInt(1, attempts);
+                    statement.setString(2, email);
                 }
+                statement.executeUpdate();
             }
         }
         else {
+            statement.close();
             rs.close();
             throw new Exception("Email não encontrado");
         }
+        statement.close();
+        rs.close();
     }
 
     public String[] getPasswordAndSalt(String email) throws Exception {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery("select * from usuarios where email='"+email+"'");
+        PreparedStatement statement = connection.prepareStatement("select * from usuarios where email=?");
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
         if(rs.next()) {
             String password = rs.getString("senha");
             String salt = rs.getString("salt");
@@ -145,32 +170,32 @@ public class DatabaseHandler {
     }
 
      public static void main(String[] args) throws Exception {
-//         DatabaseHandler handler = new DatabaseHandler();
-//         try {
-//            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
-//         } catch (Exception e) {
-//             System.out.println(e.getMessage());
-//         }
-//         handler.registerAttempts("th@232.com", true);
-//         // [123, 232]
-//         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
-//         // VALID (após os 2 minutos de espera)
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         handler.registerAttempts("th@232.com", false);
-//         handler.registerAttempts("th@232.com", true);
-//         // VALID
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         handler.registerAttempts("th@232.com", false);
-//         // VALID
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         // BLOCKED
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", true);
-//         // BLOCKED
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
+         DatabaseHandler handler = new DatabaseHandler();
+         try {
+            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
+         } catch (Exception e) {
+             System.out.println(e.getMessage());
+         }
+         handler.registerAttempts("th@232.com", true);
+         // [123, 232]
+         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
+         // VALID (após os 2 minutos de espera)
+         System.out.println(handler.verifyUserEmail("th@232.com"));
+         handler.registerAttempts("th@232.com", false);
+         handler.registerAttempts("th@232.com", false);
+         handler.registerAttempts("th@232.com", true);
+         // VALID
+         System.out.println(handler.verifyUserEmail("th@232.com"));
+         handler.registerAttempts("th@232.com", false);
+         handler.registerAttempts("th@232.com", false);
+         // VALID
+         System.out.println(handler.verifyUserEmail("th@232.com"));
+         handler.registerAttempts("th@232.com", false);
+         // BLOCKED
+         System.out.println(handler.verifyUserEmail("th@232.com"));
+         handler.registerAttempts("th@232.com", true);
+         // BLOCKED
+         System.out.println(handler.verifyUserEmail("th@232.com"));
 
 //         Statement statement = handler.connection.createStatement();
 //         ResultSet rs = statement.executeQuery("select * from mensagens");
