@@ -12,7 +12,7 @@ import java.util.List;
 
 import Authentication.PasswordHandler;
 import Utilities.LogHandler;
-import Utilities.UserState;
+import Utilities.UserLoginState;
 
 public class DatabaseHandler {
     private static DatabaseHandler instance;
@@ -46,7 +46,7 @@ public class DatabaseHandler {
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
         PreparedStatement statement = connection.prepareStatement("insert into USUARIOS values(?, ?, ?, ?, NULL, NULL, ?);");
-        if(verifyUserEmail(email) != UserState.INVALID) {
+        if(verifyUserEmail(email) != UserLoginState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
         statement.setString(1, email);
@@ -58,7 +58,7 @@ public class DatabaseHandler {
         statement.close();
     }
 
-    public UserState verifyUserEmail(String email) throws Exception {
+    public UserLoginState verifyUserEmail(String email) throws Exception {
         PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
         statement.setString(1, email);
         ResultSet rs = statement.executeQuery();
@@ -70,14 +70,14 @@ public class DatabaseHandler {
                 LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                 if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
                     LogHandler.log(2004, email);
-                    return UserState.BLOCKED;
+                    return UserLoginState.BLOCKED;
                 }
             }
             LogHandler.log(2003, email);
-            return UserState.VALID;
+            return UserLoginState.VALID;
         } else {
             LogHandler.log(2005, email);
-            return UserState.INVALID;
+            return UserLoginState.INVALID;
         }
     }
 

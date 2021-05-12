@@ -1,6 +1,8 @@
 package General;
 import java.io.BufferedReader;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,6 +26,16 @@ public class IndexHandler {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return index;
+    }
+
+    List<FileInfo> parseIndexContent(byte[] indexFileContent) {
+        ArrayList<FileInfo> index = new ArrayList<FileInfo>();
+        String[] lines = StandardCharsets.UTF_8.decode(ByteBuffer.wrap(indexFileContent)).toString().split("\n");
+        for (String line : lines) {
+            FileInfo fi = new FileInfo(line);
+            index.add(fi);
         }
         return index;
     }

@@ -1,4 +1,4 @@
 package Utilities;
-public enum UserState {
+public enum UserLoginState {
     VALID, BLOCKED, INVALID
 }

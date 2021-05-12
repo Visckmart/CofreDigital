@@ -7,7 +7,7 @@ import java.awt.Color;
 
 import Database.DatabaseHandler;
 import Utilities.LogHandler;
-import Utilities.UserState;
+import Utilities.UserLoginState;
 
 public class IdentUsuPanel extends JPanel {
     
@@ -57,8 +57,8 @@ public class IdentUsuPanel extends JPanel {
     void nextStep() {
         String emailAddress = emailTF.getText();
         try {
-            UserState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-            if (userState == UserState.VALID) {
+            UserLoginState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+            if (userState == UserLoginState.VALID) {
                 LogHandler.log(2003);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
@@ -67,7 +67,7 @@ public class IdentUsuPanel extends JPanel {
                 frame.validate();
                 frame.getRootPane().setDefaultButton(tfp.loginButton);
                 LogHandler.log(2002);
-            } else if (userState == UserState.BLOCKED) {
+            } else if (userState == UserLoginState.BLOCKED) {
                 LogHandler.log(2004);
                 errorLabel.setText("Usuário bloqueado.");
             } else {
