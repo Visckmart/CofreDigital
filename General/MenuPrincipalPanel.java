@@ -36,7 +36,7 @@ public class MenuPrincipalPanel extends JPanel {
               public void actionPerformed(ActionEvent e) {
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt3);
                 ConsultarArquivosPanel cap = new ConsultarArquivosPanel();
-                cap.setFileList(IndexHandler.testIndexHandler());
+                // cap.setFileList(IndexHandler.testIndexHandler());
                 frame.setContentPane(cap);
                 frame.invalidate();
                 frame.validate();

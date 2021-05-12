@@ -173,9 +173,11 @@ public class TecladoFoneticoPanel extends JPanel {
             if (correctPassword == true) {
                 LogHandler.log(3003);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                frame.setContentPane(new VerificaChavePanel(emailAddress));
+                VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
+                frame.setContentPane(vcp);
                 frame.invalidate();
                 frame.validate();
+                frame.getRootPane().setDefaultButton(vcp.loginButton);
                 LogHandler.log(3002);
             } else {
                 errorLabel.setText("Senha incorreta.");

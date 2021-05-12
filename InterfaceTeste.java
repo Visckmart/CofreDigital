@@ -1,7 +1,19 @@
 import javax.swing.*;
+import java.awt.event.*;
+import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.PrivateKey;
+import java.util.List;
 
+import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
+import Database.DatabaseHandler;
+import General.ConsultarArquivosPanel;
 import UserAuthentication.IdentUsuPanel;
+import Utilities.LogHandler;
 
 class InterfaceTeste {
 
@@ -34,12 +46,22 @@ class InterfaceTeste {
 
   static void prepararInterfaceAutenticacao() {
     // frame.add(new IdentUsuPanel(new TecladoFoneticoPanel(new VerificaChavePanel(new MenuPrincipalPanel()))));
-    frame.add(new IdentUsuPanel());
+    IdentUsuPanel iup = new IdentUsuPanel();
+    frame.add(iup);
+    frame.getRootPane().setDefaultButton(iup.loginButton);
   }
   static void mostrarTela() {
     frame.invalidate();
     frame.validate();
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+          LogHandler.log(1002);
+          frame.setVisible(false);
+          frame.dispose();
+    }
+  });
     frame.setSize(700, 550);
     frame.setResizable(false);
     frame.setVisible(true);
@@ -55,7 +77,20 @@ class InterfaceTeste {
   public static void main(String args[]) {
     // DatabaseHandler.createNewDatabase("test.db");
     // System.out.println(PasswordHandler.encodePassword("DABECADA", "sal99"));
+    // LogHandler.log(1001);
+    // Path privateKeyFilePath = FileSystems.getDefault().getPath("Pacote-T4/Keys/", "admin-pkcs8-des.key");
+    // try {
+    //   AuthenticationHandler ah = new AuthenticationHandler();
+    //   byte[] content = Files.readAllBytes(privateKeyFilePath);
+    //   PrivateKey pk = ah.privateKeyFromFile(content, "admin".getBytes());
+    //   System.out.println(pk);
+    //   System.out.println(DatabaseHandler.getInstance().getEncodedCertificate("aa"));
+    // } catch (Exception e) {
+    //   e.printStackTrace();
+    // }
+    
     prepararInterfaceAutenticacao();
+    // frame.add(new ConsultarArquivosPanel());
     mostrarTela();
   }
 }

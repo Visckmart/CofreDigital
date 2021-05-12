@@ -4,8 +4,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import Utilities.LogHandler;
 import Utilities.UserState;
@@ -169,7 +170,16 @@ public class DatabaseHandler {
         return registros;
     }
 
-     public static void main(String[] args) throws Exception {
+    public String getEncodedCertificate(String emailAddress) throws Exception {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+            "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
+        );
+
+        return rs.getString("certificado");
+    }
+
+    public static void main(String[] args) throws Exception {
          DatabaseHandler handler = new DatabaseHandler();
          try {
             handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
@@ -205,5 +215,5 @@ public class DatabaseHandler {
 //             System.out.printf("%s %s %s %d %d\n", rs.getString("email"), rs.getString("senha"), rs.getString("salt"), rs.getInt("attempts"), rs.getInt("gid"));
 //         }
 //         rs.close();
-     }
+    }
 }
