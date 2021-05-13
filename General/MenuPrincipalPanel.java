@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import UserAuthentication.AlterarCertificadoPanel;
 import Utilities.LogHandler;
 
 public class MenuPrincipalPanel extends JPanel {
@@ -27,7 +28,13 @@ public class MenuPrincipalPanel extends JPanel {
         bt1.setBounds(offsetX, offsetY, width, height/4);
         bt1.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            LogHandler.logWithUser(5002);
+              LogHandler.logWithUser(5002);
+              JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt1);
+              CadastroPanel cap = new CadastroPanel();
+              // cap.setFileList(IndexHandler.testIndexHandler());
+              frame.setContentPane(cap);
+              frame.invalidate();
+              frame.validate();
           }
         });
         add(bt1);
@@ -38,7 +45,13 @@ public class MenuPrincipalPanel extends JPanel {
         bt2.setHorizontalAlignment(SwingConstants.CENTER);
         bt2.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            LogHandler.logWithUser(5003);
+              LogHandler.logWithUser(5003);
+              JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt2);
+              AlterarCertificadoPanel cap = new AlterarCertificadoPanel();
+              // cap.setFileList(IndexHandler.testIndexHandler());
+              frame.setContentPane(cap);
+              frame.invalidate();
+              frame.validate();
           }
         });
         add(bt2);

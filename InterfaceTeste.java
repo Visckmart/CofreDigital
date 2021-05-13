@@ -11,6 +11,7 @@ import java.util.List;
 import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
+import General.CadastroPanel;
 import General.ConsultarArquivosPanel;
 import General.FileHandler;
 import General.TecladoFoneticoFullPanel;
@@ -97,8 +98,9 @@ class InterfaceTeste {
     // } catch (Exception e) {
     //   //TODO: handle exception
     // }
-    // prepararInterfaceAutenticacao();
-    frame.add(new AlterarCertificadoPanel());
+    prepararInterfaceAutenticacao();
+    // frame.add(new AlterarCertificadoPanel());
+    // frame.add(new CadastroPanel());
     // frame.add(new ConsultarArquivosPanel());
     mostrarTela();
   }
