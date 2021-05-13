@@ -13,6 +13,8 @@ import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
 import General.ConsultarArquivosPanel;
 import General.FileHandler;
+import General.TecladoFoneticoFullPanel;
+import UserAuthentication.AlterarCertificadoPanel;
 import UserAuthentication.IdentUsuPanel;
 import Utilities.LogHandler;
 
@@ -89,13 +91,14 @@ class InterfaceTeste {
     // } catch (Exception e) {
     //   e.printStackTrace();
     // }
-    try {
-      new DatabaseHandler().seedUsers();
-      new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
-    } catch (Exception e) {
-      //TODO: handle exception
-    }
-    prepararInterfaceAutenticacao();
+    // try {
+    //   new DatabaseHandler().seedUsers();
+    //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
+    // } catch (Exception e) {
+    //   //TODO: handle exception
+    // }
+    // prepararInterfaceAutenticacao();
+    frame.add(new AlterarCertificadoPanel());
     // frame.add(new ConsultarArquivosPanel());
     mostrarTela();
   }

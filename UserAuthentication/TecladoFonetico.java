@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TecladoFonetico {
     
-    static String[] fonemas = {
+    public static String[] fonemas = {
         "BA", "BE", "BO", "CA", "CE", "CO", "DA", "DE", "DO", "FA", "FE", "FO", "GA", "GE", "GO", "HA", "HE", "HO"
     };
     

@@ -6,7 +6,7 @@ import java.awt.Font;
 
 public class CabecalhoPanel extends JPanel {
     
-    static CabecalhoPanel panel = new CabecalhoPanel();
+    public static CabecalhoPanel panel = new CabecalhoPanel();
 
     
     private static String composeLabelText(String fieldName, String content) {
