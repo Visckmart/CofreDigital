@@ -1,4 +1,4 @@
-package UserAuthentication;
+package General;
 import javax.swing.*;
 
 import java.awt.Color;
@@ -14,30 +14,21 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
-import General.CabecalhoPanel;
-import General.MenuPrincipalPanel;
-import General.TecladoFoneticoFullPanel;
 import Utilities.LogHandler;
 
-public class AlterarCertificadoPanel extends JPanel {
+public class AlterarCertificadoPanel extends GeneralPanel {
     
     JButton[] keys = new JButton[18];
     JTextArea pathLabel;
 
     public AlterarCertificadoPanel() {
+        super("Alterar Certificado", true);
         this.setLayout(null);
-        CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
-        cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        cabecalho.updateExtraInfo("Total de acessos", "10");
-        add(cabecalho);
+        
         this.prepararCertificateChooser(225, 240, 250, 35);
         this.prepararPathLabel(150, 300, 400, 50);
         this.prepararLabelErro(225, 240, 250, 20);
         this.prepararBotaoLogin(285, 450, 130, 35);
-        
-        
-        prepareBackButton(15, 200, 140, 35);
         
         LogHandler.logWithUser(3001);
     }

@@ -11,11 +11,12 @@ import java.util.List;
 import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
+import General.AlterarCertificadoPanel;
 import General.CadastroPanel;
 import General.ConsultarArquivosPanel;
 import General.FileHandler;
+import General.MenuPrincipalPanel;
 import General.TecladoFoneticoFullPanel;
-import UserAuthentication.AlterarCertificadoPanel;
 import UserAuthentication.IdentUsuPanel;
 import Utilities.LogHandler;
 
@@ -99,6 +100,7 @@ class InterfaceTeste {
     //   //TODO: handle exception
     // }
     prepararInterfaceAutenticacao();
+    // frame.add(new MenuPrincipalPanel());
     // frame.add(new AlterarCertificadoPanel());
     // frame.add(new CadastroPanel());
     // frame.add(new ConsultarArquivosPanel());
