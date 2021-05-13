@@ -26,9 +26,9 @@ public class MenuPrincipalPanel extends JPanel {
         JButton bt1 = new JButton("Cadastrar um novo usuário");
         bt1.setFont(new Font(null, Font.PLAIN, 15));
         bt1.setBounds(offsetX, offsetY, width, height/4);
-        bt3.addActionListener(new ActionListener() {
+        bt1.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            LogHandler.logWithUser(5002, UserState.emailAddress);
+            LogHandler.logWithUser(5002);
           }
         });
         add(bt1);
@@ -37,7 +37,7 @@ public class MenuPrincipalPanel extends JPanel {
         bt2.setFont(new Font(null, Font.PLAIN, 15));
         bt2.setBounds(offsetX, offsetY + height/4, width, height/4);
         bt2.setHorizontalAlignment(SwingConstants.CENTER);
-        bt3.addActionListener(new ActionListener() {
+        bt2.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
             LogHandler.logWithUser(5003);
           }
