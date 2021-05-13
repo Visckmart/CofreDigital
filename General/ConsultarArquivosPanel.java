@@ -16,6 +16,7 @@ import javax.crypto.SecretKey;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -54,23 +55,40 @@ public class ConsultarArquivosPanel extends JPanel {
         JScrollPane sp = new JScrollPane(j);
         sp.setBounds(15, 215, 670, 280);
         add(sp);
-        prepararDirChooser(530, 175, 155, 35);
+        prepararDirChooser(165, 175, 360, 35);
+        prepareListButton(550, 175, 140, 35);
         prepareBackButton(15, 175, 140, 35);
+    }
+    void prepareListButton(int offsetX, int offsetY, int width, int height) {
+        JButton listButton = new JButton("Consultar");
+        listButton.setBounds(offsetX, offsetY, width, height);
+        listButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                consultarPasta();
+            }
+        });
+        add(listButton);
     }
 
     File chosenDirectory;
+    JLabel directoryLabel;
     void prepararDirChooser(int offsetX, int offsetY, int width, int height) {
+        directoryLabel = new JLabel();
+        directoryLabel.setBounds(offsetX + 150 + 10, offsetY, width - 150, height);
+        add(directoryLabel);
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("./Pacote-T4"));
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         JButton input = new JButton("Escolher caminho...");
-        input.setBounds(offsetX, offsetY, width, height);
+        input.setBounds(offsetX, offsetY, 150, height);
         input.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(input);
                 chosenDirectory = fc.getSelectedFile();
+                
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    consultarPasta();
+                    directoryLabel.setText(chosenDirectory.getAbsolutePath());
+                    // consultarPasta();
                     // setFileList(ih.parseIndex(p));
                 } else {
                     System.out.println("Open command cancelled by user.");
