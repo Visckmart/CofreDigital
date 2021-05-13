@@ -37,9 +37,9 @@ public class DatabaseHandler {
     public void seedUsers() throws Exception {
         // Criando usuário padrão
         String userEmail = "user01@inf1416.puc-rio.br";
-        if(verifyUserEmail(userEmail) == UserState.INVALID) {
+        if(verifyUserEmail(userEmail) == UserLoginState.INVALID) {
             byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-            String password = PasswordHandler.encodePassword("123", "232").get();
+            String password = PasswordHandler.encodePassword("BABABABA", "232").get();
             registerUser(userEmail, certificate, password, "232", 0);
         }
     }
@@ -183,13 +183,17 @@ public class DatabaseHandler {
         return registros;
     }
 
-    public String getEncodedCertificate(String emailAddress) throws Exception {
+    public byte[] getEncodedCertificate(String emailAddress) throws Exception {
+        System.out.println(emailAddress);
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
             "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
         );
-
-        return rs.getString("certificado");
+        if (rs.next() == false) {
+            return null;
+        }
+        String certificado = rs.getString("certificado");
+        return certificado.getBytes();
     }
 
     public static void main(String[] args) throws Exception {
