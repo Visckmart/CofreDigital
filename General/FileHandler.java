@@ -7,7 +7,6 @@ import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 
-import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;

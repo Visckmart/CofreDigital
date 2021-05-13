@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import Authentication.UserState;
 import Utilities.LogHandler;
 
 public class MenuPrincipalPanel extends JPanel {
