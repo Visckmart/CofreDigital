@@ -1,6 +1,8 @@
 package UserAuthentication;
 import javax.swing.*;
 
+import Authentication.UserState;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.Color;
@@ -32,6 +34,7 @@ public class IdentUsuPanel extends JPanel {
         
         emailTF = new JTextField();
         emailTF.setBounds(offsetX + width*2/10 + 10, offsetY, (width*8/10 - 10), height);
+        emailTF.setText("user01@inf1416.puc-rio.br");
         this.add(emailTF);
     }
     
@@ -60,6 +63,7 @@ public class IdentUsuPanel extends JPanel {
             UserLoginState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (userState == UserLoginState.VALID) {
                 LogHandler.log(2003);
+                UserState.emailAddress = emailAddress;
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
                 frame.setContentPane(tfp);
