@@ -36,7 +36,7 @@ public class TecladoFoneticoPanel extends JPanel {
         tecladoFonetico = new TecladoFonetico();
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
         
-        LogHandler.log(3001, emailAddress);
+        LogHandler.logWithUser(3001);
     }
     
     private void prepararCampoDeSenha(int offsetX, int offsetY, int width, int height) {

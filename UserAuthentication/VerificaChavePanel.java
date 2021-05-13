@@ -15,6 +15,7 @@ import javax.swing.JPasswordField;
 import Authentication.AuthenticationHandler;
 import Database.DatabaseHandler;
 import General.MenuPrincipalPanel;
+import Utilities.LogHandler;
 import Authentication.UserState;
 
 public class VerificaChavePanel extends JPanel {
@@ -116,6 +117,7 @@ public class VerificaChavePanel extends JPanel {
 
             if (authHandler.verifyPrivateKey(privateKey, userCertificate)) {
                 UserState.privateKey = privateKey;
+                LogHandler.logWithUser(4002);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();

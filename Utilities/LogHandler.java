@@ -1,12 +1,13 @@
 package Utilities;
 import java.sql.Statement;
 
+import Authentication.UserState;
 import Database.DatabaseHandler;
 
 public class LogHandler {
     
-    public static void log(int codigo, String emailAddress, String fileName) {
-        String login_name = emailAddress == null ? "NULL" : "'"+emailAddress+"'";
+    public static void logWithUserAndFile(int codigo, String fileName) {
+        String login_name = UserState.emailAddress == null ? "NULL" : "'"+UserState.emailAddress+"'";
         String file_name = fileName == null ? "NULL" : "'"+fileName+"'";
         
         try {
@@ -25,11 +26,11 @@ public class LogHandler {
         }
     }
 
-    public static void log(int codigo, String emailAddress) {
-        log(codigo, emailAddress, null);
+    public static void logWithUser(int codigo) {
+        logWithUserAndFile(codigo, null);
     }
 
     public static void log(int codigo) {
-        log(codigo, null, null);
+        logWithUserAndFile(codigo, null);
     }
 }

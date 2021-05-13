@@ -69,14 +69,14 @@ public class DatabaseHandler {
             if (dateString != null) {
                 LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                 if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
-                    LogHandler.log(2004, email);
+                    LogHandler.logWithUser(2004);
                     return UserLoginState.BLOCKED;
                 }
             }
-            LogHandler.log(2003, email);
+            LogHandler.logWithUser(2003);
             return UserLoginState.VALID;
         } else {
-            LogHandler.log(2005, email);
+            LogHandler.logWithUser(2005);
             return UserLoginState.INVALID;
         }
     }

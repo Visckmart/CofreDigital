@@ -28,7 +28,7 @@ public class MenuPrincipalPanel extends JPanel {
         bt1.setBounds(offsetX, offsetY, width, height/4);
         bt3.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            LogHandler.log(5002, UserState.emailAddress);
+            LogHandler.logWithUser(5002, UserState.emailAddress);
           }
         });
         add(bt1);
@@ -39,7 +39,7 @@ public class MenuPrincipalPanel extends JPanel {
         bt2.setHorizontalAlignment(SwingConstants.CENTER);
         bt3.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
-            LogHandler.log(5003, UserState.emailAddress);
+            LogHandler.logWithUser(5003);
           }
         });
         add(bt2);
@@ -47,7 +47,7 @@ public class MenuPrincipalPanel extends JPanel {
         JButton bt3 = new JButton("<html><p style='text-align:center;'>Consultar pasta de arquivos<br>secretos do usuário</p></html>");
         bt3.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
-                LogHandler.log(5004, UserState.emailAddress);
+                LogHandler.logWithUser(5004);
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt3);
                 ConsultarArquivosPanel cap = new ConsultarArquivosPanel();
                 // cap.setFileList(IndexHandler.testIndexHandler());
@@ -65,8 +65,8 @@ public class MenuPrincipalPanel extends JPanel {
         bt4.setBounds(offsetX, offsetY + (height/4) * 3, width, height/4);
         bt4.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
-                LogHandler.log(5005, UserState.emailAddress);
-                LogHandler.log(9003, UserState.emailAddress);
+                LogHandler.logWithUser(5005);
+                LogHandler.logWithUser(9003);
                 JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bt4);
                 ConfirmacaoSaidaPanel cap = new ConfirmacaoSaidaPanel();
                 // cap.setFileList(IndexHandler.testIndexHandler());

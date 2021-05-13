@@ -28,7 +28,7 @@ public class ConfirmacaoSaidaPanel extends JPanel {
         backButton.setBounds(offsetX, offsetY, width, height);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                LogHandler.log(9004, UserState.emailAddress);
+                LogHandler.logWithUser(9004);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(backButton);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();
