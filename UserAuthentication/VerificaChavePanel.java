@@ -107,14 +107,15 @@ public class VerificaChavePanel extends JPanel {
     
     void nextStep() {
         try {
-            AuthenticationHandler ah = new AuthenticationHandler();
+            AuthenticationHandler authHandler = new AuthenticationHandler();
             byte[] content = Files.readAllBytes(chosenFile.toPath());
-            PrivateKey pk = ah.privateKeyFromFile(content, new String(passwordTF.getPassword()).getBytes(StandardCharsets.UTF_8));
-            UserState.privateKey = pk;
-            byte[] certificateDB = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
-            Certificate c = new AuthenticationHandler().certificateFromFile(certificateDB);
+            String fraseSecreta = new String(passwordTF.getPassword());
+            PrivateKey privateKey = authHandler.privateKeyFromFile(content, fraseSecreta.getBytes(StandardCharsets.UTF_8));
+            byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
+            Certificate userCertificate = authHandler.certificateFromFile(userCertificateContent);
 
-            if (ah.verifyPrivateKey(pk, c)) {
+            if (authHandler.verifyPrivateKey(privateKey, userCertificate)) {
+                UserState.privateKey = privateKey;
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();
