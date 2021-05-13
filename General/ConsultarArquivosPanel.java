@@ -4,9 +4,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.cert.Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -21,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Authentication.AuthenticationHandler;
 import Authentication.UserState;
+import Database.DatabaseHandler;
 import Utilities.FileInfo;
   
 public class ConsultarArquivosPanel extends JPanel {
@@ -48,12 +52,13 @@ public class ConsultarArquivosPanel extends JPanel {
         this.setLayout(null);
         // adding it to JScrollPane
         JScrollPane sp = new JScrollPane(j);
-        sp.setBounds(15, 210, 670, 280);
+        sp.setBounds(15, 215, 670, 280);
         add(sp);
-        prepararDirChooser(210, 175, 175, 30);
-        prepareBackButton(15, 175, 175, 30);
+        prepararDirChooser(530, 175, 155, 35);
+        prepareBackButton(15, 175, 140, 35);
     }
 
+    File chosenDirectory;
     void prepararDirChooser(int offsetX, int offsetY, int width, int height) {
         final JFileChooser fc = new JFileChooser();
         fc.setCurrentDirectory(new File("./Pacote-T4"));
@@ -63,28 +68,9 @@ public class ConsultarArquivosPanel extends JPanel {
         input.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(input);
+                chosenDirectory = fc.getSelectedFile();
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    
-                    // IndexHandler ih = new IndexHandler();
-                    System.out.println(UserState.privateKey);
-                    Path p = FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.env");
-                    System.out.println(fc.getSelectedFile().getAbsolutePath());
-                    // File env = new File(fc.getSelectedFile().getAbsolutePath() + "/index.env");
-                    try {
-                        byte[] enve = Files.readAllBytes(p);
-                        SecretKey sk = new FileHandler().decryptEnvelope(UserState.privateKey, enve);
-                        System.out.println(sk);
-                        byte[] arq = Files.readAllBytes(FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.enc"));
-                        byte[] fileContent = new FileHandler().decryptFile(sk, arq);
-
-                        System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fileContent)));
-                        List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
-                        System.out.println(fileInfos);
-                        setFileList(fileInfos);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                
+                    consultarPasta();
                     // setFileList(ih.parseIndex(p));
                 } else {
                     System.out.println("Open command cancelled by user.");
@@ -95,7 +81,7 @@ public class ConsultarArquivosPanel extends JPanel {
     }
 
     void prepareBackButton(int offsetX, int offsetY, int width, int height) {
-        JButton backButton = new JButton("Voltar ao menu");
+        JButton backButton = new JButton("<   Voltar ao menu");
         backButton.setBounds(offsetX, offsetY, width, height);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -106,6 +92,24 @@ public class ConsultarArquivosPanel extends JPanel {
             }
         });
         add(backButton);
+    }
+
+    void consultarPasta() {
+        if (chosenDirectory == null) {
+            setFileList(new ArrayList<FileInfo>());
+            return;
+        }
+        String directory = chosenDirectory.getAbsolutePath();
+        try {
+            byte[] fileContent = new FileHandler().decryptAndVerifyFile(directory, "index");
+
+            System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fileContent)));
+            List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
+            System.out.println(fileInfos);
+            setFileList(fileInfos);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     void setFileList(List<FileInfo> fileInfoList) {

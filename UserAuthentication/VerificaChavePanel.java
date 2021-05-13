@@ -1,5 +1,6 @@
 package UserAuthentication;
 import javax.crypto.BadPaddingException;
+import java.security.cert.Certificate;
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -110,12 +111,15 @@ public class VerificaChavePanel extends JPanel {
             byte[] content = Files.readAllBytes(chosenFile.toPath());
             PrivateKey pk = ah.privateKeyFromFile(content, new String(passwordTF.getPassword()).getBytes(StandardCharsets.UTF_8));
             UserState.privateKey = pk;
-            System.out.println(pk);
-            // System.out.println(DatabaseHandler.getInstance().getEncodedCertificate("aa"));
-            JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-            frame.setContentPane(new MenuPrincipalPanel());
-            frame.invalidate();
-            frame.validate();
+            byte[] certificateDB = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
+            Certificate c = new AuthenticationHandler().certificateFromFile(certificateDB);
+
+            if (ah.verifyPrivateKey(pk, c)) {
+                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                frame.setContentPane(new MenuPrincipalPanel());
+                frame.invalidate();
+                frame.validate();
+            }
         } catch (BadPaddingException e) {
             e.printStackTrace();
             System.out.println("Frase secreta incorreta.");
