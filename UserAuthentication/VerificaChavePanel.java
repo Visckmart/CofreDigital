@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.PrivateKey;
+import java.awt.Color;
 
 import javax.swing.JPasswordField;
 
@@ -18,6 +19,7 @@ import Authentication.AuthenticationHandler;
 import Database.DatabaseHandler;
 import General.MenuPrincipalPanel;
 import Utilities.LogHandler;
+import Utilities.UserLoginState;
 import Authentication.UserState;
 
 public class VerificaChavePanel extends JPanel {
@@ -30,6 +32,7 @@ public class VerificaChavePanel extends JPanel {
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
+        this.prepararLabelErro(210, 350, 280, 30);
         this.prepararBotaoLogin(285, 400, 130, 35);
     }
     
@@ -42,6 +45,14 @@ public class VerificaChavePanel extends JPanel {
         passwordTF = new JPasswordField();
         passwordTF.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
         this.add(passwordTF);
+    }
+    
+    JLabel errorLabel;
+    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.red);
+        errorLabel.setBounds(offsetX, offsetY, width, height);
+        this.add(errorLabel);
     }
     
     File chosenFile;
@@ -109,30 +120,47 @@ public class VerificaChavePanel extends JPanel {
     }
     
     void nextStep() {
+        AuthenticationHandler authHandler;
+        boolean validPrivateKey;
         try {
-            AuthenticationHandler authHandler = new AuthenticationHandler();
-            byte[] content = Files.readAllBytes(chosenFile.toPath());
-            String fraseSecreta = new String(passwordTF.getPassword());
-            PrivateKey privateKey = authHandler.privateKeyFromFile(content, fraseSecreta.getBytes(StandardCharsets.UTF_8));
-            byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
-            Certificate userCertificate = authHandler.certificateFromFile(userCertificateContent);
-
-            if (authHandler.verifyPrivateKey(privateKey, userCertificate)) {
-                UserState.privateKey = privateKey;
-                String x = ((X509Certificate)userCertificate).getSubjectDN().getName();
-                int a = x.indexOf("CN=") + 3;
-                UserState.username = (String)x.subSequence(a, x.indexOf(",", a));
+            authHandler = new AuthenticationHandler();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        String fraseSecreta = new String(passwordTF.getPassword());
+        try {
+            validPrivateKey = authHandler.verifyUserPrivateKey(chosenFile.toPath(), fraseSecreta, emailAddress);
+            if (validPrivateKey) {
                 LogHandler.logWithUser(4002);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();
                 frame.validate();
+                return;
+            } else {
             }
         } catch (BadPaddingException e) {
-            e.printStackTrace();
+            errorLabel.setText("Frase secreta incorreta.");
             System.out.println("Frase secreta incorreta.");
+            try {
+                boolean userBlocked = DatabaseHandler.getInstance().verifyUserEmail(emailAddress) == UserLoginState.BLOCKED;
+                if (userBlocked) {
+                    LogHandler.logWithUser(4007);
+                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                    IdentUsuPanel vcp = new IdentUsuPanel();
+                    frame.setContentPane(vcp);
+                    frame.invalidate();
+                    frame.validate();
+                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                return;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
     }
     

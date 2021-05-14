@@ -1,7 +1,17 @@
 package Authentication;
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import java.security.cert.X509Certificate;
+
+import Database.DatabaseHandler;
+import Utilities.LogHandler;
+
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
@@ -10,6 +20,7 @@ import java.util.Base64;
 import java.util.Random;
 
 public class AuthenticationHandler {
+
     private final Signature signature;
     private final SecureRandom rng;
     private final Cipher cipher;
@@ -17,6 +28,7 @@ public class AuthenticationHandler {
     private final KeyFactory keyFactory;
     private final CertificateFactory certificateFactory;
     private final Base64.Decoder decoder;
+
     public AuthenticationHandler() throws Exception {
         signature = Signature.getInstance("SHA1withRSA");
         rng = SecureRandom.getInstance("SHA1PRNG");
@@ -67,6 +79,58 @@ public class AuthenticationHandler {
         byte[] decodedCertificate = decoder.decode(encodedCertificate);
 
         return certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
+    }
+
+    static String getUsernameFromCertificate(Certificate cert) {
+        String fullName = ((X509Certificate)cert).getSubjectDN().getName();
+        int usernameStart = fullName.indexOf("CN=") + 3;
+        int usernameEnd = fullName.indexOf(",", usernameStart);
+        return (String)fullName.subSequence(usernameStart, usernameEnd);
+    }
+
+    public boolean verifyUserPrivateKey(Path privateKeyPath, String secretKey, String emailAddress) throws BadPaddingException {
+        byte[] privateKeyContent;
+        try {
+            privateKeyContent = Files.readAllBytes(privateKeyPath);
+        } catch (IOException exc) {
+            LogHandler.log(4004);
+            return false;
+        }
+        
+        PrivateKey privateKey;
+        try {
+            privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
+        } catch (BadPaddingException badPaddingException) {
+            LogHandler.log(4005);
+            try {
+                DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            throw badPaddingException;
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            return false;
+        }
+        
+        try {
+            byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
+            Certificate userCertificate = this.certificateFromFile(userCertificateContent);
+            boolean validKey = this.verifyPrivateKey(privateKey, userCertificate);
+
+            
+            if (validKey) {
+                DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
+                UserState.privateKey = privateKey;
+                UserState.username = AuthenticationHandler.getUsernameFromCertificate(userCertificate);
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception exc) {
+            LogHandler.log(4006);
+            return false;
+        }
     }
 
 //    public static void main(String[] args) throws Exception {
