@@ -12,7 +12,9 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
+import Database.DatabaseHandler;
 import Utilities.LogHandler;
+import Utilities.UserLoginState;
 
 public class TecladoFoneticoPanel extends JPanel {
     
@@ -180,6 +182,14 @@ public class TecladoFoneticoPanel extends JPanel {
                 frame.getRootPane().setDefaultButton(vcp.loginButton);
                 LogHandler.log(3002);
             } else {
+                if (DatabaseHandler.getInstance().verifyUserEmail(emailAddress) == UserLoginState.BLOCKED) {
+                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                    IdentUsuPanel vcp = new IdentUsuPanel();
+                    frame.setContentPane(vcp);
+                    frame.invalidate();
+                    frame.validate();
+                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                }
                 errorLabel.setText("Senha incorreta.");
                 tecladoFonetico.limparDigitacao();
                 tecladoFonetico.renovarCombinacoes();

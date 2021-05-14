@@ -91,8 +91,8 @@ public class PasswordHandler {
     }
 
     public static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
-        System.out.println("IGNORANDO TECLADO FONETICO");
-        if (true) return true;
+        // System.out.println("IGNORANDO TECLADO FONETICO");
+        // if (true) return true;
         String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
         String passwordHash = pwdAndSalt[0];
         String salt = pwdAndSalt[1];
@@ -101,8 +101,12 @@ public class PasswordHandler {
         List<String> allCombinations = generatePasswordCombinations(gruposFoneticosDigitados).get(0);
         for (String phoneticCombination : allCombinations) {
             Optional<String> encodedPassword = PasswordHandler.encodePassword(phoneticCombination, salt);
-            if (encodedPassword.get().equals(pwdAndSalt[0])) { return true; }
+            if (encodedPassword.get().equals(pwdAndSalt[0])) {
+                DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
+                return true;
+            }
         }
+        DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
         return false;
     }
 }
