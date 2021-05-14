@@ -5,6 +5,7 @@ CREATE TABLE USUARIOS (
 	salt varchar(1024),
 	certificado BLOB,
 	attempts INTEGER default 0,
+	queries INTEGER default 0,
 	timeout TIMESTAMP,
 	gid INTEGER,
 	FOREIGN  KEY (gid)
@@ -21,7 +22,7 @@ CREATE TABLE MENSAGENS (
 	codigo INTEGER PRIMARY KEY,
 	mensagem varchar(2048)
 );
-INSERT INTO USUARIOS values('aa', '2a52ff396ed64e9229420d39664499cfd0623eaa', 'sal99', 'certificado', 0, NULL, 0);
+INSERT INTO USUARIOS values('aa', '2a52ff396ed64e9229420d39664499cfd0623eaa', 'sal99', 'certificado', 0, 0, NULL, 0);
 INSERT INTO MENSAGENS VALUES
 (1001, 'Sistema iniciado.'),
 (1002, 'Sistema encerrado.'),

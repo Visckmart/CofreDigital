@@ -176,35 +176,49 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     
     void nextStep() {
         if (fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6) {
-            if (fonemasCorretos == null) {
-                System.out.println("Ir para confirmacao");
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados);
-                vcp.setSuccessHandler(successHandler);
-                frame.setContentPane(vcp);
-                frame.invalidate();
-                frame.validate();
-                frame.getRootPane().setDefaultButton(vcp.loginButton);
-            } else {
-                if (fonemasCorretos.equals(fonemasDigitados)) {
-                    System.out.println("Confirmado");
-                    if (successHandler == SuccessHandler.CADASTRAR) {
-                        // DatabaseHandler.getInstance().registerUser(email, certificate, encryptedPassword, salt, gid);
-                    } else {
-                        // DatabaseHandler.getInstance()
-                    }
+            boolean noSequentialDuplicates = true;
+
+            String ultimoFonema="";
+            for (String fonema : fonemasDigitados) {
+                if (fonema.equals(ultimoFonema)) {
+                    noSequentialDuplicates = false;
+                    break;
+                }
+                ultimoFonema = fonema;
+            }
+            if (noSequentialDuplicates) {
+                if (fonemasCorretos == null) {
+                    System.out.println("Ir para confirmacao");
                     JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    MenuPrincipalPanel vcp = new MenuPrincipalPanel();
+                    TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados);
+                    vcp.setSuccessHandler(successHandler);
                     frame.setContentPane(vcp);
                     frame.invalidate();
                     frame.validate();
+                    frame.getRootPane().setDefaultButton(vcp.loginButton);
                 } else {
-                    fonemasDigitados.clear();
-                    updateInterface();
-                    System.out.println("Confirmacao invalida");
-                    errorLabel.setText("Confirmação de senha incorreta");
-                    
+                    if (fonemasCorretos.equals(fonemasDigitados)) {
+                        System.out.println("Confirmado");
+                        if (successHandler == SuccessHandler.CADASTRAR) {
+                            // DatabaseHandler.getInstance().registerUser(email, certificate, encryptedPassword, salt, gid);
+                        } else {
+                            // DatabaseHandler.getInstance()
+                        }
+                        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                        MenuPrincipalPanel vcp = new MenuPrincipalPanel();
+                        frame.setContentPane(vcp);
+                        frame.invalidate();
+                        frame.validate();
+                    } else {
+                        fonemasDigitados.clear();
+                        updateInterface();
+                        System.out.println("Confirmacao invalida");
+                        errorLabel.setText("Confirmação de senha incorreta");
+
+                    }
                 }
+            } else {
+                errorLabel.setText("Não use fonemas iguais em sequência.");
             }
         } else {
             errorLabel.setText("Quantidade de fonemas inválida.");

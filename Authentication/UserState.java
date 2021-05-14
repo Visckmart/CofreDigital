@@ -8,7 +8,11 @@ public class UserState {
     public static String username;
     public static PrivateKey privateKey;
     public static Certificate certificate;
-    
+    public static int attempts;
+    public static int queries;
+    public static int totalUsers;
+    public static UserGroup group;
+
     public static Certificate newUserCertificate;
     public static String newUserGroup;
 }
