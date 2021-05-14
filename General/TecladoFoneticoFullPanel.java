@@ -7,12 +7,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
+import Database.DatabaseHandler;
 import UserAuthentication.TecladoFonetico;
 import Utilities.LogHandler;
 
@@ -23,6 +25,10 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
 
     List<String> fonemasDigitados = new ArrayList<String>();
     List<String> fonemasCorretos;
+
+    public enum SuccessHandler {
+        CADASTRAR, ALTERAR
+    }
 
     public TecladoFoneticoFullPanel(String title, List<String> newPassword) {
         super(title, true);
@@ -162,6 +168,11 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         fonemasDigitados.add(TecladoFonetico.fonemas[index]);
         updateInterface();
     }
+
+    SuccessHandler successHandler;
+    void setSuccessHandler(SuccessHandler handler) {
+        successHandler = handler;
+    }
     
     void nextStep() {
         if (fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6) {
@@ -169,6 +180,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                 System.out.println("Ir para confirmacao");
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados);
+                vcp.setSuccessHandler(successHandler);
                 frame.setContentPane(vcp);
                 frame.invalidate();
                 frame.validate();
@@ -176,6 +188,11 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             } else {
                 if (fonemasCorretos.equals(fonemasDigitados)) {
                     System.out.println("Confirmado");
+                    if (successHandler == SuccessHandler.CADASTRAR) {
+                        // DatabaseHandler.getInstance().registerUser(email, certificate, encryptedPassword, salt, gid);
+                    } else {
+                        // DatabaseHandler.getInstance()
+                    }
                     JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                     MenuPrincipalPanel vcp = new MenuPrincipalPanel();
                     frame.setContentPane(vcp);

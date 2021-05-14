@@ -14,6 +14,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
+import General.TecladoFoneticoFullPanel.SuccessHandler;
 import Utilities.LogHandler;
 
 public class AlterarCertificadoPanel extends GeneralPanel {
@@ -127,6 +128,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         }
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
         TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Nova Senha", null);
+        vcp.setSuccessHandler(SuccessHandler.ALTERAR);
         frame.setContentPane(vcp);
         frame.invalidate();
         frame.validate();
