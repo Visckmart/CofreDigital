@@ -1,9 +1,13 @@
 package General;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +25,11 @@ import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import Utilities.FileInfo;
-  
+import java.awt.event.*;
+
 public class ConsultarArquivosPanel extends GeneralPanel {
     
-    JTable listaArquivos;
+    ListaArquivosTable listaArquivos;
   
     // Constructor
     public ConsultarArquivosPanel() {
@@ -34,7 +39,18 @@ public class ConsultarArquivosPanel extends GeneralPanel {
 
         listaArquivos = new ListaArquivosTable();
         add(listaArquivos);
+        
 
+        MouseAdapter doubleClickHandler = new MouseAdapter() {
+            public void mouseClicked(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    JTable target = (JTable)event.getSource();
+                    int row = target.getSelectedRow();
+                    saveRowAsFile(row);
+                }
+            }
+        };
+        listaArquivos.addMouseListener(doubleClickHandler);
         JScrollPane scrollPane = new JScrollPane(listaArquivos);
         scrollPane.setBounds(20, 225, 660, 280);
         add(scrollPane);
@@ -110,7 +126,64 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         }
     }
 
+    public void saveRowAsFile(int row) {
+        final JFileChooser fc = new JFileChooser();
+        fc.setCurrentDirectory(new File("~/Downloads"));
+        File defaultName = new File(fileInfoList.get(row).nomeOriginal);
+        fc.setSelectedFile(defaultName);
+        int saveDialogOption = fc.showSaveDialog(this);
+        if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
+            decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
+            // final String content = "a";
+            // try (
+            //     final BufferedWriter writer = Files.newBufferedWriter(fc.getSelectedFile().toPath()
+            //     ,
+            //         StandardCharsets.UTF_8, StandardOpenOption.CREATE);
+            // ) {
+            //     writer.write(content);
+            //     writer.flush();
+            // } catch (Exception e) {
+            //     e.printStackTrace();
+            // }
+            // consultarPasta();
+            // setFileList(ih.parseIndex(p));
+        } else {
+            System.out.println("Open command cancelled by user.");
+        }
+    }
+
+    void decryptFileAndSaveAs(File file, File destination) {
+        System.out.println(file);
+        System.out.println(destination);
+        System.out.println(chosenDirectory.getAbsolutePath());
+        System.out.println(file.getName());
+        try {
+            byte[] x = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
+            // System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(x)).toString());
+            try {
+                System.out.println(destination.toPath());
+                Files.write(destination.toPath(), x);
+                // writer.
+                // writer.write(x);
+                // writer.write(x);
+                // writer.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void doubleClickedRow(int row) {
+        System.out.println(row);
+        System.out.println(fileInfoList.get(row));
+    }
+
+    List<FileInfo> fileInfoList;
+
     void setFileList(List<FileInfo> fileInfoList) {
+        this.fileInfoList = fileInfoList;
         DefaultTableModel tableModel = (DefaultTableModel)listaArquivos.getModel();
         tableModel.setRowCount(0);
         for (int i = 0; i < fileInfoList.size(); i++) {

@@ -44,6 +44,7 @@ public class VerificaChavePanel extends JPanel {
         
         passwordTF = new JPasswordField();
         passwordTF.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
+        passwordTF.setText("user01");
         this.add(passwordTF);
     }
     
@@ -55,11 +56,11 @@ public class VerificaChavePanel extends JPanel {
         this.add(errorLabel);
     }
     
-    File chosenFile;
+    File chosenFile = new File("/Users/victormartins/Documents/CofreDigital/./Pacote-T4/Keys/user01-pkcs8-des.key");
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
+        // fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
         JButton input = new JButton("Escolher arquivo da chave privada...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
@@ -68,6 +69,7 @@ public class VerificaChavePanel extends JPanel {
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     chosenFile = fc.getSelectedFile();
+                    System.out.println(chosenFile);
                     //This is where a real application would open the file.
                     System.out.println("Opening: " + chosenFile.getName() + ".");
                 } else {

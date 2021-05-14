@@ -38,6 +38,7 @@ public class TecladoFoneticoPanel extends JPanel {
         tecladoFonetico = new TecladoFonetico();
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
         
+        this.loginButton.setEnabled(true);
         LogHandler.logWithUser(3001);
     }
     
