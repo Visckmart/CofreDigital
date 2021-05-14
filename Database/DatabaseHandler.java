@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import Authentication.PasswordHandler;
+import Authentication.UserGroup;
+import Authentication.UserState;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 
@@ -194,6 +196,40 @@ public class DatabaseHandler {
         }
         String certificado = rs.getString("certificado");
         return certificado.getBytes();
+    }
+
+    public void updateUserCertificate(String emailAddress, byte[] certificate)  throws Exception {
+        PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET certificado=? where email=?");
+        statement.setBytes(1, certificate);
+        statement.setString(2, emailAddress);
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void updateUserPassword(String emailAddress, String senha, String salt)  throws Exception {
+        PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET senha=?, salt=? where email=?");
+        statement.setString(1, senha);
+        statement.setString(2, salt);
+        statement.setString(3, emailAddress);
+        statement.executeUpdate();
+        statement.close();
+    }
+
+    public void updateUserState(String emailAddress) throws Exception {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+            "SELECT * from USUARIOS where email = '" + emailAddress + "'"
+        );
+        UserState.emailAddress = rs.getString("email");
+        UserState.attempts = rs.getInt("attempts");
+        UserState.group = rs.getInt("gid") == 0 ? UserGroup.USER : UserGroup.ADMIN;
+        UserState.queries = rs.getInt("queries");
+        rs.close();
+
+        statement = connection.createStatement();
+        rs = statement.executeQuery("SELECT * from USUARIOS");
+        rs.last();
+        UserState.totalUsers = rs.getRow();
     }
 
     public static void main(String[] args) throws Exception {

@@ -5,6 +5,7 @@ CREATE TABLE USUARIOS (
 	salt varchar(1024),
 	certificado BLOB,
 	attempts INTEGER default 0,
+	queries INTEGER default 0,
 	timeout TIMESTAMP,
 	gid INTEGER,
 	FOREIGN  KEY (gid)
