@@ -47,7 +47,7 @@ public class DatabaseHandler {
     }
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
-        PreparedStatement statement = connection.prepareStatement("insert into USUARIOS values(?, ?, ?, ?, NULL, NULL, ?);");
+        PreparedStatement statement = connection.prepareStatement("insert into USUARIOS values(?, ?, ?, ?, NULL, NULL, NULL, ?);");
         if(verifyUserEmail(email) != UserLoginState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
@@ -101,11 +101,11 @@ public class DatabaseHandler {
                         statement.setString(2, email);
                     }
                     else {
-                        statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email=?");
+                        statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
                         statement.setString(1, email);
                     }
                 } else {
-                    statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes') where email=?");
+                    statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
                     statement.setString(1, email);
                 }
                 statement.executeUpdate();
@@ -228,8 +228,12 @@ public class DatabaseHandler {
 
         statement = connection.createStatement();
         rs = statement.executeQuery("SELECT * from USUARIOS");
-        rs.last();
-        UserState.totalUsers = rs.getRow();
+        int rowCount=0;
+        while(rs.next())
+        {
+            rowCount++;
+        }
+        UserState.totalUsers = rowCount;
     }
 
     public static void main(String[] args) throws Exception {
@@ -247,7 +251,10 @@ public class DatabaseHandler {
          System.out.println(handler.verifyUserEmail("th@232.com"));
          handler.registerAttempts("th@232.com", false);
          handler.registerAttempts("th@232.com", false);
+         handler.updateUserState("th@232.com");
+         System.out.println(UserState.attempts);
          handler.registerAttempts("th@232.com", true);
+         System.out.println(UserState.attempts);
          // VALID
          System.out.println(handler.verifyUserEmail("th@232.com"));
          handler.registerAttempts("th@232.com", false);
@@ -255,6 +262,8 @@ public class DatabaseHandler {
          // VALID
          System.out.println(handler.verifyUserEmail("th@232.com"));
          handler.registerAttempts("th@232.com", false);
+         handler.updateUserState("th@232.com");
+         System.out.println(UserState.attempts);
          // BLOCKED
          System.out.println(handler.verifyUserEmail("th@232.com"));
          handler.registerAttempts("th@232.com", true);
