@@ -12,4 +12,7 @@ public class UserState {
     public static int queries;
     public static int totalUsers;
     public static UserGroup group;
+
+    public static Certificate newUserCertificate;
+    public static String newUserGroup;
 }
