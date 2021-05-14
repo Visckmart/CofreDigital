@@ -17,7 +17,6 @@ public class GeneralPanel extends JPanel {
         this.setLayout(null);
 
         CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
         cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
         cabecalho.updateExtraInfo("Total de acessos", "10");
         add(cabecalho);
@@ -29,7 +28,7 @@ public class GeneralPanel extends JPanel {
         add(titleLabel);
 
         if (backToMenu) {
-            prepareBackButton(20, cabecalho.getHeight() + 55, 140, 35);
+            prepareBackButton(20, cabecalho.getHeight() + 55, 150, 35);
         }
     }
 

@@ -16,7 +16,7 @@ import Authentication.PasswordHandler;
 import UserAuthentication.TecladoFonetico;
 import Utilities.LogHandler;
 
-public class TecladoFoneticoFullPanel extends JPanel {
+public class TecladoFoneticoFullPanel extends GeneralPanel {
     
     JButton[] keys = new JButton[18];
     JTextPane feedbackField = new JTextPane();
@@ -24,22 +24,14 @@ public class TecladoFoneticoFullPanel extends JPanel {
     List<String> fonemasDigitados = new ArrayList<String>();
     List<String> fonemasCorretos;
 
-    public TecladoFoneticoFullPanel(List<String> newPassword) {
+    public TecladoFoneticoFullPanel(String title, List<String> newPassword) {
+        super(title, true);
         this.fonemasCorretos = newPassword;
 
-        this.setLayout(null);
-        CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
-        cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        cabecalho.updateExtraInfo("Total de acessos", "10");
-        add(cabecalho);
-        this.prepararCampoDeSenha(257, 200, 185, 35);
-        this.prepararLabelErro(225, 240, 250, 20);
-        this.prepararBotoes(250, 250, 200, 200);
+        this.prepararCampoDeSenha(257, 180, 185, 35);
+        this.prepararLabelErro(225, 220, 250, 20);
+        this.prepararBotoes(250, 245, 200, 200);
         this.prepararBotaoLogin(285, 450, 130, 35);
-        
-        
-        prepareBackButton(15, 200, 140, 35);
         updatePasswordFeedback(0);
         
         LogHandler.logWithUser(3001);
@@ -176,7 +168,7 @@ public class TecladoFoneticoFullPanel extends JPanel {
             if (fonemasCorretos == null) {
                 System.out.println("Ir para confirmacao");
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel(fonemasDigitados);
+                TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados);
                 frame.setContentPane(vcp);
                 frame.invalidate();
                 frame.validate();

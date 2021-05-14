@@ -19,13 +19,13 @@ public class MenuPrincipalPanel extends GeneralPanel {
         // cabecalho.updateExtraInfo("Total de acessos", "10");
         // add(cabecalho);
 
-        prepararCorpo(225, 200, 250, 300);
+        prepararCorpo(225, 190, 255, 300);
       }
       
       void prepararCorpo(int offsetX, int offsetY, int width, int height) {
         JButton bt1 = new JButton("Cadastrar um novo usuário");
         bt1.setFont(new Font(null, Font.PLAIN, 15));
-        bt1.setBounds(offsetX, offsetY, width, height/4);
+        bt1.setBounds(offsetX, offsetY, width, height/4 - 5);
         bt1.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
               LogHandler.logWithUser(5002);
@@ -41,7 +41,7 @@ public class MenuPrincipalPanel extends GeneralPanel {
         
         JButton bt2 = new JButton("<html><p style='text-align:center;'>Alterar senha pessoal e<br>certificado digital do usuário</p.</html>");
         bt2.setFont(new Font(null, Font.PLAIN, 15));
-        bt2.setBounds(offsetX, offsetY + height/4, width, height/4);
+        bt2.setBounds(offsetX, offsetY + height/4, width, height/4 - 5);
         bt2.setHorizontalAlignment(SwingConstants.CENTER);
         bt2.addActionListener(new ActionListener() {
           public void actionPerformed(ActionEvent e) {
@@ -69,12 +69,12 @@ public class MenuPrincipalPanel extends GeneralPanel {
               }
             });
         bt3.setFont(new Font(null, Font.PLAIN, 15));
-        bt3.setBounds(offsetX, offsetY + (height/4) * 2, width, height/4);
+        bt3.setBounds(offsetX, offsetY + (height/4) * 2, width, height/4 - 5);
         add(bt3);
 
         JButton bt4 = new JButton("Sair do Sistema");
         bt4.setFont(new Font(null, Font.PLAIN, 15));
-        bt4.setBounds(offsetX, offsetY + (height/4) * 3, width, height/4);
+        bt4.setBounds(offsetX, offsetY + (height/4) * 3, width, height/4 - 5);
         bt4.addActionListener(new ActionListener() {
               public void actionPerformed(ActionEvent e) {
                 LogHandler.logWithUser(5005);

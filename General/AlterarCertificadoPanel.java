@@ -23,12 +23,11 @@ public class AlterarCertificadoPanel extends GeneralPanel {
 
     public AlterarCertificadoPanel() {
         super("Alterar Certificado", true);
-        this.setLayout(null);
         
-        this.prepararCertificateChooser(225, 240, 250, 35);
-        this.prepararPathLabel(150, 300, 400, 50);
+        this.prepararCertificateChooser(225, 250, 250, 35);
+        this.prepararPathLabel(150, 290, 400, 50);
         this.prepararLabelErro(225, 240, 250, 20);
-        this.prepararBotaoLogin(285, 450, 130, 35);
+        this.prepararBotaoLogin(285, 350, 130, 35);
         
         LogHandler.logWithUser(3001);
     }
@@ -127,7 +126,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
             // Atualizar certificado
         }
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel(null);
+        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Nova Senha", null);
         frame.setContentPane(vcp);
         frame.invalidate();
         frame.validate();

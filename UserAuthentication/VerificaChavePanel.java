@@ -1,6 +1,8 @@
 package UserAuthentication;
 import javax.crypto.BadPaddingException;
 import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
@@ -117,6 +119,9 @@ public class VerificaChavePanel extends JPanel {
 
             if (authHandler.verifyPrivateKey(privateKey, userCertificate)) {
                 UserState.privateKey = privateKey;
+                String x = ((X509Certificate)userCertificate).getSubjectDN().getName();
+                int a = x.indexOf("CN=") + 3;
+                UserState.username = (String)x.subSequence(a, x.indexOf(",", a));
                 LogHandler.logWithUser(4002);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new MenuPrincipalPanel());

@@ -5,17 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class CadastroPanel extends JPanel {
+public class CadastroPanel extends GeneralPanel {
     
     String emailAddress;
     public CadastroPanel() {
-        this.setLayout(null);
-        
-        CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
-        cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        cabecalho.updateExtraInfo("Total de acessos", "10");
-        add(cabecalho);
+        super("Cadastrar Novo Usuário", true);
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoGrupo(210, 320, 320, 50);
@@ -101,7 +95,7 @@ public class CadastroPanel extends JPanel {
     
     void nextStep() {
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel(null);
+        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null);
         frame.setContentPane(vcp);
         frame.invalidate();
         frame.validate();

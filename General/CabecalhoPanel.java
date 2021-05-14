@@ -1,6 +1,8 @@
 package General;
 import javax.swing.*;
 
+import Authentication.UserState;
+
 import java.awt.Color;
 import java.awt.Font;
 
@@ -21,7 +23,7 @@ public class CabecalhoPanel extends JPanel {
     private CabecalhoPanel() {
         this.setLayout(null);
 
-        loginLabel = new JLabel(composeLabelText("Login", ""));
+        loginLabel = new JLabel(composeLabelText("Login", UserState.emailAddress));
         loginLabel.setFont(new Font(null, Font.PLAIN, 18));
         loginLabel.setBounds(0, 0, 350, 25);
         loginLabel.setBackground(Color.pink);
@@ -35,7 +37,7 @@ public class CabecalhoPanel extends JPanel {
         // groupLabel.setOpaque(true);
         add(groupLabel);
 
-        usernameLabel = new JLabel(composeLabelText("Nome de usuário", ""));
+        usernameLabel = new JLabel(composeLabelText("Nome de usuário", UserState.username));
         usernameLabel.setFont(new Font(null, Font.PLAIN, 18));
         usernameLabel.setBounds(0, 60, 350, 25);
         usernameLabel.setBackground(Color.green);

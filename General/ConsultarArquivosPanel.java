@@ -4,15 +4,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.SecretKey;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -28,36 +22,22 @@ import Authentication.UserState;
 import Database.DatabaseHandler;
 import Utilities.FileInfo;
   
-public class ConsultarArquivosPanel extends JPanel {
+public class ConsultarArquivosPanel extends GeneralPanel {
     
-    JTable j;
+    JTable listaArquivos;
   
     // Constructor
     public ConsultarArquivosPanel() {
+        super("Consulta de Arquivos", true);
+        prepararDirChooser(175, 180, 360, 35);
+        prepareListButton(560, 180, 120, 35);
 
-        CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
-        cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        cabecalho.updateExtraInfo("Total de acessos", "10");
-        add(cabecalho);
+        listaArquivos = new ListaArquivosTable();
+        add(listaArquivos);
 
-        j = new ListaArquivosTable();
-        add(j);
-
-        File path = new File("./Pacote-T4/Files");
-        File[] files = path.listFiles();
-        for (File file : files) {
-            System.out.println(file.getName());
-        }
-        
-        this.setLayout(null);
-        // adding it to JScrollPane
-        JScrollPane sp = new JScrollPane(j);
-        sp.setBounds(15, 215, 670, 280);
-        add(sp);
-        prepararDirChooser(165, 175, 360, 35);
-        prepareListButton(550, 175, 140, 35);
-        prepareBackButton(15, 175, 140, 35);
+        JScrollPane scrollPane = new JScrollPane(listaArquivos);
+        scrollPane.setBounds(20, 225, 660, 280);
+        add(scrollPane);
     }
     void prepareListButton(int offsetX, int offsetY, int width, int height) {
         JButton listButton = new JButton("Consultar");
@@ -87,7 +67,7 @@ public class ConsultarArquivosPanel extends JPanel {
                 chosenDirectory = fc.getSelectedFile();
                 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    directoryLabel.setText(chosenDirectory.getAbsolutePath());
+                    directoryLabel.setText(chosenDirectory.getName());
                     // consultarPasta();
                     // setFileList(ih.parseIndex(p));
                 } else {
@@ -131,7 +111,7 @@ public class ConsultarArquivosPanel extends JPanel {
     }
 
     void setFileList(List<FileInfo> fileInfoList) {
-        DefaultTableModel tableModel = (DefaultTableModel)j.getModel();
+        DefaultTableModel tableModel = (DefaultTableModel)listaArquivos.getModel();
         tableModel.setRowCount(0);
         for (int i = 0; i < fileInfoList.size(); i++) {
             String[] rowInfo = {

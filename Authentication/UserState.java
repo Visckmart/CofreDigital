@@ -5,6 +5,7 @@ import java.security.PrivateKey;
 
 public class UserState {
     public static String emailAddress;
+    public static String username;
     public static PrivateKey privateKey;
     public static Certificate certificate;
 }
