@@ -25,6 +25,10 @@ public class AlterarCertificadoPanel extends GeneralPanel {
     JButton[] keys = new JButton[18];
     JTextArea pathLabel;
 
+    @Override protected int getBackCode() {
+        return 7006;
+    }
+
     public AlterarCertificadoPanel() {
         super("Alterar Certificado", true);
         

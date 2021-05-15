@@ -13,6 +13,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.util.Optional;
 
 public class CadastroPanel extends GeneralPanel {
     
@@ -129,7 +134,24 @@ public class CadastroPanel extends GeneralPanel {
             errorLabel.setText("Caminho do certificado digital inválido.");
             return;
         }
-        try {    
+        Certificate cert;
+        try {
+            cert = new AuthenticationHandler().certificateFromFile(certificateContent);
+        } catch (Exception e) {
+            errorLabel.setText("Certificado inválido");
+            return;
+        }
+        try {
+            AuthenticationHandler.checkCertificate(cert, Optional.empty());
+        } catch (CertificateNotYetValidException | CertificateExpiredException e) {
+            errorLabel.setText("Certificado fora do prazo.");
+            return;
+        } catch (CertificateException e) {
+            errorLabel.setText("Certificado não pertence ao usuário.");
+            return;
+        }
+
+        try {
             UserState.newUserCertificate = new AuthenticationHandler().certificateFromFile(certificateContent);
             UserState.newUserCertificateContent = certificateContent;
             
