@@ -8,11 +8,16 @@ import javax.swing.*;
 import Utilities.LogHandler;
 
 public class ConfirmacaoSaidaPanel extends GeneralPanel {
-    
+
+    @Override protected int getBackCode() {
+        return 9004;
+    }
+
     public ConfirmacaoSaidaPanel() {
         super("Confirmação de Saída", true);
 
         prepareQuitButton(250, 275, 200, 35);
+        LogHandler.logWithUser(9001);
       }
 
     void prepareQuitButton(int offsetX, int offsetY, int width, int height) {
