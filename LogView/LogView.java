@@ -1,15 +1,16 @@
+package LogView;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.GridLayout;
+import java.util.Timer;
 
 import Database.DatabaseHandler;
-import LogView.ListaRegistrosTable;
 
 public class LogView {
 
     static JFrame frame = new JFrame("LogView por Thiago Lamenza e Victor Martins");
-    ListaRegistrosTable t = new ListaRegistrosTable();
+    static ListaRegistrosTable t = new ListaRegistrosTable();
     LogView() {
         
         JPanel p = new JPanel();
@@ -18,7 +19,9 @@ public class LogView {
         p.setLayout(new GridLayout());
         p.add(t);
         try {
-            t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
+            // t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
+            Timer timer = new Timer();
+            timer.schedule(new AtualizarRegistros(), 5000, 2000);
         } catch (Exception exc) {
             exc.printStackTrace();
         }

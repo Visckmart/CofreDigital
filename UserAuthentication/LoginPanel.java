@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -22,6 +23,7 @@ public class LoginPanel extends JPanel {
     
     void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
         errorLabel = new JLabel();
+        errorLabel.setFont(new Font(null, Font.BOLD, 14));
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         errorLabel.setForeground(Color.red);
         errorLabel.setBounds(offsetX, offsetY, width, height);

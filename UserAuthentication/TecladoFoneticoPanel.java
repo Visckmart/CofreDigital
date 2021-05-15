@@ -30,7 +30,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
         feedbackField.updatePasswordFeedback(0);
         tecladoFonetico = new TecladoFonetico();
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
-        
+        updateInterface();
         LogHandler.logWithUser(3001);
     }
     

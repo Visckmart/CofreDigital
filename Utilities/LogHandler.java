@@ -19,7 +19,8 @@ public class LogHandler {
                 "INSERT into REGISTROS (codigo, usuario, arquivo) values(%d, %s, %s);",
                 codigo, login_name, file_name
             );
-//            System.out.println(query);
+        //    System.out.println(query);
+            System.out.println(codigo + " " + login_name + " " + file_name);
             statement.executeUpdate(query);
         } catch (Exception exc) {
             exc.printStackTrace();
@@ -31,6 +32,19 @@ public class LogHandler {
     }
 
     public static void log(int codigo) {
-        logWithUserAndFile(codigo, null);
+        try {
+            DatabaseHandler dbHandler = DatabaseHandler.getInstance();
+            Statement statement = dbHandler.connection.createStatement();
+            statement.setQueryTimeout(30);
+            String query = String.format(
+                "INSERT into REGISTROS (codigo) values(%d);",
+                codigo
+            );
+            System.out.println(codigo);
+            statement.executeUpdate(query);
+        } catch (Exception exc) {
+            exc.printStackTrace();
+        }
+        // logWithUserAndFile(codigo, null);
     }
 }

@@ -76,6 +76,7 @@ public class DatabaseHandler {
                         return UserLoginState.BLOCKED;
                     }
                 }
+                UserState.emailAddress = email;
                 LogHandler.logWithUser(2003);
                 return UserLoginState.VALID;
             } else {
