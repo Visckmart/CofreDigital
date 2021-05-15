@@ -84,6 +84,7 @@ class InterfaceTeste {
 
   public static void main(String args[]) {
     LogHandler.log(1001);
+    DatabaseHandler.getInstance().seedUsers();
     // DatabaseHandler.createNewDatabase("test.db");
     // System.out.println(PasswordHandler.encodePassword("DABECADA", "sal99"));
     // 064f3b5c5e8ea7a79a27a87cdc0ec8dacd0c9741
@@ -98,7 +99,7 @@ class InterfaceTeste {
     //   e.printStackTrace();
     // }
     // try {
-    //   DatabaseHandler.getInstance().seedUsers();
+    //
     // //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
     // } catch (Exception e) {
     // //   //TODO: handle exception

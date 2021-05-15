@@ -36,13 +36,17 @@ public class DatabaseHandler {
         connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
     }
 
-    public void seedUsers() throws Exception {
-        // Criando usuário padrão
-        String userEmail = "user01@inf1416.puc-rio.br";
-        if(verifyUserEmail(userEmail) == UserLoginState.INVALID) {
-            byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-            String password = PasswordHandler.encodePassword("BABABABA", "232");
-            registerUser(userEmail, certificate, password, "232", 0);
+    public void seedUsers() {
+        try {
+            // Criando usuário padrão
+            String userEmail = "admin@inf1416.puc-rio.br";
+            if(verifyUserEmail(userEmail) == UserLoginState.INVALID) {
+                byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/admin-x509.crt"));
+                String password = PasswordHandler.encodePassword("BADACADA", "232");
+                registerUser(userEmail, certificate, password, "232", UserGroup.ADMIN.ordinal());
+            }
+        } catch (Exception ignored) {
+
         }
     }
 
@@ -218,11 +222,6 @@ public class DatabaseHandler {
             
             String[] registro = { adjustedDate.format(TimestampFormatter), mensagem };
             registros.add(registro);
-
-            // System.out.println(rs.getString("timestamp"));
-            // System.out.println(rs.getString("codigo"));
-            // System.out.println(rs.getString("usuario"));
-            // System.out.println(rs.getString("arquivo"));
         }
         rs.close();
         return registros;
@@ -292,47 +291,47 @@ public class DatabaseHandler {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-         DatabaseHandler handler = new DatabaseHandler();
-         handler.seedUsers();
-         try {
-            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
-         } catch (Exception e) {
-             System.out.println(e.getMessage());
-         }
-         handler.registerAttempts("th@232.com", true);
-         // [123, 232]
-         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
-         // VALID (após os 2 minutos de espera)
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         handler.registerAttempts("th@232.com", false);
-         handler.updateUserState("th@232.com");
-         System.out.println(UserState.attempts);
-         handler.registerAttempts("th@232.com", true);
-         System.out.println(UserState.attempts);
-         // VALID
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         handler.registerAttempts("th@232.com", false);
-         // VALID
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", false);
-         handler.updateUserState("th@232.com");
-         System.out.println(UserState.attempts);
-         // BLOCKED
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-         handler.registerAttempts("th@232.com", true);
-         // BLOCKED
-         System.out.println(handler.verifyUserEmail("th@232.com"));
-
-//         Statement statement = handler.connection.createStatement();
-//         ResultSet rs = statement.executeQuery("select * from mensagens");
-//         while(rs.next()) {
-//             System.out.println(rs.getInt("codigo"));
-//             System.out.println(rs.getString("mensagem"));
-//             System.out.printf("%s %s %s %d %d\n", rs.getString("email"), rs.getString("senha"), rs.getString("salt"), rs.getInt("attempts"), rs.getInt("gid"));
+//    public static void main(String[] args) throws Exception {
+//         DatabaseHandler handler = new DatabaseHandler();
+//         handler.seedUsers();
+//         try {
+//            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
+//         } catch (Exception e) {
+//             System.out.println(e.getMessage());
 //         }
-//         rs.close();
-    }
+//         handler.registerAttempts("th@232.com", true);
+//         // [123, 232]
+//         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
+//         // VALID (após os 2 minutos de espera)
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         handler.registerAttempts("th@232.com", false);
+//         handler.updateUserState("th@232.com");
+//         System.out.println(UserState.attempts);
+//         handler.registerAttempts("th@232.com", true);
+//         System.out.println(UserState.attempts);
+//         // VALID
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         handler.registerAttempts("th@232.com", false);
+//         // VALID
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", false);
+//         handler.updateUserState("th@232.com");
+//         System.out.println(UserState.attempts);
+//         // BLOCKED
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//         handler.registerAttempts("th@232.com", true);
+//         // BLOCKED
+//         System.out.println(handler.verifyUserEmail("th@232.com"));
+//
+////         Statement statement = handler.connection.createStatement();
+////         ResultSet rs = statement.executeQuery("select * from mensagens");
+////         while(rs.next()) {
+////             System.out.println(rs.getInt("codigo"));
+////             System.out.println(rs.getString("mensagem"));
+////             System.out.printf("%s %s %s %d %d\n", rs.getString("email"), rs.getString("senha"), rs.getString("salt"), rs.getInt("attempts"), rs.getInt("gid"));
+////         }
+////         rs.close();
+//    }
 }
