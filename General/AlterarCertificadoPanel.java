@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 
 public class AlterarCertificadoPanel extends GeneralPanel {
@@ -123,19 +124,13 @@ public class AlterarCertificadoPanel extends GeneralPanel {
             // Atualizar certificado
             try {
                 byte[] certificateContent = Files.readAllBytes(chosenFile.toPath());
-
-                // AuthenticationHandler.getUsernameFromCertificate();
                 DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, certificateContent);
             } catch (Exception exc) {
                 exc.printStackTrace();
             }
-            
         }
-        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Nova Senha", null, PasswordGoal.ALTERAR);
-        frame.setContentPane(vcp);
-        frame.invalidate();
-        frame.validate();
+        TecladoFoneticoFullPanel tecladoNovaSenhaPanel = new TecladoFoneticoFullPanel("Nova Senha", null, PasswordGoal.ALTERAR);
+        FrameHandler.showPanel(tecladoNovaSenhaPanel);
     }
         
   }

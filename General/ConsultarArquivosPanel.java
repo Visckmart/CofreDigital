@@ -10,11 +10,9 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import Authentication.UserState;
@@ -89,20 +87,6 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         add(input);
     }
 
-    void prepareBackButton(int offsetX, int offsetY, int width, int height) {
-        JButton backButton = new JButton("<   Voltar ao menu");
-        backButton.setBounds(offsetX, offsetY, width, height);
-        backButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(backButton);
-                frame.setContentPane(new MenuPrincipalPanel());
-                frame.invalidate();
-                frame.validate();
-            }
-        });
-        add(backButton);
-    }
-
     void consultarPasta() {
         if (chosenDirectory == null) {
             setFileList(new ArrayList<FileInfo>());
@@ -131,19 +115,6 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         int saveDialogOption = fc.showSaveDialog(this);
         if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
             decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
-            // final String content = "a";
-            // try (
-            //     final BufferedWriter writer = Files.newBufferedWriter(fc.getSelectedFile().toPath()
-            //     ,
-            //         StandardCharsets.UTF_8, StandardOpenOption.CREATE);
-            // ) {
-            //     writer.write(content);
-            //     writer.flush();
-            // } catch (Exception e) {
-            //     e.printStackTrace();
-            // }
-            // consultarPasta();
-            // setFileList(ih.parseIndex(p));
         } else {
             System.out.println("Open command cancelled by user.");
         }
@@ -156,14 +127,9 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         System.out.println(file.getName());
         try {
             byte[] x = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
-            // System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(x)).toString());
             try {
                 System.out.println(destination.toPath());
                 Files.write(destination.toPath(), x);
-                // writer.
-                // writer.write(x);
-                // writer.write(x);
-                // writer.flush();
             } catch (Exception e) {
                 e.printStackTrace();
             }
