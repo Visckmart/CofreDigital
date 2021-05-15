@@ -1,7 +1,7 @@
 package General;
 import javax.swing.*;
 
-import General.TecladoFoneticoFullPanel.SuccessHandler;
+import General.TecladoFoneticoFullPanel.PasswordGoal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +11,7 @@ public class CadastroPanel extends GeneralPanel {
     
     String emailAddress;
     public CadastroPanel() {
-        super("Cadastrar Novo Usuário", true);
+        super("Cadastrar Novo Usuário", true, CabecalhoInfo.TOTAL_USUARIOS);
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoGrupo(210, 320, 320, 50);
@@ -97,8 +97,7 @@ public class CadastroPanel extends GeneralPanel {
     
     void nextStep() {
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null);
-        vcp.setSuccessHandler(SuccessHandler.CADASTRAR);
+        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         frame.setContentPane(vcp);
         frame.invalidate();
         frame.validate();

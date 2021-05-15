@@ -7,13 +7,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
+import Authentication.UserState;
 import Database.DatabaseHandler;
 import UserAuthentication.TecladoFonetico;
 import Utilities.LogHandler;
@@ -26,12 +29,13 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     List<String> fonemasDigitados = new ArrayList<String>();
     List<String> fonemasCorretos;
 
-    public enum SuccessHandler {
+    public enum PasswordGoal {
         CADASTRAR, ALTERAR
     }
-
-    public TecladoFoneticoFullPanel(String title, List<String> newPassword) {
-        super(title, true);
+    PasswordGoal goal;
+    public TecladoFoneticoFullPanel(String title, List<String> newPassword, PasswordGoal goal) {
+        super(title, true, goal == PasswordGoal.CADASTRAR ? CabecalhoInfo.TOTAL_USUARIOS : CabecalhoInfo.TOTAL_ACESSOS);
+        this.goal = goal;
         this.fonemasCorretos = newPassword;
 
         this.prepararCampoDeSenha(257, 180, 185, 35);
@@ -168,11 +172,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         fonemasDigitados.add(TecladoFonetico.fonemas[index]);
         updateInterface();
     }
-
-    SuccessHandler successHandler;
-    void setSuccessHandler(SuccessHandler handler) {
-        successHandler = handler;
-    }
     
     void nextStep() {
         if (fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6) {
@@ -190,8 +189,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                 if (fonemasCorretos == null) {
                     System.out.println("Ir para confirmacao");
                     JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados);
-                    vcp.setSuccessHandler(successHandler);
+                    TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
                     frame.setContentPane(vcp);
                     frame.invalidate();
                     frame.validate();
@@ -199,10 +197,21 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                 } else {
                     if (fonemasCorretos.equals(fonemasDigitados)) {
                         System.out.println("Confirmado");
-                        if (successHandler == SuccessHandler.CADASTRAR) {
-                            // DatabaseHandler.getInstance().registerUser(email, certificate, encryptedPassword, salt, gid);
+                        if (goal == PasswordGoal.CADASTRAR) {
+                            JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                            ConfirmacaoCadastroPanel vcp = new ConfirmacaoCadastroPanel();
+                            frame.setContentPane(vcp);
+                            frame.invalidate();
+                            frame.validate();
                         } else {
-                            // DatabaseHandler.getInstance()
+                            String salt = PasswordHandler.generateSalt();
+                            Optional<String> senha = PasswordHandler.encodePassword(String.join("", (String[])fonemasDigitados.toArray()), salt);
+                            try {
+                                DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha.get(), salt);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return;
+                            }
                         }
                         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                         MenuPrincipalPanel vcp = new MenuPrincipalPanel();

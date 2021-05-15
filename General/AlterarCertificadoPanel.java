@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +15,11 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
-import General.TecladoFoneticoFullPanel.SuccessHandler;
+import Authentication.UserState;
+import Database.DatabaseHandler;
+import General.TecladoFoneticoFullPanel.PasswordGoal;
 import Utilities.LogHandler;
 
 public class AlterarCertificadoPanel extends GeneralPanel {
@@ -125,10 +130,19 @@ public class AlterarCertificadoPanel extends GeneralPanel {
     void nextStep() {
         if (chosenFile != null) {
             // Atualizar certificado
+            try {
+                byte[] certificateContent = Files.readAllBytes(chosenFile.toPath());
+                Certificate cert =  new AuthenticationHandler().certificateFromFile(certificateContent);
+
+                // AuthenticationHandler.getUsernameFromCertificate();
+                DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, certificateContent);
+            } catch (Exception exc) {
+                exc.printStackTrace();
+            }
+            
         }
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Nova Senha", null);
-        vcp.setSuccessHandler(SuccessHandler.ALTERAR);
+        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Nova Senha", null, PasswordGoal.ALTERAR);
         frame.setContentPane(vcp);
         frame.invalidate();
         frame.validate();

@@ -13,22 +13,23 @@ import javax.swing.SwingUtilities;
 
 public class GeneralPanel extends JPanel {
 
-    GeneralPanel(String title, boolean backToMenu) {
+    GeneralPanel(String title, boolean backToMenu, CabecalhoInfo infoAdicional) {
         this.setLayout(null);
-
+        
         CabecalhoPanel cabecalho = CabecalhoPanel.panel;
         cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        cabecalho.updateExtraInfo("Total de acessos", "10");
+        // cabecalho.updateExtraInfo("Total de acessos", "10");
+        cabecalho.setInformacaoAdicional(infoAdicional);
         add(cabecalho);
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setBounds(10, cabecalho.getHeight() + 20, 680, 30);
+        titleLabel.setBounds(10, cabecalho.getHeight() + 25, 680, 30);
         titleLabel.setFont(new Font(null, Font.BOLD, 20));
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         add(titleLabel);
 
         if (backToMenu) {
-            prepareBackButton(20, cabecalho.getHeight() + 55, 150, 35);
+            prepareBackButton(20, cabecalho.getHeight() + 25, 150, 35);
         }
     }
 
@@ -44,5 +45,9 @@ public class GeneralPanel extends JPanel {
             }
         });
         add(backButton);
+    }
+
+    GeneralPanel(String title, boolean canGoBack) {
+        this(title, canGoBack, CabecalhoInfo.TOTAL_ACESSOS);
     }
 }
