@@ -1,6 +1,7 @@
 package General;
 import javax.swing.*;
 
+import Authentication.UserGroup;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 
@@ -47,7 +48,7 @@ public class CabecalhoPanel extends JPanel {
         // loginLabel.setOpaque(true);
         add(loginLabel);
 
-        groupLabel = new JLabel(composeLabelText("Grupo", ""));
+        groupLabel = new JLabel(composeLabelText("Grupo", UserState.group == UserGroup.ADMIN ? "Administrador" : "Usuário"));
         groupLabel.setFont(new Font(null, Font.PLAIN, 18));
         groupLabel.setBounds(0, 30, 350, 25);
         groupLabel.setBackground(Color.red);
