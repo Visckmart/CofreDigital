@@ -10,7 +10,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPanel extends JPanel {
+public abstract class LoginPanel extends JPanel {
     
     public JButton loginButton;
     JLabel errorLabel;

@@ -44,11 +44,13 @@ public class ListaRegistrosTable extends JTable {
 
     public void setRegisterList(List<String[]> registerInfoList) {
         DefaultTableModel tableModel = (DefaultTableModel)this.getModel();
+        int selectedRow = getSelectedRow();
         tableModel.setRowCount(0);
         for (int i = registerInfoList.size() - 1; i >= 0; i--) {
             tableModel.addRow(registerInfoList.get(i));
         }
         tableModel.setRowCount(registerInfoList.size());
+        setRowSelectionInterval(selectedRow, selectedRow);
     }
 
     public boolean editCellAt(int row, int column, EventObject e) {
