@@ -16,9 +16,18 @@ public class ConfirmacaoSaidaPanel extends GeneralPanel {
     public ConfirmacaoSaidaPanel() {
         super("Confirmação de Saída", true);
 
-        prepareQuitButton(250, 275, 200, 35);
+        prepararMensagem(125, 275, 450, 35);
+        prepareQuitButton(250, 350, 200, 35);
+
         LogHandler.logWithUser(9001);
-      }
+    }
+    void prepararMensagem(int offsetX, int offsetY, int width, int height) {
+      JLabel messageLabel = new JLabel("Pressione o botão Sair para confirmar.");
+      messageLabel.setBounds(offsetX, offsetY, width, height);
+      messageLabel.setFont(new Font(null, Font.PLAIN, 15));
+      messageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+      add(messageLabel);
+    }
 
     void prepareQuitButton(int offsetX, int offsetY, int width, int height) {
         JButton bt1 = new JButton("Sair");

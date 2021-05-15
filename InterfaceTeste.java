@@ -13,6 +13,7 @@ import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
 import General.AlterarCertificadoPanel;
 import General.CadastroPanel;
+import General.ConfirmacaoSaidaPanel;
 import General.ConsultarArquivosPanel;
 import General.FileHandler;
 import General.MenuPrincipalPanel;
@@ -106,6 +107,7 @@ class InterfaceTeste {
     prepararInterfaceAutenticacao();
     // frame.add(new MenuPrincipalPanel());
     // frame.add(new AlterarCertificadoPanel());
+    // frame.add(new ConfirmacaoSaidaPanel());
     // frame.add(new CadastroPanel());
     // frame.add(new ConsultarArquivosPanel());
     mostrarTela();
