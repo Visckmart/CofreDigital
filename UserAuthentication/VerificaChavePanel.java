@@ -25,7 +25,7 @@ public class VerificaChavePanel extends LoginPanel {
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
-        this.prepararLabelErro(175, 350, 350, 30);
+        this.prepararLabelErro(175, 355, 400, 30);
 
         LogHandler.logWithUser(4001);
     }
@@ -120,9 +120,8 @@ public class VerificaChavePanel extends LoginPanel {
             LogHandler.logWithUser(4002);
             DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
             FrameHandler.showPanel(new MenuPrincipalPanel());
-        }
-        else {
-            errorLabel.setText("Assinatura digital ou chave secreta inválida.");
+        } else {
+            errorLabel.setText("<html>Assinatura digital inválida ou frase<br>secreta inválida.</html>");
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
             UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (newState == UserLoginState.BLOCKED) {
