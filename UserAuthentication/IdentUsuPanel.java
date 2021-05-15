@@ -19,7 +19,7 @@ public class IdentUsuPanel extends JPanel {
         add(TitlePanel.getInstance());
         this.prepararCampoEmail(225, 270, 250, 35);
         this.prepararLabelErro(225, 310, 250, 30);
-        this.prepararBotaoLogin(285, 375, 130, 35);
+        this.prepararBotaoLogin(285, 400, 130, 35);
         LogHandler.log(2001);
     }
 

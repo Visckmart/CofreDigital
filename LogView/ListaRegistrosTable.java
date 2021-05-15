@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class ListaRegistrosTable extends JTable {
     
-    static String[] columnNames = {"Timestamp", "Arquivo"};
+    static String[] columnNames = {"Timestamp", "Registro"};
 
     public ListaRegistrosTable() {
         super(new DefaultTableModel(null, columnNames));
@@ -32,12 +32,12 @@ public class ListaRegistrosTable extends JTable {
         this.addMouseListener(doubleClickHandler);
 
         this.getTableHeader().setFont(new Font(null, Font.PLAIN, 15));
-        this.setFont(new Font(null, Font.PLAIN, 15));
+        this.setFont(new Font(null, Font.PLAIN, 14));
 
         TableColumn column = null;
         for (int i = 0; i < columnNames.length; i++) {
             column = this.getColumnModel().getColumn(i);
-            if (i == 0) { column.setPreferredWidth(25); }
+            if (i == 0) { column.setMinWidth(180); column.setMaxWidth(180); }
             else { column.setPreferredWidth(300); }
         }
     }
