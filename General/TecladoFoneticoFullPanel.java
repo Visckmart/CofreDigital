@@ -170,8 +170,16 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         add(backButton);
     }
     void updateInterface() {
-        updatePasswordFeedback(fonemasDigitados.size() * 2);
-        // this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
+        int totalFonemasDigitados = fonemasDigitados.size();
+        updatePasswordFeedback(totalFonemasDigitados * 2);
+        boolean bloquear = totalFonemasDigitados * 2 >= 12;
+        for (int i = 0; i < keys.length; i++) {
+            if (bloquear) {
+                keys[i].setEnabled(false);
+            } else {
+                keys[i].setEnabled(true);
+            }
+        }
     }
     void buttonPressed(int index) {
         errorLabel.setText("");
@@ -214,6 +222,8 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     
     void nextStep() {
         if (!verificarSenha()) {
+            fonemasDigitados.clear();
+            updateInterface();
             return;
         }
         if (fonemasCorretos == null) {

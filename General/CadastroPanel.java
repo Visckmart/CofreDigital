@@ -2,6 +2,7 @@ package General;
 import javax.swing.*;
 
 import Authentication.AuthenticationHandler;
+import Authentication.UserGroup;
 import Authentication.UserState;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
 import Utilities.FrameHandler;
@@ -30,7 +31,7 @@ public class CadastroPanel extends GeneralPanel {
         this.prepararBotaoLogin(285, 400, 130, 35);
 
         
-        this.prepararLabelErro(175, 365, 400, 30);
+        this.prepararLabelErro(150, 370, 400, 30);
         LogHandler.log(6001);
     }
     
@@ -158,7 +159,7 @@ public class CadastroPanel extends GeneralPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        UserState.newUserGroup = groupList.getSelectedIndex() == 0 ? "administrador" : "usuario";
+        UserState.newUserGroup = groupList.getSelectedIndex() == 0 ? UserGroup.USER : UserGroup.ADMIN;
         TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         FrameHandler.showPanel(tecladoNovaSenhaCadastro);
     }

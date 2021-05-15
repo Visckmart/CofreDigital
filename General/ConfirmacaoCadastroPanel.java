@@ -9,8 +9,10 @@ import javax.swing.*;
 
 import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
+import Authentication.UserGroup;
 import Authentication.UserState;
 import Database.DatabaseHandler;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 
 public class ConfirmacaoCadastroPanel extends GeneralPanel {
@@ -26,6 +28,7 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         super("Confirmação de Cadastro", true, CabecalhoInfo.TOTAL_USUARIOS);
 
         this.prepararBotaoLogin(285, 450, 130, 35);
+        this.prepararLabelErro(225, 420, 250, 20);
         prepararInformacoes();
     }
 
@@ -45,9 +48,9 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
                 String salt = PasswordHandler.generateSalt();
                 String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt);
                 try {
-                    DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, 1);
+                    DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, UserState.newUserGroup == UserGroup.ADMIN ? 1 : 0);
+                    FrameHandler.showPanel(new CadastroPanel());
                 } catch (Exception exc) {
-                    exc.printStackTrace();
                     errorLabel.setText("Usuário já está cadastrado.");
                 }
             }
@@ -69,8 +72,8 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         String[] valoresCampos = AuthenticationHandler.getCertificateInfo(UserState.newUserCertificate);
         for (int i = 0; i < nomesCampos.length; i++) {
             JLabel newLabel = new JLabel(composeLabelText(nomesCampos[i], valoresCampos[i]));
-            newLabel.setFont(new Font(null, Font.PLAIN, 18));
-            newLabel.setBounds(125, 200 + i * 30, 450, 25);
+            newLabel.setFont(new Font(null, Font.PLAIN, 15));
+            newLabel.setBounds(125, 200 + i * 25, 450, 20);
             // newLabel.setBackground(Color.red);
             // groupLabel.setOpaque(true);
             add(newLabel);
