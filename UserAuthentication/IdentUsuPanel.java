@@ -12,21 +12,15 @@ import Utilities.FrameHandler;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 
-public class IdentUsuPanel extends JPanel {
-    
-    public IdentUsuPanel() {
-        this.setLayout(null);
-
-        add(TitlePanel.getInstance());
-        this.prepararCampoEmail(225, 270, 250, 35);
-        this.prepararLabelErro(225, 310, 250, 30);
-        this.prepararBotaoLogin(285, 400, 130, 35);
-        LogHandler.log(2001);
-    }
-
-    
+public class IdentUsuPanel extends LoginPanel {
     
     JTextField emailTF;
+    JLabel errorLabel;
+    public IdentUsuPanel() {
+        this.prepararCampoEmail(225, 270, 250, 35);
+        this.prepararLabelErro(225, 310, 250, 30);
+        LogHandler.log(2001);
+    }
 
     private void prepararCampoEmail(int offsetX, int offsetY, int width, int height) {
         JLabel emailLabel = new JLabel("E-mail: ");
@@ -39,14 +33,13 @@ public class IdentUsuPanel extends JPanel {
         this.add(emailTF);
     }
     
-    JLabel errorLabel;
     private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
         errorLabel = new JLabel();
         errorLabel.setForeground(Color.red);
         errorLabel.setBounds(offsetX, offsetY, width, height);
         this.add(errorLabel);
     }
-    public JButton loginButton;
+    
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         loginButton = new JButton("Continuar   >");
         loginButton.setBounds(offsetX, offsetY, width, height);

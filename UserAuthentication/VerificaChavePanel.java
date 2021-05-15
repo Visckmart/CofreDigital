@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import Authentication.AuthenticationHandler;
 import Database.DatabaseHandler;
 import General.MenuPrincipalPanel;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 import Authentication.UserState;
@@ -131,10 +132,7 @@ public class VerificaChavePanel extends JPanel {
             if (validPrivateKey) {
                 LogHandler.logWithUser(4002);
                 DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                frame.setContentPane(new MenuPrincipalPanel());
-                frame.invalidate();
-                frame.validate();
+                FrameHandler.showPanel(new MenuPrincipalPanel());
                 return;
             } else {
             }
@@ -142,15 +140,12 @@ public class VerificaChavePanel extends JPanel {
             errorLabel.setText("Frase secreta incorreta.");
             System.out.println("Frase secreta incorreta.");
             try {
-                boolean userBlocked = DatabaseHandler.getInstance().verifyUserEmail(emailAddress) == UserLoginState.BLOCKED;
-                if (userBlocked) {
+                UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+                if (newState == UserLoginState.BLOCKED) {
                     LogHandler.logWithUser(4007);
-                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    IdentUsuPanel vcp = new IdentUsuPanel();
-                    frame.setContentPane(vcp);
-                    frame.invalidate();
-                    frame.validate();
-                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                    IdentUsuPanel firstStep = new IdentUsuPanel();
+                    FrameHandler.showPanel(firstStep, firstStep.loginButton);
+                    return;
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

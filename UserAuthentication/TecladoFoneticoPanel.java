@@ -13,10 +13,11 @@ import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 
-public class TecladoFoneticoPanel extends JPanel {
+public class TecladoFoneticoPanel extends LoginPanel {
     
     JButton[] keys = new JButton[6];
     JTextPane feedbackField = new JTextPane();
@@ -27,18 +28,14 @@ public class TecladoFoneticoPanel extends JPanel {
     public TecladoFoneticoPanel(String emailAddress) {
         this.emailAddress = emailAddress;
 
-        this.setLayout(null);
-        add(TitlePanel.getInstance());
         this.prepararCampoDeSenha(257, 200, 185, 35);
         this.prepararLabelErro(225, 240, 250, 20);
         this.prepararBotoes(150, 270, 400, 115);
-        this.prepararBotaoLogin(285, 400, 130, 35);
         
         updatePasswordFeedback(0);
         tecladoFonetico = new TecladoFonetico();
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
         
-        this.loginButton.setEnabled(true);
         LogHandler.logWithUser(3001);
     }
     
@@ -91,18 +88,6 @@ public class TecladoFoneticoPanel extends JPanel {
         errorLabel.setForeground(Color.red);
         errorLabel.setBounds(offsetX, offsetY, width, height);
         this.add(errorLabel);
-    }
-    
-    JButton loginButton;
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        loginButton = new JButton("Continuar   >");
-        loginButton.setBounds(offsetX, offsetY, width, height);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                nextStep();
-            }
-        });
-        this.add(loginButton);
     }
 
     void atualizarBotoes(List<String> fonemas) {
@@ -175,27 +160,24 @@ public class TecladoFoneticoPanel extends JPanel {
             correctPassword = PasswordHandler.checkPhoneticPassword(tecladoFonetico.gruposDigitados, emailAddress);
             if (correctPassword == true) {
                 LogHandler.log(3003);
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+
                 VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
-                frame.setContentPane(vcp);
-                frame.invalidate();
-                frame.validate();
-                frame.getRootPane().setDefaultButton(vcp.loginButton);
+                FrameHandler.showPanel(vcp, vcp.loginButton);
+
                 LogHandler.log(3002);
             } else {
-                if (DatabaseHandler.getInstance().verifyUserEmail(emailAddress) == UserLoginState.BLOCKED) {
-                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    IdentUsuPanel vcp = new IdentUsuPanel();
-                    frame.setContentPane(vcp);
-                    frame.invalidate();
-                    frame.validate();
-                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+                if (newState == UserLoginState.BLOCKED) {
+                    IdentUsuPanel firstPanel = new IdentUsuPanel();
+                    FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
+                    return;
+                } else {
+                    errorLabel.setText("Senha incorreta.");
+                    tecladoFonetico.limparDigitacao();
+                    tecladoFonetico.renovarCombinacoes();
+                    updatePasswordFeedback(0);
+                    atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
                 }
-                errorLabel.setText("Senha incorreta.");
-                tecladoFonetico.limparDigitacao();
-                tecladoFonetico.renovarCombinacoes();
-                updatePasswordFeedback(0);
-                atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
             }
         } catch (Exception e) {
             e.printStackTrace();
