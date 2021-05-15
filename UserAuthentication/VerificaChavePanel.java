@@ -43,7 +43,7 @@ public class VerificaChavePanel extends LoginPanel {
         this.add(passwordTF);
     }
 
-    File chosenFile = new File("/Users/victormartins/Documents/CofreDigital/./Pacote-T4/Keys/user01-pkcs8-des.key");
+    File chosenFile = new File("./Pacote-T4/Keys/user01-pkcs8-des.key");
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
