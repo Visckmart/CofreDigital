@@ -122,6 +122,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             System.out.println(fileInfos);
             setFileList(fileInfos);
             DatabaseHandler.getInstance().registerQuery(UserState.emailAddress);
+            CabecalhoPanel.panel.atualizarInformacaoAdicional();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

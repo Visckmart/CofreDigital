@@ -26,7 +26,7 @@ public class CabecalhoPanel extends JPanel {
         informacaoAdicional = info;
         DatabaseHandler.getInstance().updateUserState(UserState.emailAddress);
         if (info == CabecalhoInfo.TOTAL_ACESSOS) {
-            updateExtraInfo("Total de acessos do usuário", "10");
+            updateExtraInfo("Total de acessos do usuário", Integer.toString(UserState.accesses));
         } else if (info == CabecalhoInfo.TOTAL_CONSULTAS) {
             updateExtraInfo("Total de consultas do usuário", Integer.toString(UserState.queries));
         } else if (info == CabecalhoInfo.TOTAL_USUARIOS) {
@@ -34,6 +34,9 @@ public class CabecalhoPanel extends JPanel {
         }
     }
     
+    public void atualizarInformacaoAdicional() {
+        setInformacaoAdicional(informacaoAdicional);
+    }
     private CabecalhoPanel() {
         this.setLayout(null);
 
