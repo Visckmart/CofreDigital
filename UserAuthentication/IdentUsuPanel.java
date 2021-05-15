@@ -35,25 +35,21 @@ public class IdentUsuPanel extends LoginPanel {
 
     void nextStep() {
         String emailAddress = emailTF.getText();
-        try {
-            UserLoginState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-            if (userState == UserLoginState.VALID) {
-                LogHandler.log(2003);
-                UserState.emailAddress = emailAddress;
-                
-                TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
-                FrameHandler.showPanel(tfp, tfp.loginButton);
-                
-                LogHandler.log(2002);
-            } else if (userState == UserLoginState.BLOCKED) {
-                LogHandler.log(2004);
-                errorLabel.setText("Usuário bloqueado.");
-            } else {
-                LogHandler.log(2005);
-                errorLabel.setText("Usuário não identificado.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        UserLoginState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+        if (userState == UserLoginState.VALID) {
+            LogHandler.log(2003);
+            UserState.emailAddress = emailAddress;
+
+            TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
+            FrameHandler.showPanel(tfp, tfp.loginButton);
+
+            LogHandler.log(2002);
+        } else if (userState == UserLoginState.BLOCKED) {
+            LogHandler.log(2004);
+            errorLabel.setText("Usuário bloqueado.");
+        } else {
+            LogHandler.log(2005);
+            errorLabel.setText("Usuário não identificado.");
         }
     }
     
