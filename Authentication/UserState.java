@@ -10,6 +10,7 @@ public class UserState {
     public static Certificate certificate;
     public static int attempts;
     public static int queries;
+    public static int accesses;
     public static int totalUsers;
     public static UserGroup group;
 
