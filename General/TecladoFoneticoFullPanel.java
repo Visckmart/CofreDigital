@@ -192,6 +192,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                     if (fonemasCorretos.equals(fonemasDigitados)) {
                         System.out.println("Confirmado");
                         if (goal == PasswordGoal.CADASTRAR) {
+                            LogHandler.logWithUser(6002);
                             String np = String.join("", fonemasDigitados);
                             System.out.println(np);
                             UserState.newUserPassword = np;
