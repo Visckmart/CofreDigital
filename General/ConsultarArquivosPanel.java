@@ -152,6 +152,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         for (int i = 0; i < fileInfoList.size(); i++) {
             String[] rowInfo = {
                 fileInfoList.get(i).nomeOriginal,
+                fileInfoList.get(i).nomeProtegido,
                 fileInfoList.get(i).dono,
                 fileInfoList.get(i).grupo
             };
