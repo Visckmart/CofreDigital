@@ -60,39 +60,47 @@ public class DatabaseHandler {
         statement.close();
     }
 
-    public UserLoginState verifyUserEmail(String email) throws Exception {
-        PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
-        statement.setString(1, email);
-        ResultSet rs = statement.executeQuery();
+    public UserLoginState verifyUserEmail(String email) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
 
-        if (rs.next()) {
-            String dateString = rs.getString("timeout");
-            rs.close();
-            if (dateString != null) {
-                LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
-                if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
-                    LogHandler.logWithUser(2004);
-                    return UserLoginState.BLOCKED;
+            if (rs.next()) {
+                String dateString = rs.getString("timeout");
+                rs.close();
+                if (dateString != null) {
+                    LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
+                    if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
+                        LogHandler.logWithUser(2004);
+                        return UserLoginState.BLOCKED;
+                    }
                 }
+                LogHandler.logWithUser(2003);
+                return UserLoginState.VALID;
+            } else {
+                LogHandler.logWithUser(2005);
+                return UserLoginState.INVALID;
             }
-            LogHandler.logWithUser(2003);
-            return UserLoginState.VALID;
-        } else {
-            LogHandler.logWithUser(2005);
-            return UserLoginState.INVALID;
+        } catch(Exception ignored) {
+            return null;
         }
     }
 
-    public void registerAccess(String email) throws Exception {
-        PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
-        statement.setString(1, email);
-        ResultSet rs = statement.executeQuery();
-        int accesses = rs.getInt("accesses");
-        statement = connection.prepareStatement("UPDATE USUARIOS SET accesses=?, timeout=null where email=?");
-        statement.setInt(1, accesses + 1);
-        statement.setString(2, email);
-        statement.executeUpdate();
-        statement.close();
+    public void registerAccess(String email) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            int accesses = rs.getInt("accesses");
+            statement = connection.prepareStatement("UPDATE USUARIOS SET accesses=?, timeout=null where email=?");
+            statement.setInt(1, accesses + 1);
+            statement.setString(2, email);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void registerQuery(String email) throws Exception {
@@ -107,51 +115,55 @@ public class DatabaseHandler {
         statement.close();
     }
 
-    public void registerAttempts(String email, boolean success) throws Exception {
-        PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
-        statement.setString(1, email);
-        ResultSet rs = statement.executeQuery();
-        if(rs.next()) {
-            int attempts = rs.getInt("attempts") + 1;
-            String dateString = rs.getString("timeout");
-            rs.close();
-            if(attempts >= 3 && !success) {
-                if (dateString != null) {
-                    LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
-                    if(timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) < 0) {
-                        statement = connection.prepareStatement("UPDATE USUARIOS SET attempts=?, timeout=null where email=?");
-                        statement.setInt(1, 1);
-                        statement.setString(2, email);
-                    }
-                    else {
-                        statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
+    public void registerAttempts(String email, boolean success) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                int attempts = rs.getInt("attempts") + 1;
+                String dateString = rs.getString("timeout");
+                rs.close();
+                if (attempts >= 3 && !success) {
+                    if (dateString != null) {
+                        LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
+                        if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) < 0) {
+                            statement = connection.prepareStatement("UPDATE USUARIOS SET attempts=?, timeout=null where email=?");
+                            statement.setInt(1, 1);
+                            statement.setString(2, email);
+                        } else {
+                            statement =
+                                connection.prepareStatement(
+                                    "UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
+                            statement.setString(1, email);
+                        }
+                    } else {
+                        statement =
+                            connection.prepareStatement(
+                                "UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
                         statement.setString(1, email);
                     }
-                } else {
-                    statement = connection.prepareStatement("UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
-                    statement.setString(1, email);
+                    statement.executeUpdate();
+                } else if (attempts < 3) {
+                    if (success) {
+                        statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = 0, timeout = null where email=?");
+                        statement.setString(1, email);
+                    } else {
+                        statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = ?, timeout = null where email=?");
+                        statement.setInt(1, attempts);
+                        statement.setString(2, email);
+                    }
+                    statement.executeUpdate();
                 }
-                statement.executeUpdate();
+            } else {
+                statement.close();
+                rs.close();
+                throw new Exception("Email não encontrado");
             }
-            else if(attempts < 3) {
-                if(success) {
-                    statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = 0, timeout = null where email=?");
-                    statement.setString(1, email);
-                } else {
-                    statement = connection.prepareStatement("UPDATE USUARIOS SET attempts = ?, timeout = null where email=?");
-                    statement.setInt(1, attempts);
-                    statement.setString(2, email);
-                }
-                statement.executeUpdate();
-            }
-        }
-        else {
             statement.close();
             rs.close();
-            throw new Exception("Email não encontrado");
+        } catch(Exception ignored) {
         }
-        statement.close();
-        rs.close();
     }
 
     public String[] getPasswordAndSalt(String email) throws Exception {
@@ -208,17 +220,21 @@ public class DatabaseHandler {
         return registros;
     }
 
-    public byte[] getEncodedCertificate(String emailAddress) throws Exception {
-        System.out.println(emailAddress);
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(
-            "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
-        );
-        if (rs.next() == false) {
+    public byte[] getEncodedCertificate(String emailAddress) {
+        try {
+            System.out.println(emailAddress);
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(
+                "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
+            );
+            if (rs.next() == false) {
+                return null;
+            }
+            String certificado = rs.getString("certificado");
+            return certificado.getBytes();
+        } catch (Exception ignored) {
             return null;
         }
-        String certificado = rs.getString("certificado");
-        return certificado.getBytes();
     }
 
     public void updateUserCertificate(String emailAddress, byte[] certificate)  throws Exception {
