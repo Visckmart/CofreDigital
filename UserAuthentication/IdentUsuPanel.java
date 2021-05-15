@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.awt.Color;
 
 import Database.DatabaseHandler;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 
@@ -64,12 +65,10 @@ public class IdentUsuPanel extends JPanel {
             if (userState == UserLoginState.VALID) {
                 LogHandler.log(2003);
                 UserState.emailAddress = emailAddress;
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
+                
                 TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
-                frame.setContentPane(tfp);
-                frame.invalidate();
-                frame.validate();
-                frame.getRootPane().setDefaultButton(tfp.loginButton);
+                FrameHandler.showPanel(tfp, tfp.loginButton);
+                
                 LogHandler.log(2002);
             } else if (userState == UserLoginState.BLOCKED) {
                 LogHandler.log(2004);
