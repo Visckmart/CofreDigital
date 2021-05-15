@@ -113,7 +113,7 @@ public class AuthenticationHandler {
         return certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
     }
 
-    static void checkCertificate(Certificate cert, Optional<String> email)
+    public static void checkCertificate(Certificate cert, Optional<String> email)
         throws CertificateNotYetValidException, CertificateExpiredException, CertificateException {
         X509Certificate certNovo = (X509Certificate) cert;
         certNovo.checkValidity();
