@@ -47,7 +47,7 @@ public class DatabaseHandler {
     }
 
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
-        PreparedStatement statement = connection.prepareStatement("insert into USUARIOS values(?, ?, ?, ?, NULL, NULL, NULL, ?);");
+        PreparedStatement statement = connection.prepareStatement("insert into USUARIOS(email, senha, salt, certificado, gid) values(?, ?, ?, ?, ?);");
         if(verifyUserEmail(email) != UserLoginState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
