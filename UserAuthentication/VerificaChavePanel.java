@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 
 import javax.swing.JPasswordField;
@@ -26,7 +25,7 @@ public class VerificaChavePanel extends LoginPanel {
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
-        this.prepararLabelErro(210, 350, 280, 30);
+        this.prepararLabelErro(175, 350, 350, 30);
 
         LogHandler.logWithUser(4001);
     }
@@ -47,7 +46,7 @@ public class VerificaChavePanel extends LoginPanel {
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        // fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
+        fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
         JButton input = new JButton("Escolher arquivo da chave privada...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
@@ -112,7 +111,7 @@ public class VerificaChavePanel extends LoginPanel {
         } catch (Exception e) {
             LogHandler.log(4004);
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
-            errorLabel.setText("Caminho para a chave privada incorreto.");
+            errorLabel.setText("Caminho da chave privada inválido.");
             return;
         }
         boolean validPrivateKey = authHandler.verifyUserPrivateKey(privateKeyContent, fraseSecreta, emailAddress);

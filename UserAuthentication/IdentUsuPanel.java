@@ -15,10 +15,9 @@ import Utilities.UserLoginState;
 public class IdentUsuPanel extends LoginPanel {
     
     JTextField emailTF;
-    JLabel errorLabel;
     public IdentUsuPanel() {
-        this.prepararCampoEmail(225, 270, 250, 35);
-        this.prepararLabelErro(225, 310, 250, 30);
+        this.prepararCampoEmail(200, 270, 300, 35);
+        this.prepararLabelErro(200, 310, 300, 30);
         LogHandler.log(2001);
     }
 
@@ -37,18 +36,12 @@ public class IdentUsuPanel extends LoginPanel {
         String emailAddress = emailTF.getText();
         UserLoginState userState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
         if (userState == UserLoginState.VALID) {
-            LogHandler.log(2003);
-            UserState.emailAddress = emailAddress;
-
+            LogHandler.log(2002);
             TecladoFoneticoPanel tfp = new TecladoFoneticoPanel(emailAddress);
             FrameHandler.showPanel(tfp, tfp.loginButton);
-
-            LogHandler.log(2002);
         } else if (userState == UserLoginState.BLOCKED) {
-            LogHandler.log(2004);
             errorLabel.setText("Usuário bloqueado.");
         } else {
-            LogHandler.log(2005);
             errorLabel.setText("Usuário não identificado.");
         }
     }

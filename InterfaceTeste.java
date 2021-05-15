@@ -97,12 +97,12 @@ class InterfaceTeste {
     // } catch (Exception e) {
     //   e.printStackTrace();
     // }
-    try {
-      new DatabaseHandler().seedUsers();
-    //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
-    } catch (Exception e) {
-    //   //TODO: handle exception
-    }
+    // try {
+    //   DatabaseHandler.getInstance().seedUsers();
+    // //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
+    // } catch (Exception e) {
+    // //   //TODO: handle exception
+    // }
     prepararInterfaceAutenticacao();
     // frame.add(new MenuPrincipalPanel());
     // frame.add(new AlterarCertificadoPanel());
