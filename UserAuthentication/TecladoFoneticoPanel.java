@@ -117,6 +117,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
             newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (newState == UserLoginState.BLOCKED) {
                 IdentUsuPanel firstPanel = new IdentUsuPanel();
+                firstPanel.preencherEmail(emailAddress);
                 FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
             } else {
                 errorLabel.setText("Senha incorreta.");

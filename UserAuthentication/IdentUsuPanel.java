@@ -21,6 +21,11 @@ public class IdentUsuPanel extends LoginPanel {
         LogHandler.log(2001);
     }
 
+    void preencherEmail(String email) {
+        this.emailTF.setText(email);
+        nextStep();
+    }
+
     private void prepararCampoEmail(int offsetX, int offsetY, int width, int height) {
         JLabel emailLabel = new JLabel("E-mail: ");
         emailLabel.setBounds(offsetX, offsetY, width*2/10, height);

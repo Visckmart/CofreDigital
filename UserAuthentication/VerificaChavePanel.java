@@ -127,6 +127,7 @@ public class VerificaChavePanel extends LoginPanel {
             if (newState == UserLoginState.BLOCKED) {
                 LogHandler.logWithUser(4007);
                 IdentUsuPanel firstStep = new IdentUsuPanel();
+                firstStep.preencherEmail(emailAddress);
                 FrameHandler.showPanel(firstStep, firstStep.loginButton);
             }
         }
