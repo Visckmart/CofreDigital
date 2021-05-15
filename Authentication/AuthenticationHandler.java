@@ -74,6 +74,34 @@ public class AuthenticationHandler {
         return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decoded));
     }
 
+    public boolean verifyUserPrivateKey(byte[] privateKeyContent, String secretKey, String emailAddress) {
+        PrivateKey privateKey;
+        try {
+            privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
+        }
+        catch (Exception e) {
+            DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
+            LogHandler.logWithUser(4005);
+            return false;
+        }
+
+        byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
+        try {
+            Certificate userCertificate = this.certificateFromFile(userCertificateContent);
+            if (this.verifyPrivateKey(privateKey, userCertificate)) {
+                DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
+                UserState.privateKey = privateKey;
+                UserState.username = AuthenticationHandler.getUsernameFromCertificate(userCertificate);
+                return true;
+            } else {
+                throw new Exception("Chave inválida");
+            }
+        } catch (Exception exc) {
+            LogHandler.log(4006);
+            return false;
+        }
+    }
+
     public Certificate certificateFromFile(byte[] file) throws Exception {
         String fileString = new String(file);
         int beginIndex = fileString.indexOf("-----BEGIN CERTIFICATE-----") + "-----BEGIN CERTIFICATE-----".length();
@@ -140,34 +168,6 @@ public class AuthenticationHandler {
         int emailEnd = fullName.indexOf(",", emailIndex);
 
         return fullName.substring(emailIndex, emailEnd);
-    }
-
-    public boolean verifyUserPrivateKey(byte[] privateKeyContent, String secretKey, String emailAddress) {
-        PrivateKey privateKey;
-        try {
-            privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
-        }
-        catch (Exception e) {
-            DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
-            LogHandler.logWithUser(4005);
-            return false;
-        }
-
-        byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
-        try {
-            Certificate userCertificate = this.certificateFromFile(userCertificateContent);
-            if (this.verifyPrivateKey(privateKey, userCertificate)) {
-                DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
-                UserState.privateKey = privateKey;
-                UserState.username = AuthenticationHandler.getUsernameFromCertificate(userCertificate);
-                return true;
-            } else {
-                throw new Exception("Chave inválida");
-            }
-        } catch (Exception exc) {
-            LogHandler.log(4006);
-            return false;
-        }
     }
 
     public static void main(String[] args) throws Exception {

@@ -31,7 +31,7 @@ public class DatabaseHandler {
 
     public Connection connection;
     private final DateTimeFormatter TimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public DatabaseHandler() throws Exception {
+    private DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
         connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
     }
@@ -128,15 +128,13 @@ public class DatabaseHandler {
                     if (dateString != null) {
                         LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                         if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) < 0) {
-                            statement = connection.prepareStatement("UPDATE USUARIOS SET attempts=?, timeout=null where email=?");
-                            statement.setInt(1, 1);
-                            statement.setString(2, email);
+                            statement = connection.prepareStatement("UPDATE USUARIOS SET attempts=1, timeout=null where email=?");
                         } else {
                             statement =
                                 connection.prepareStatement(
                                     "UPDATE USUARIOS SET timeout = datetime('now','+2 minutes'), attempts=3 where email=?");
-                            statement.setString(1, email);
                         }
+                        statement.setString(1, email);
                     } else {
                         statement =
                             connection.prepareStatement(
@@ -166,18 +164,23 @@ public class DatabaseHandler {
         }
     }
 
-    public String[] getPasswordAndSalt(String email) throws Exception {
-        PreparedStatement statement = connection.prepareStatement("select * from usuarios where email=?");
-        statement.setString(1, email);
-        ResultSet rs = statement.executeQuery();
-        if(rs.next()) {
-            String password = rs.getString("senha");
-            String salt = rs.getString("salt");
-            rs.close();
-            String[] value = { password, salt };
-            return value;
+    public String[] getPasswordAndSalt(String email) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from usuarios where email=?");
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            if(rs.next()) {
+                String password = rs.getString("senha");
+                String salt = rs.getString("salt");
+                rs.close();
+                String[] value = { password, salt };
+                return value;
+            } else {
+                return null;
+            }
+        } catch (Exception ignored) {
+            return null;
         }
-        throw new Exception("Email não encontrado");
     }
 
     public List<String[]> getAllRegisters() throws Exception {

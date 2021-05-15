@@ -109,8 +109,6 @@ public class TecladoFoneticoPanel extends LoginPanel {
             return;
         }
         if (correctPassword == true) {
-            LogHandler.log(3003);
-
             VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
             FrameHandler.showPanel(vcp, vcp.loginButton);
 
