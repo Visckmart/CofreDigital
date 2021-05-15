@@ -12,6 +12,7 @@ public class MenuPrincipalPanel extends GeneralPanel {
       public MenuPrincipalPanel() {
         super("Menu principal", false);
         prepararCorpo(210, 190, 280, 300);
+        LogHandler.logWithUser(5001);
       }
       
       void prepararCorpo(int offsetX, int offsetY, int width, int height) {
