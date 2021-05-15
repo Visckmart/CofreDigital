@@ -119,6 +119,19 @@ public class AuthenticationHandler {
         return (String)fullName.subSequence(usernameStart, usernameEnd);
     }
 
+    static String getEmailFromCertificate(Certificate cert) {
+        X509Certificate certNovo = (X509Certificate) cert;
+        String fullName = ((X509Certificate)cert).getSubjectDN().getName();
+        int emailIndex = fullName.indexOf("EMAILADDRESS=") + 13;
+        int emailEnd = fullName.indexOf(",", emailIndex);
+
+
+        String nameSubject = certNovo.getSubjectDN().getName();
+
+
+        return fullName.substring(emailIndex, emailEnd);
+    }
+
     public boolean verifyUserPrivateKey(Path privateKeyPath, String secretKey, String emailAddress) throws BadPaddingException {
         byte[] privateKeyContent;
         try {
