@@ -78,7 +78,7 @@ class InterfaceTeste {
   static void testePasswordHandler() {
     for (int i = 0; i < 5; i++) {
       System.out.println(PasswordHandler.generateSalt());
-      System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()).get());
+      System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()));
     }
   }
 
