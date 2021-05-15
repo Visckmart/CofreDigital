@@ -1,11 +1,14 @@
 package Authentication;
+import Database.DatabaseHandler;
+import Utilities.LogHandler;
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
+import java.math.BigInteger;
+import java.nio.file.Paths;
 import java.security.cert.X509Certificate;
 
-import Database.DatabaseHandler;
-import Utilities.LogHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,6 +20,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
+import java.util.Date;
+import java.util.Optional;
 import java.util.Random;
 
 public class AuthenticationHandler {
@@ -81,10 +86,36 @@ public class AuthenticationHandler {
         return certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
     }
 
+    static String checkCertificate(Certificate cert, Optional<String> email) {
+        X509Certificate certNovo = (X509Certificate) cert;
+        try {
+            certNovo.checkValidity();
+        } catch (Exception e) {
+            return "Certificado fora do prazo de validade";
+        }
+
+        if(email.isPresent()) {
+            String subject = certNovo.getSubjectDN().getName();
+            int emailIndex = subject.indexOf("EMAILADDRESS=")+13;
+            String emailName = subject.substring(emailIndex, subject.indexOf(',', emailIndex));
+
+            if(!email.get().equals(emailName)) {
+                return "Certificado não bate com o usuário atual.";
+            }
+        }
+        return null;
+    }
+
     static String getUsernameFromCertificate(Certificate cert) {
+        X509Certificate certNovo = (X509Certificate) cert;
         String fullName = ((X509Certificate)cert).getSubjectDN().getName();
         int usernameStart = fullName.indexOf("CN=") + 3;
         int usernameEnd = fullName.indexOf(",", usernameStart);
+
+
+        String nameSubject = certNovo.getSubjectDN().getName();
+
+
         return (String)fullName.subSequence(usernameStart, usernameEnd);
     }
 
@@ -96,7 +127,7 @@ public class AuthenticationHandler {
             LogHandler.log(4004);
             return false;
         }
-        
+
         PrivateKey privateKey;
         try {
             privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
@@ -112,13 +143,13 @@ public class AuthenticationHandler {
             exc.printStackTrace();
             return false;
         }
-        
+
         try {
             byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
             Certificate userCertificate = this.certificateFromFile(userCertificateContent);
             boolean validKey = this.verifyPrivateKey(privateKey, userCertificate);
 
-            
+
             if (validKey) {
                 DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
                 UserState.privateKey = privateKey;
@@ -133,13 +164,14 @@ public class AuthenticationHandler {
         }
     }
 
-//    public static void main(String[] args) throws Exception {
-//        byte[] fileContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-pkcs8-des.key"));
-//        AuthenticationHandler handler = new AuthenticationHandler();
-//        PrivateKey privateKey = handler.privateKeyFromFile(fileContent, "user01".getBytes());
-//
-//        byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-//        Certificate certificate = handler.certificateFromFile(certificateContent);
-//        System.out.println(handler.verifyPrivateKey(privateKey, certificate));
-//    }
+    public static void main(String[] args) throws Exception {
+        byte[] fileContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-pkcs8-des.key"));
+        AuthenticationHandler handler = new AuthenticationHandler();
+        PrivateKey privateKey = handler.privateKeyFromFile(fileContent, "user01".getBytes());
+
+        byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
+        Certificate certificate = handler.certificateFromFile(certificateContent);
+        getUsernameFromCertificate(certificate);
+        System.out.println(handler.verifyPrivateKey(privateKey, certificate));
+    }
 }
