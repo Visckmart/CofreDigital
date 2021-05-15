@@ -81,10 +81,10 @@ class InterfaceTeste {
   }
 
   public static void main(String args[]) {
+    LogHandler.log(1001);
     // DatabaseHandler.createNewDatabase("test.db");
     // System.out.println(PasswordHandler.encodePassword("DABECADA", "sal99"));
     // 064f3b5c5e8ea7a79a27a87cdc0ec8dacd0c9741
-    // LogHandler.log(1001);
     // Path privateKeyFilePath = FileSystems.getDefault().getPath("Pacote-T4/Keys/", "admin-pkcs8-des.key");
     // try {
     //   AuthenticationHandler ah = new AuthenticationHandler();

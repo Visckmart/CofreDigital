@@ -16,7 +16,7 @@ import General.MenuPrincipalPanel;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 import Authentication.UserState;
-
+// TODO: Mensagem de erro para chave errada
 public class VerificaChavePanel extends JPanel {
     
     String emailAddress;
@@ -29,6 +29,7 @@ public class VerificaChavePanel extends JPanel {
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(210, 350, 280, 30);
         this.prepararBotaoLogin(285, 400, 130, 35);
+        LogHandler.logWithUser(4001);
     }
     
     JPasswordField passwordTF;
@@ -137,6 +138,8 @@ public class VerificaChavePanel extends JPanel {
                 frame.validate();
                 return;
             } else {
+                // TODO: Cagado
+                throw new BadPaddingException();
             }
         } catch (BadPaddingException e) {
             errorLabel.setText("Frase secreta incorreta.");
