@@ -7,8 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import java.math.BigInteger;
 import java.nio.file.Paths;
-import java.security.cert.X509Certificate;
-
+import java.security.cert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,8 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.*;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.time.DateTimeException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
@@ -114,13 +113,10 @@ public class AuthenticationHandler {
         return certificateFactory.generateCertificate(new ByteArrayInputStream(decodedCertificate));
     }
 
-    static String checkCertificate(Certificate cert, Optional<String> email) {
+    static void checkCertificate(Certificate cert, Optional<String> email)
+        throws CertificateNotYetValidException, CertificateExpiredException, CertificateException {
         X509Certificate certNovo = (X509Certificate) cert;
-        try {
-            certNovo.checkValidity();
-        } catch (Exception e) {
-            return "Certificado fora do prazo de validade";
-        }
+        certNovo.checkValidity();
 
         if(email.isPresent()) {
             String subject = certNovo.getSubjectDN().getName();
@@ -128,10 +124,9 @@ public class AuthenticationHandler {
             String emailName = subject.substring(emailIndex, subject.indexOf(',', emailIndex));
 
             if(!email.get().equals(emailName)) {
-                return "Certificado não bate com o usuário atual.";
+                throw new CertificateException();
             }
         }
-        return null;
     }
 
     static String getUsernameFromCertificate(Certificate cert) {
