@@ -22,6 +22,7 @@ public class ConfirmacaoSaidaPanel extends GeneralPanel {
         bt1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 LogHandler.logWithUser(9003);
+                LogHandler.log(1002);
                 System.exit(0);
             }
           });

@@ -142,44 +142,27 @@ public class AuthenticationHandler {
         return fullName.substring(emailIndex, emailEnd);
     }
 
-    public boolean verifyUserPrivateKey(Path privateKeyPath, String secretKey, String emailAddress) throws BadPaddingException {
-        byte[] privateKeyContent;
-        try {
-            privateKeyContent = Files.readAllBytes(privateKeyPath);
-        } catch (IOException exc) {
-            LogHandler.log(4004);
-            return false;
-        }
-
+    public boolean verifyUserPrivateKey(byte[] privateKeyContent, String secretKey, String emailAddress) {
         PrivateKey privateKey;
         try {
             privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
-        } catch (BadPaddingException badPaddingException) {
-            LogHandler.log(4005);
-            try {
-                DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            throw badPaddingException;
-        } catch (Exception exc) {
-            exc.printStackTrace();
+        }
+        catch (Exception e) {
+            DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
+            LogHandler.logWithUser(4005);
             return false;
         }
 
+        byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
         try {
-            byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(emailAddress);
             Certificate userCertificate = this.certificateFromFile(userCertificateContent);
-            boolean validKey = this.verifyPrivateKey(privateKey, userCertificate);
-
-
-            if (validKey) {
+            if (this.verifyPrivateKey(privateKey, userCertificate)) {
                 DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
                 UserState.privateKey = privateKey;
                 UserState.username = AuthenticationHandler.getUsernameFromCertificate(userCertificate);
                 return true;
             } else {
-                return false;
+                throw new Exception("Chave inválida");
             }
         } catch (Exception exc) {
             LogHandler.log(4006);

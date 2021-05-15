@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.awt.Color;
+import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.swing.JPasswordField;
 
@@ -19,7 +21,7 @@ import Utilities.UserLoginState;
 import Authentication.UserState;
 
 public class VerificaChavePanel extends LoginPanel {
-    
+
     String emailAddress;
     public VerificaChavePanel(String emailAddress) {
         this.emailAddress = emailAddress;
@@ -40,7 +42,7 @@ public class VerificaChavePanel extends LoginPanel {
         passwordTF.setText("user01");
         this.add(passwordTF);
     }
-    
+
     File chosenFile = new File("/Users/victormartins/Documents/CofreDigital/./Pacote-T4/Keys/user01-pkcs8-des.key");
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
@@ -97,7 +99,6 @@ public class VerificaChavePanel extends LoginPanel {
     
     void nextStep() {
         AuthenticationHandler authHandler;
-        boolean validPrivateKey;
         try {
             authHandler = new AuthenticationHandler();
         } catch (Exception e) {
@@ -105,33 +106,29 @@ public class VerificaChavePanel extends LoginPanel {
             return;
         }
         String fraseSecreta = new String(passwordTF.getPassword());
+        byte[] privateKeyContent;
         try {
-            validPrivateKey = authHandler.verifyUserPrivateKey(chosenFile.toPath(), fraseSecreta, emailAddress);
-            if (validPrivateKey) {
-                LogHandler.logWithUser(4002);
-                DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
-                FrameHandler.showPanel(new MenuPrincipalPanel());
-                return;
-            } else {
-            }
-        } catch (BadPaddingException e) {
-            errorLabel.setText("Frase secreta incorreta.");
-            System.out.println("Frase secreta incorreta.");
-            try {
-                UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-                if (newState == UserLoginState.BLOCKED) {
-                    LogHandler.logWithUser(4007);
-                    IdentUsuPanel firstStep = new IdentUsuPanel();
-                    FrameHandler.showPanel(firstStep, firstStep.loginButton);
-                    return;
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            privateKeyContent = Files.readAllBytes(chosenFile.toPath());
+        } catch (IOException exc) {
+            LogHandler.log(4004);
+            errorLabel.setText("Caminho para a chave privada incorreto");
             return;
+        }
+        boolean validPrivateKey = authHandler.verifyUserPrivateKey(privateKeyContent, fraseSecreta, emailAddress);
+        if (validPrivateKey) {
+            LogHandler.logWithUser(4002);
+            DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
+            FrameHandler.showPanel(new MenuPrincipalPanel());
+        }
+        else {
+            errorLabel.setText("Assinatura digital ou chave secreta inválida.");
+            UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+            if (newState == UserLoginState.BLOCKED) {
+                LogHandler.logWithUser(4007);
+                IdentUsuPanel firstStep = new IdentUsuPanel();
+                FrameHandler.showPanel(firstStep, firstStep.loginButton);
+                return;
+            }
         }
     }
     
