@@ -1,4 +1,9 @@
 package Utilities;
+
+import Authentication.UserGroup;
+import Authentication.UserState;
+import Database.DatabaseHandler;
+
 public class FileInfo {
 
     public String nomeProtegido;
@@ -14,9 +19,11 @@ public class FileInfo {
         this.grupo = lineInfo[3];
     }
     
-    public boolean checkAccess(String user, String group) {
-        // System.out.printf("%s %s  %s %s\n", user, this.dono, group, this.grupo);
-        return user.equals(this.dono) || group.equals(this.grupo);
+    public boolean checkAccess() {
+        DatabaseHandler.getInstance().updateUserState(UserState.emailAddress);
+        boolean groupCorrect = (this.grupo.equals("usuario") && UserState.group == UserGroup.USER) ||
+            (this.grupo.equals("administrador") && UserState.group == UserGroup.ADMIN);
+        return UserState.username.equals(this.dono) && groupCorrect;
     }
 
     public String toString() {

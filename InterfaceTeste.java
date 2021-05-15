@@ -98,7 +98,7 @@ class InterfaceTeste {
     //   e.printStackTrace();
     // }
     try {
-      new DatabaseHandler().seedUsers();
+      // new DatabaseHandler().seedUsers();
     //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
     } catch (Exception e) {
     //   //TODO: handle exception
