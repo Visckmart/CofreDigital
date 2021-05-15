@@ -34,12 +34,13 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                AuthenticationHandler authHandler = new AuthenticationHandler();
-                String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
-                String salt = PasswordHandler.generateSalt();
+                
                 try {
-                String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt).get();
-                DatabaseHandler.getInstance().registerUser(email, User.newUserCertificate, encodedPassword, salt, 1);
+                    AuthenticationHandler authHandler = new AuthenticationHandler();
+                    String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
+                    String salt = PasswordHandler.generateSalt();
+                    String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt).get();
+                    DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, 1);
                 } catch (Exception exc) {
                     exc.printStackTrace();
                 }

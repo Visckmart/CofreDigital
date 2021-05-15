@@ -1,11 +1,14 @@
 package General;
 import javax.swing.*;
 
+import Authentication.AuthenticationHandler;
+import Authentication.UserState;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
 
 public class CadastroPanel extends GeneralPanel {
     
@@ -96,6 +99,17 @@ public class CadastroPanel extends GeneralPanel {
     }
     
     void nextStep() {
+        if (chosenFile == null) {
+            return;
+        }
+        try {
+            byte[] certificateContent = Files.readAllBytes(chosenFile.toPath());
+            UserState.newUserCertificate = new AuthenticationHandler().certificateFromFile(certificateContent);
+            UserState.newUserCertificateContent = certificateContent;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
         TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         frame.setContentPane(vcp);

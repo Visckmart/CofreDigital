@@ -198,7 +198,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                     if (fonemasCorretos.equals(fonemasDigitados)) {
                         System.out.println("Confirmado");
                         if (goal == PasswordGoal.CADASTRAR) {
-                            String np = String.join("", (String[])fonemasDigitados.toArray());
+                            String np = String.join("", fonemasDigitados);
                             System.out.println(np);
                             UserState.newUserPassword = np;
                             JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
@@ -206,9 +206,10 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                             frame.setContentPane(vcp);
                             frame.invalidate();
                             frame.validate();
+                            return;
                         } else {
                             String salt = PasswordHandler.generateSalt();
-                            Optional<String> senha = PasswordHandler.encodePassword(String.join("", (String[])fonemasDigitados.toArray()), salt);
+                            Optional<String> senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
                             try {
                                 DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha.get(), salt);
                             } catch (Exception e) {
@@ -216,11 +217,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                                 return;
                             }
                         }
-                        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                        MenuPrincipalPanel vcp = new MenuPrincipalPanel();
-                        frame.setContentPane(vcp);
-                        frame.invalidate();
-                        frame.validate();
                     } else {
                         fonemasDigitados.clear();
                         updateInterface();
