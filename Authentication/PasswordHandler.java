@@ -38,7 +38,7 @@ public class PasswordHandler {
         return hexString.toString();
     }
     
-    public static Optional<String> encodePassword(String password, String salt) {
+    public static String encodePassword(String password, String salt) {
         assert password != null && salt != null : "Argumentos insucifientes para criptografar senha.";
         assert password.length() > 0 && salt.length() > 0 : "Argumentos inválidos para criptografar senha.";
         
@@ -47,11 +47,11 @@ public class PasswordHandler {
             messageDigest.update((password + salt).getBytes());
             byte[] digest = messageDigest.digest();
             String hexDigest = byteArrayToHexString(digest);
-            return Optional.of(hexDigest);
+            return hexDigest;
 
         } catch (NoSuchAlgorithmException exception) {
             exception.printStackTrace();
-            return Optional.empty();
+            return null;
         }
     }
 
@@ -100,8 +100,8 @@ public class PasswordHandler {
 
         List<String> allCombinations = generatePasswordCombinations(gruposFoneticosDigitados).get(0);
         for (String phoneticCombination : allCombinations) {
-            Optional<String> encodedPassword = PasswordHandler.encodePassword(phoneticCombination, salt);
-            if (encodedPassword.get().equals(pwdAndSalt[0])) {
+            String encodedPassword = PasswordHandler.encodePassword(phoneticCombination, salt);
+            if (encodedPassword.equals(pwdAndSalt[0])) {
                 DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
                 return true;
             }

@@ -18,6 +18,7 @@ import General.FileHandler;
 import General.MenuPrincipalPanel;
 import General.TecladoFoneticoFullPanel;
 import UserAuthentication.IdentUsuPanel;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 
 class InterfaceTeste {
@@ -71,6 +72,7 @@ class InterfaceTeste {
     frame.setLocationRelativeTo(null);
     frame.setResizable(false);
     frame.setVisible(true);
+    FrameHandler.setMainFrame(frame);
   }
 
   static void testePasswordHandler() {

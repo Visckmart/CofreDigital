@@ -13,23 +13,20 @@ import javax.swing.JPasswordField;
 import Authentication.AuthenticationHandler;
 import Database.DatabaseHandler;
 import General.MenuPrincipalPanel;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 import Utilities.UserLoginState;
 import Authentication.UserState;
-// TODO: Mensagem de erro para chave errada
-public class VerificaChavePanel extends JPanel {
-    
+
+public class VerificaChavePanel extends LoginPanel {
+
     String emailAddress;
     public VerificaChavePanel(String emailAddress) {
-        this.setLayout(null);
         this.emailAddress = emailAddress;
-        add(TitlePanel.getInstance());
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(210, 350, 280, 30);
-        this.prepararBotaoLogin(285, 400, 130, 35);
-        LogHandler.logWithUser(4001);
     }
     
     JPasswordField passwordTF;
@@ -43,15 +40,7 @@ public class VerificaChavePanel extends JPanel {
         passwordTF.setText("user01");
         this.add(passwordTF);
     }
-    
-    JLabel errorLabel;
-    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.red);
-        errorLabel.setBounds(offsetX, offsetY, width, height);
-        this.add(errorLabel);
-    }
-    
+
     File chosenFile = new File("/Users/victormartins/Documents/CofreDigital/./Pacote-T4/Keys/user01-pkcs8-des.key");
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
@@ -105,17 +94,6 @@ public class VerificaChavePanel extends JPanel {
             clearButton.setEnabled(false);
         }
     }
-    JButton loginButton;
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        loginButton = new JButton("Continuar   >");
-        loginButton.setBounds(offsetX, offsetY, width, height);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                nextStep();
-            }
-        });
-        this.add(loginButton);
-    }
     
     void nextStep() {
         AuthenticationHandler authHandler;
@@ -132,28 +110,20 @@ public class VerificaChavePanel extends JPanel {
             if (validPrivateKey) {
                 LogHandler.logWithUser(4002);
                 DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
-                JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                frame.setContentPane(new MenuPrincipalPanel());
-                frame.invalidate();
-                frame.validate();
+                FrameHandler.showPanel(new MenuPrincipalPanel());
                 return;
             } else {
-                // TODO: Cagado
-                throw new BadPaddingException();
             }
         } catch (BadPaddingException e) {
             errorLabel.setText("Frase secreta incorreta.");
             System.out.println("Frase secreta incorreta.");
             try {
-                boolean userBlocked = DatabaseHandler.getInstance().verifyUserEmail(emailAddress) == UserLoginState.BLOCKED;
-                if (userBlocked) {
+                UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+                if (newState == UserLoginState.BLOCKED) {
                     LogHandler.logWithUser(4007);
-                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    IdentUsuPanel vcp = new IdentUsuPanel();
-                    frame.setContentPane(vcp);
-                    frame.invalidate();
-                    frame.validate();
-                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                    IdentUsuPanel firstStep = new IdentUsuPanel();
+                    FrameHandler.showPanel(firstStep, firstStep.loginButton);
+                    return;
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

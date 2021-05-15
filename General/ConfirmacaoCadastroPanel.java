@@ -37,7 +37,7 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
                 try {
                     String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
                     String salt = PasswordHandler.generateSalt();
-                    String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt).get();
+                    String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt);
                     DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, 1);
                 } catch (Exception exc) {
                     exc.printStackTrace();
