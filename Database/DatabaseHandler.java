@@ -51,13 +51,17 @@ public class DatabaseHandler {
         if(verifyUserEmail(email) != UserLoginState.INVALID) {
             throw new Exception("Usuário já existe!");
         }
-        statement.setString(1, email);
-        statement.setString(2, encryptedPassword);
-        statement.setString(3, salt);
-        statement.setBytes(4, certificate);
-        statement.setInt(5, gid);
-        statement.executeUpdate();
-        statement.close();
+        try {
+            statement.setString(1, email);
+            statement.setString(2, encryptedPassword);
+            statement.setString(3, salt);
+            statement.setBytes(4, certificate);
+            statement.setInt(5, gid);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception e) {
+            return;
+        }
     }
 
     public UserLoginState verifyUserEmail(String email) {
