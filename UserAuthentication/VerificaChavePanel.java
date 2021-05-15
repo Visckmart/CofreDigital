@@ -109,9 +109,10 @@ public class VerificaChavePanel extends LoginPanel {
         byte[] privateKeyContent;
         try {
             privateKeyContent = Files.readAllBytes(chosenFile.toPath());
-        } catch (IOException exc) {
+        } catch (Exception exc) {
             LogHandler.log(4004);
-            errorLabel.setText("Caminho para a chave privada incorreto");
+            DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
+            errorLabel.setText("Caminho para a chave privada incorreto.");
             return;
         }
         boolean validPrivateKey = authHandler.verifyUserPrivateKey(privateKeyContent, fraseSecreta, emailAddress);
