@@ -2,8 +2,6 @@ package General;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,12 +25,11 @@ public class ConsultarArquivosPanel extends GeneralPanel {
     // Constructor
     public ConsultarArquivosPanel() {
         super("Consulta de Arquivos", true, CabecalhoInfo.TOTAL_CONSULTAS);
-        prepararDirChooser(175, 180, 360, 35);
-        prepareListButton(560, 180, 120, 35);
+        prepararDirChooser(20, 190, 530, 35);
+        prepareListButton(560, 190, 120, 35);
 
         listaArquivos = new ListaArquivosTable();
         add(listaArquivos);
-        
 
         MouseAdapter doubleClickHandler = new MouseAdapter() {
             public void mouseClicked(MouseEvent event) {
@@ -45,9 +42,10 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         };
         listaArquivos.addMouseListener(doubleClickHandler);
         JScrollPane scrollPane = new JScrollPane(listaArquivos);
-        scrollPane.setBounds(20, 225, 660, 280);
+        scrollPane.setBounds(20, 230, 660, 275);
         add(scrollPane);
     }
+
     void prepareListButton(int offsetX, int offsetY, int width, int height) {
         JButton listButton = new JButton("Consultar");
         listButton.setBounds(offsetX, offsetY, width, height);
@@ -65,20 +63,19 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         directoryLabel = new JLabel();
         directoryLabel.setBounds(offsetX + 150 + 10, offsetY, width - 150, height);
         add(directoryLabel);
-        final JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("./Pacote-T4"));
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File("./Pacote-T4"));
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
         JButton input = new JButton("Escolher caminho...");
         input.setBounds(offsetX, offsetY, 150, height);
         input.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int returnVal = fc.showOpenDialog(input);
-                chosenDirectory = fc.getSelectedFile();
-                
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    directoryLabel.setText(chosenDirectory.getName());
-                    // consultarPasta();
-                    // setFileList(ih.parseIndex(p));
+                int openDialogOption = fileChooser.showOpenDialog(input);
+                if (openDialogOption == JFileChooser.APPROVE_OPTION) {
+                    chosenDirectory = fileChooser.getSelectedFile();
+                    directoryLabel.setText(chosenDirectory.getAbsolutePath());
                 } else {
                     System.out.println("Open command cancelled by user.");
                 }
@@ -96,9 +93,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         try {
             byte[] fileContent = new FileHandler().decryptAndVerifyFile(directory, "index");
 
-            System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fileContent)));
             List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
-            System.out.println(fileInfos);
             setFileList(fileInfos);
             DatabaseHandler.getInstance().registerQuery(UserState.emailAddress);
             CabecalhoPanel.panel.atualizarInformacaoAdicional();
@@ -121,26 +116,12 @@ public class ConsultarArquivosPanel extends GeneralPanel {
     }
 
     void decryptFileAndSaveAs(File file, File destination) {
-        System.out.println(file);
-        System.out.println(destination);
-        System.out.println(chosenDirectory.getAbsolutePath());
-        System.out.println(file.getName());
         try {
-            byte[] x = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
-            try {
-                System.out.println(destination.toPath());
-                Files.write(destination.toPath(), x);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            byte[] fileContent = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
+            Files.write(destination.toPath(), fileContent);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    void doubleClickedRow(int row) {
-        System.out.println(row);
-        System.out.println(fileInfoList.get(row));
     }
 
     List<FileInfo> fileInfoList;
@@ -159,6 +140,5 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             tableModel.addRow(rowInfo);
         }
         tableModel.setRowCount(fileInfoList.size());
-        // tableModel.fireTableDataChanged();
     }
 }

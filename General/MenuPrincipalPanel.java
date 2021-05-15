@@ -9,17 +9,9 @@ import Utilities.LogHandler;
 
 public class MenuPrincipalPanel extends GeneralPanel {
     
-    public MenuPrincipalPanel() {
-      super("Menu principal", false);
-        this.setLayout(null);
-
-        // CabecalhoPanel cabecalho = CabecalhoPanel.panel;
-        // CabecalhoPanel.panel.updateLoginInfo("login", "grupo", "nome");
-        // cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        // cabecalho.updateExtraInfo("Total de acessos", "10");
-        // add(cabecalho);
-
-        prepararCorpo(225, 190, 255, 300);
+      public MenuPrincipalPanel() {
+        super("Menu principal", false);
+        prepararCorpo(210, 190, 280, 300);
       }
       
       void prepararCorpo(int offsetX, int offsetY, int width, int height) {

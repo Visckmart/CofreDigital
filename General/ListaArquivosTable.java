@@ -10,7 +10,6 @@ public class ListaArquivosTable extends JTable {
     
     static String[] columnNames = {"Nome do Arquivo", "Nome Protegido", "Dono", "Grupo"};
 
-    // Callable<Void> rowSelectedHandler;
     ListaArquivosTable() {
         super(new DefaultTableModel(null, columnNames));
 
