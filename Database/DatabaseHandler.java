@@ -104,16 +104,20 @@ public class DatabaseHandler {
         }
     }
 
-    public void registerQuery(String email) throws Exception {
-        PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
-        statement.setString(1, email);
-        ResultSet rs = statement.executeQuery();
-        int accesses = rs.getInt("queries");
-        statement = connection.prepareStatement("UPDATE USUARIOS SET queries=?, timeout=null where email=?");
-        statement.setInt(1, accesses + 1);
-        statement.setString(2, email);
-        statement.executeUpdate();
-        statement.close();
+    public void registerQuery(String email) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
+            statement.setString(1, email);
+            ResultSet rs = statement.executeQuery();
+            int accesses = rs.getInt("queries");
+            statement = connection.prepareStatement("UPDATE USUARIOS SET queries=?, timeout=null where email=?");
+            statement.setInt(1, accesses + 1);
+            statement.setString(2, email);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void registerAttempts(String email, boolean success) {

@@ -2,7 +2,10 @@ package General;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
+import java.security.InvalidKeyException;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +19,18 @@ import javax.swing.table.DefaultTableModel;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import Utilities.FileInfo;
+import Utilities.LogHandler;
+
 import java.awt.event.*;
 
 public class ConsultarArquivosPanel extends GeneralPanel {
     
     ListaArquivosTable listaArquivos;
-  
+
+    @Override protected int getBackCode() {
+        return 8002;
+    }
+
     // Constructor
     public ConsultarArquivosPanel() {
         super("Consulta de Arquivos", true, CabecalhoInfo.TOTAL_CONSULTAS);
@@ -44,6 +53,8 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         JScrollPane scrollPane = new JScrollPane(listaArquivos);
         scrollPane.setBounds(20, 230, 660, 275);
         add(scrollPane);
+
+        LogHandler.logWithUser(8001);
     }
 
     void prepareListButton(int offsetX, int offsetY, int width, int height) {
@@ -85,6 +96,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
     }
 
     void consultarPasta() {
+        LogHandler.logWithUser(8003);
         if (chosenDirectory == null) {
             setFileList(new ArrayList<FileInfo>());
             return;
@@ -95,10 +107,17 @@ public class ConsultarArquivosPanel extends GeneralPanel {
 
             List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
             setFileList(fileInfos);
+            LogHandler.logWithUser(8009);
             DatabaseHandler.getInstance().registerQuery(UserState.emailAddress);
             CabecalhoPanel.panel.atualizarInformacaoAdicional();
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException ignored) {
+            // TODO: Avisar para o usuário
+        } catch (InvalidKeyException ignored) {
+            // TODO: Avisar para o usuário
+        } catch (SignatureException ignored) {
+            // TODO: Avisar para o usuário
+        } catch (Exception ignored) {
+            // TODO: Avisar para o usuário
         }
     }
 
@@ -107,12 +126,20 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         fc.setCurrentDirectory(new File("~/Downloads"));
         File defaultName = new File(fileInfoList.get(row).nomeOriginal);
         fc.setSelectedFile(defaultName);
+        LogHandler.logWithUserAndFile(8010, defaultName.getName());
         int saveDialogOption = fc.showSaveDialog(this);
-        if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
-            decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
+
+        if(fileInfoList.get(row).checkAccess()) {
+            LogHandler.logWithUserAndFile(8011, defaultName.getName());
+            if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
+                decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
+            } else {
+                System.out.println("Open command cancelled by user.");
+            }
         } else {
-            System.out.println("Open command cancelled by user.");
+            LogHandler.logWithUserAndFile(8012, defaultName.getName());
         }
+
     }
 
     void decryptFileAndSaveAs(File file, File destination) {
@@ -130,13 +157,9 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         this.fileInfoList = fileInfoList;
         DefaultTableModel tableModel = (DefaultTableModel)listaArquivos.getModel();
         tableModel.setRowCount(0);
-        for (int i = 0; i < fileInfoList.size(); i++) {
+        for (FileInfo fileInfo : fileInfoList) {
             String[] rowInfo = {
-                fileInfoList.get(i).nomeOriginal,
-                fileInfoList.get(i).nomeProtegido,
-                fileInfoList.get(i).dono,
-                fileInfoList.get(i).grupo
-            };
+                fileInfo.nomeOriginal, fileInfo.nomeProtegido, fileInfo.dono, fileInfo.grupo };
             tableModel.addRow(rowInfo);
         }
         tableModel.setRowCount(fileInfoList.size());

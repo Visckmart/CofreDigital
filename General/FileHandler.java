@@ -6,7 +6,9 @@ import javax.crypto.SecretKey;
 import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
+import Utilities.LogHandler;
 
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -48,28 +50,69 @@ public class FileHandler {
     }
 
 
-    public byte[] decryptAndVerifyFile(String directory, String fileName) throws Exception {
+    public byte[] decryptAndVerifyFile(String directory, String fileName) throws IOException, InvalidKeyException, SignatureException,  Exception {
         Path directoryPath = FileSystems.getDefault().getPath(directory);
-        FileHandler fileHandler = new FileHandler();
+        FileHandler fileHandler;
 
-        Path envelopePath = directoryPath.resolve(fileName + ".env");
-        byte[] envelopeContent = Files.readAllBytes(envelopePath);
-        SecretKey simmetricKey = fileHandler.decryptEnvelope(UserState.privateKey, envelopeContent);
-        
-        Path encryptedFilePath = directoryPath.resolve(fileName + ".enc");
-        byte[] encryptedContent = Files.readAllBytes(encryptedFilePath);
-        byte[] fileContent = fileHandler.decryptFile(simmetricKey, encryptedContent);
+        fileHandler = new FileHandler();
 
-        Path signatureFilePath = directoryPath.resolve(fileName + ".asd");
-        byte[] signatureContent = Files.readAllBytes(signatureFilePath);
-        byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(UserState.emailAddress);
-        Certificate userCertificate = new AuthenticationHandler().certificateFromFile(userCertificateContent);
-        boolean isAuthentic = fileHandler.verifyFileAuthenticity(signatureContent, fileContent, userCertificate);
-        if (isAuthentic == false) {
-            System.out.println("Autenticidade inválida.");
-            throw new Exception("Erro na verificação de Autenticidade");
+        byte[] envelopeContent, encryptedContent, signatureContent;
+        try {
+            Path envelopePath = directoryPath.resolve(fileName + ".env");
+            envelopeContent = Files.readAllBytes(envelopePath);
+            Path encryptedFilePath = directoryPath.resolve(fileName + ".enc");
+            encryptedContent = Files.readAllBytes(encryptedFilePath);
+            Path signatureFilePath = directoryPath.resolve(fileName + ".asd");
+            signatureContent = Files.readAllBytes(signatureFilePath);
+        } catch (Exception e) {
+            if(fileName.equals("index")) {
+                LogHandler.logWithUser(8004);
+            }
+            throw new IOException("Arquivo não encontrado");
         }
-        return fileContent;
+
+
+        byte[] fileContent;
+        try {
+            SecretKey simmetricKey = fileHandler.decryptEnvelope(UserState.privateKey, envelopeContent);
+
+            fileContent = fileHandler.decryptFile(simmetricKey, encryptedContent);
+        } catch (Exception e) {
+            if (fileName.equals("index")) {
+                LogHandler.logWithUser(8007);
+            } else {
+                LogHandler.logWithUserAndFile(8015, fileName);
+            }
+            throw new InvalidKeyException();
+        }
+        if (fileName.equals("index")) {
+            LogHandler.logWithUser(8005);
+        } else {
+            LogHandler.logWithUserAndFile(8013, fileName);
+        }
+
+        try {
+            byte[] userCertificateContent = DatabaseHandler.getInstance().getEncodedCertificate(UserState.emailAddress);
+            Certificate userCertificate = new AuthenticationHandler().certificateFromFile(userCertificateContent);
+            boolean isAuthentic = fileHandler.verifyFileAuthenticity(signatureContent, fileContent, userCertificate);
+            if (!isAuthentic) {
+                throw new Exception("Erro na verificação de Autenticidade");
+            }
+
+            if (fileName.equals("index")) {
+                LogHandler.logWithUser(8006);
+            } else {
+                LogHandler.logWithUserAndFile(8014, fileName);
+            }
+            return fileContent;
+        } catch (Exception e) {
+            if(fileName.equals("index")) {
+                LogHandler.logWithUser(8008);
+            } else {
+                LogHandler.logWithUserAndFile(8016, fileName);
+            }
+            throw new SignatureException();
+        }
     }
     //     try {
     //         byte[] enve = Files.readAllBytes(filePath);

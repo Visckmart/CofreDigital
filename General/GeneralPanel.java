@@ -1,5 +1,7 @@
 package General;
 
+import Utilities.LogHandler;
+
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
-public class GeneralPanel extends JPanel {
+public abstract class GeneralPanel extends JPanel {
+    protected  int getBackCode() {return -1;}
 
     GeneralPanel(String title, boolean backToMenu, CabecalhoInfo infoAdicional) {
         this.setLayout(null);
@@ -45,6 +48,9 @@ public class GeneralPanel extends JPanel {
             }
         });
         add(backButton);
+        if(getBackCode() >= 0) {
+            LogHandler.logWithUser(getBackCode());
+        }
     }
 
     GeneralPanel(String title, boolean canGoBack) {
