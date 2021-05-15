@@ -8,7 +8,7 @@ import java.awt.Font;
 
 public class ListaArquivosTable extends JTable {
     
-    static String[] columnNames = {"Nome do Arquivo", "Dono", "Grupo"};
+    static String[] columnNames = {"Nome do Arquivo", "Nome Protegido", "Dono", "Grupo"};
 
     // Callable<Void> rowSelectedHandler;
     ListaArquivosTable() {
