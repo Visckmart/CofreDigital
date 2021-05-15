@@ -10,7 +10,6 @@ import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
-import Utilities.LogHandler;
 
 public class ConfirmacaoCadastroPanel extends GeneralPanel {
 
@@ -36,7 +35,6 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
             public void actionPerformed(ActionEvent e) {
                 
                 try {
-                    AuthenticationHandler authHandler = new AuthenticationHandler();
                     String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
                     String salt = PasswordHandler.generateSalt();
                     String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt).get();

@@ -12,7 +12,6 @@ import java.security.cert.X509Certificate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -108,14 +107,9 @@ public class AuthenticationHandler {
     }
 
     static String getUsernameFromCertificate(Certificate cert) {
-        X509Certificate certNovo = (X509Certificate) cert;
         String fullName = ((X509Certificate)cert).getSubjectDN().getName();
         int usernameStart = fullName.indexOf("CN=") + 3;
         int usernameEnd = fullName.indexOf(",", usernameStart);
-
-
-        String nameSubject = certNovo.getSubjectDN().getName();
-
 
         return (String)fullName.subSequence(usernameStart, usernameEnd);
     }
@@ -144,10 +138,6 @@ public class AuthenticationHandler {
         String fullName = ((X509Certificate)cert).getSubjectDN().getName();
         int emailIndex = fullName.indexOf("EMAILADDRESS=") + 13;
         int emailEnd = fullName.indexOf(",", emailIndex);
-
-
-        String nameSubject = certNovo.getSubjectDN().getName();
-
 
         return fullName.substring(emailIndex, emailEnd);
     }

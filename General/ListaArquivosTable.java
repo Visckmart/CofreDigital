@@ -1,19 +1,9 @@
 package General;
-import javax.swing.JFileChooser;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import java.awt.event.*;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.EventObject;
-import java.util.concurrent.Callable;
 import java.awt.Font;
 
 public class ListaArquivosTable extends JTable {
@@ -26,18 +16,6 @@ public class ListaArquivosTable extends JTable {
 
         this.setBounds(0, 0, 200, 300);
         this.setRowHeight(25);
-        ListaArquivosTable t = this;
-        // MouseAdapter doubleClickHandler = new MouseAdapter() {
-        //     public void mouseClicked(MouseEvent event) {
-        //         if (event.getClickCount() == 2) {
-        //             JTable target = (JTable)event.getSource();
-        //             int row = target.getSelectedRow();
-        //             // rowSelectedHandler.call();
-        //             // saveRowAsFile(row);
-        //         }
-        //     }
-        // };
-        // this.addMouseListener(doubleClickHandler);
 
         this.getTableHeader().setFont(new Font(null, Font.PLAIN, 15));
         this.setFont(new Font(null, Font.PLAIN, 15));

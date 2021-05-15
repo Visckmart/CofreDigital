@@ -1,16 +1,11 @@
 package UserAuthentication;
 import javax.crypto.BadPaddingException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 
 import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.security.PrivateKey;
 import java.awt.Color;
 
 import javax.swing.JPasswordField;

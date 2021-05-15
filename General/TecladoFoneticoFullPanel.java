@@ -8,13 +8,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
