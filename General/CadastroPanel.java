@@ -4,6 +4,7 @@ import javax.swing.*;
 import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
+import Utilities.FrameHandler;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -110,11 +111,8 @@ public class CadastroPanel extends GeneralPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-        TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
-        frame.setContentPane(vcp);
-        frame.invalidate();
-        frame.validate();
+        TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
+        FrameHandler.showPanel(tecladoNovaSenhaCadastro);
     }
     
     

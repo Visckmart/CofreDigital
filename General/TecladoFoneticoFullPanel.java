@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -17,6 +16,7 @@ import Authentication.PasswordHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import UserAuthentication.TecladoFonetico;
+import Utilities.FrameHandler;
 import Utilities.LogHandler;
 
 public class TecladoFoneticoFullPanel extends GeneralPanel {
@@ -186,12 +186,8 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             if (noSequentialDuplicates) {
                 if (fonemasCorretos == null) {
                     System.out.println("Ir para confirmacao");
-                    JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                    TecladoFoneticoFullPanel vcp = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
-                    frame.setContentPane(vcp);
-                    frame.invalidate();
-                    frame.validate();
-                    frame.getRootPane().setDefaultButton(vcp.loginButton);
+                    TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
+                    FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
                 } else {
                     if (fonemasCorretos.equals(fonemasDigitados)) {
                         System.out.println("Confirmado");
@@ -199,11 +195,8 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                             String np = String.join("", fonemasDigitados);
                             System.out.println(np);
                             UserState.newUserPassword = np;
-                            JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
-                            ConfirmacaoCadastroPanel vcp = new ConfirmacaoCadastroPanel();
-                            frame.setContentPane(vcp);
-                            frame.invalidate();
-                            frame.validate();
+                            ConfirmacaoCadastroPanel confirmacaoCadastroPanel = new ConfirmacaoCadastroPanel();
+                            FrameHandler.showPanel(confirmacaoCadastroPanel);
                             return;
                         } else {
                             String salt = PasswordHandler.generateSalt();
