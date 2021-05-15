@@ -5,7 +5,10 @@ import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
 import Utilities.FrameHandler;
+import Utilities.LogHandler;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,20 +23,24 @@ public class CadastroPanel extends GeneralPanel {
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoGrupo(210, 320, 320, 50);
         this.prepararBotaoLogin(285, 400, 130, 35);
+
+        
+        this.prepararLabelErro(175, 365, 400, 30);
+        LogHandler.log(6001);
     }
     
-    JList<String> groupTF;
+    JList<String> groupList;
     private void prepararCampoGrupo(int offsetX, int offsetY, int width, int height) {
         JLabel passwordLabel = new JLabel("Grupo do usuário: ");
         passwordLabel.setBounds(offsetX, offsetY, width*4/10, height);
         this.add(passwordLabel);
         
         String[] grupos = {"Administrador", "Usuário"};
-        groupTF = new JList<String>(grupos);
-        groupTF.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
-        groupTF.setFixedCellHeight(25);
-        groupTF.setSelectedIndex(1);
-        this.add(groupTF);
+        groupList = new JList<String>(grupos);
+        groupList.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
+        groupList.setFixedCellHeight(25);
+        groupList.setSelectedIndex(1);
+        this.add(groupList);
     }
     
     File chosenFile;
@@ -98,19 +105,38 @@ public class CadastroPanel extends GeneralPanel {
         });
         this.add(loginButton);
     }
+    JLabel errorLabel;
+    void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
+        errorLabel = new JLabel();
+        errorLabel.setFont(new Font(null, Font.BOLD, 14));
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        errorLabel.setForeground(Color.red);
+        errorLabel.setBounds(offsetX, offsetY, width, height);
+        this.add(errorLabel);
+    }
     
     void nextStep() {
         if (chosenFile == null) {
+            LogHandler.logWithUser(6004);
+            errorLabel.setText("Caminho do certificado digital inválido.");
             return;
         }
+        byte[] certificateContent;
         try {
-            byte[] certificateContent = Files.readAllBytes(chosenFile.toPath());
+            certificateContent = Files.readAllBytes(chosenFile.toPath());
+        } catch (Exception e) {
+            LogHandler.logWithUser(6004);
+            errorLabel.setText("Caminho do certificado digital inválido.");
+            return;
+        }
+        try {    
             UserState.newUserCertificate = new AuthenticationHandler().certificateFromFile(certificateContent);
             UserState.newUserCertificateContent = certificateContent;
             
         } catch (Exception e) {
             e.printStackTrace();
         }
+        UserState.newUserGroup = groupList.getSelectedIndex() == 0 ? "administrador" : "usuario";
         TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         FrameHandler.showPanel(tecladoNovaSenhaCadastro);
     }
