@@ -3,10 +3,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 
 import Database.DatabaseHandler;
+import Utilities.LogHandler;
+import Utilities.UserLoginState;
 
 public class PasswordHandler {
 
@@ -90,7 +91,7 @@ public class PasswordHandler {
         }
     }
 
-    public static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) throws Exception {
+    public static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) {
         System.out.println("IGNORANDO TECLADO FONETICO");
         if (true) return true;
         String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
@@ -103,10 +104,18 @@ public class PasswordHandler {
             String encodedPassword = PasswordHandler.encodePassword(phoneticCombination, salt);
             if (encodedPassword.equals(pwdAndSalt[0])) {
                 DatabaseHandler.getInstance().registerAttempts(emailAddress, true);
+                LogHandler.logWithUser(3003);
                 return true;
             }
         }
-        DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
+        DatabaseHandler instance = DatabaseHandler.getInstance();
+        instance.registerAttempts(emailAddress, false);
+        instance.updateUserState(UserState.emailAddress);
+        int attempts = UserState.attempts;
+        LogHandler.logWithUser(3003 + attempts);
+        if(instance.verifyUserEmail(UserState.emailAddress) == UserLoginState.BLOCKED) {
+            LogHandler.logWithUser(3007);
+        }
         return false;
     }
 }
