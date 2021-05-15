@@ -50,7 +50,9 @@ public class ListaRegistrosTable extends JTable {
             tableModel.addRow(registerInfoList.get(i));
         }
         tableModel.setRowCount(registerInfoList.size());
-        setRowSelectionInterval(selectedRow, selectedRow);
+        if (selectedRow != -1) {
+            setRowSelectionInterval(selectedRow, selectedRow);
+        }
     }
 
     public boolean editCellAt(int row, int column, EventObject e) {

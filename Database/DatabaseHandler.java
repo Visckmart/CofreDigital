@@ -198,11 +198,11 @@ public class DatabaseHandler {
         while (rs.next()) {
             String mensagem = rs.getString("mensagem");
             if (mensagem != null) {
-                String usuario = rs.getString("usuario");
+                String usuario = "<u><b>" + rs.getString("usuario") + "</b></u>";
                 if (usuario != null) {
                     mensagem = mensagem.replace("<login_name>", usuario);
                 }
-                String arquivo = rs.getString("usuario");
+                String arquivo = "<u><b>" + rs.getString("usuario") + "</b></u>";
                 if (arquivo != null) {
                     mensagem = mensagem.replace("<arq_name>", arquivo);
                 }
@@ -216,7 +216,7 @@ public class DatabaseHandler {
             ZonedDateTime originalDate = ZonedDateTime.of(date, ZoneId.of("UTC"));
             ZonedDateTime adjustedDate = originalDate.withZoneSameInstant(ZoneId.of("UTC-3"));
             
-            String[] registro = { adjustedDate.format(TimestampFormatter), mensagem };
+            String[] registro = { adjustedDate.format(TimestampFormatter), "<html>" + mensagem + "</html>" };
             registros.add(registro);
 
             // System.out.println(rs.getString("timestamp"));
