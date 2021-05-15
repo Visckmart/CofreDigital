@@ -7,7 +7,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
+import java.util.Optional;
 
+import Authentication.AuthenticationHandler;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
@@ -19,6 +25,10 @@ public class AlterarCertificadoPanel extends GeneralPanel {
     JButton[] keys = new JButton[18];
     JTextArea pathLabel;
 
+    @Override protected int getBackCode() {
+        return 7006;
+    }
+
     public AlterarCertificadoPanel() {
         super("Alterar Certificado", true);
         
@@ -27,7 +37,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         this.prepararLabelErro(225, 240, 250, 20);
         this.prepararBotaoLogin(285, 350, 130, 35);
         
-        LogHandler.logWithUser(3001);
+        LogHandler.logWithUser(7001);
     }
     
     File chosenFile;
@@ -122,12 +132,42 @@ public class AlterarCertificadoPanel extends GeneralPanel {
     void nextStep() {
         if (chosenFile != null) {
             // Atualizar certificado
+            byte[] certificateContent;
             try {
-                byte[] certificateContent = Files.readAllBytes(chosenFile.toPath());
-                DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, certificateContent);
-            } catch (Exception exc) {
-                exc.printStackTrace();
+                certificateContent = Files.readAllBytes(chosenFile.toPath());
+            } catch (Exception e) {
+                LogHandler.logWithUser(7003);
+                errorLabel.setText("Caminho para o certificado inválido.");
+                return;
             }
+            AuthenticationHandler handler;
+            try {
+                handler = new AuthenticationHandler();
+            } catch(Exception e) {
+                return;
+            }
+            Certificate cert;
+            try {
+                cert = handler.certificateFromFile(certificateContent);
+            } catch (Exception e) {
+                errorLabel.setText("Certificado inválido.");
+                LogHandler.logWithUser(7005);
+                return;
+            }
+            try {
+                AuthenticationHandler.checkCertificate(cert, Optional.of(UserState.emailAddress));
+            } catch (CertificateNotYetValidException | CertificateExpiredException e) {
+                errorLabel.setText("Certificado fora do prazo.");
+                LogHandler.logWithUser(7005);
+                return;
+            } catch (CertificateException e) {
+                errorLabel.setText("Certificado não pertence ao usuário.");
+                LogHandler.logWithUser(7005);
+                return;
+            }
+
+            DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, certificateContent);
+            LogHandler.logWithUser(7004);
         }
         TecladoFoneticoFullPanel tecladoNovaSenhaPanel = new TecladoFoneticoFullPanel("Nova Senha", null, PasswordGoal.ALTERAR);
         FrameHandler.showPanel(tecladoNovaSenhaPanel);

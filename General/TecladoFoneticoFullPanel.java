@@ -44,6 +44,14 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         
         LogHandler.logWithUser(3001);
     }
+
+    @Override protected int getBackCode() {
+        if(this.goal == PasswordGoal.CADASTRAR) {
+            return 6007;
+        } else {
+            return 7006;
+        }
+    }
     
     private void prepararCampoDeSenha(int offsetX, int offsetY, int width, int height) {
         feedbackField.setBounds(offsetX, offsetY, width, height);

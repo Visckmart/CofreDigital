@@ -245,12 +245,16 @@ public class DatabaseHandler {
         }
     }
 
-    public void updateUserCertificate(String emailAddress, byte[] certificate)  throws Exception {
-        PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET certificado=? where email=?");
-        statement.setBytes(1, certificate);
-        statement.setString(2, emailAddress);
-        statement.executeUpdate();
-        statement.close();
+    public void updateUserCertificate(String emailAddress, byte[] certificate) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET certificado=? where email=?");
+            statement.setBytes(1, certificate);
+            statement.setString(2, emailAddress);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void updateUserPassword(String emailAddress, String senha, String salt)  throws Exception {
