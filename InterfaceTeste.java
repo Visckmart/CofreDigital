@@ -68,6 +68,7 @@ class InterfaceTeste {
     }
   });
     frame.setSize(700, 550);
+    frame.setLocationRelativeTo(null);
     frame.setResizable(false);
     frame.setVisible(true);
   }

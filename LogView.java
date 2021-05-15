@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import java.awt.GridLayout;
 
 import Database.DatabaseHandler;
 import LogView.ListaRegistrosTable;
@@ -13,7 +14,8 @@ public class LogView {
         
         JPanel p = new JPanel();
         p.setBounds(0, 0, 700, 550);
-        p.setLayout(null);
+        // p.setLayout(null);
+        p.setLayout(new GridLayout());
         p.add(t);
         try {
             t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
@@ -27,7 +29,8 @@ public class LogView {
         frame.invalidate();
         frame.validate();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 550);
+        frame.setSize(750, 550);
+        frame.setLocationRelativeTo(null);
         frame.setResizable(true);
         frame.setVisible(true);
     }
