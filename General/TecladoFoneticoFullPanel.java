@@ -171,57 +171,72 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         updateInterface();
     }
     
-    void nextStep() {
-        if (fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6) {
-            boolean noSequentialDuplicates = true;
-
-            String ultimoFonema="";
-            for (String fonema : fonemasDigitados) {
-                if (fonema.equals(ultimoFonema)) {
-                    noSequentialDuplicates = false;
-                    break;
-                }
-                ultimoFonema = fonema;
-            }
-            if (noSequentialDuplicates) {
-                if (fonemasCorretos == null) {
-                    System.out.println("Ir para confirmacao");
-                    TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
-                    FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
-                } else {
-                    if (fonemasCorretos.equals(fonemasDigitados)) {
-                        System.out.println("Confirmado");
-                        if (goal == PasswordGoal.CADASTRAR) {
-                            LogHandler.logWithUser(6002);
-                            String np = String.join("", fonemasDigitados);
-                            System.out.println(np);
-                            UserState.newUserPassword = np;
-                            ConfirmacaoCadastroPanel confirmacaoCadastroPanel = new ConfirmacaoCadastroPanel();
-                            FrameHandler.showPanel(confirmacaoCadastroPanel);
-                            return;
-                        } else {
-                            String salt = PasswordHandler.generateSalt();
-                            String senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
-                            try {
-                                DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha, salt);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                return;
-                            }
-                        }
-                    } else {
-                        fonemasDigitados.clear();
-                        updateInterface();
-                        System.out.println("Confirmacao invalida");
-                        errorLabel.setText("Confirmação de senha incorreta");
-
-                    }
-                }
+    boolean verificarSenha() {
+        if (!(fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6)) {
+            if (goal == PasswordGoal.CADASTRAR) {
+                LogHandler.logWithUser(6003);
             } else {
-                errorLabel.setText("Não use fonemas iguais em sequência.");
+                LogHandler.logWithUser(7002);
             }
+            errorLabel.setText("Não use fonemas iguais em sequência.");
+            return false;
+        }
+        boolean noSequentialDuplicates = true;
+
+        String ultimoFonema="";
+        for (String fonema : fonemasDigitados) {
+            if (fonema.equals(ultimoFonema)) {
+                noSequentialDuplicates = false;
+                break;
+            }
+            ultimoFonema = fonema;
+        }
+        if (noSequentialDuplicates) {
+            return true;
         } else {
+            if (goal == PasswordGoal.CADASTRAR) {
+                LogHandler.logWithUser(6003);
+            } else {
+                LogHandler.logWithUser(7002);
+            }
             errorLabel.setText("Quantidade de fonemas inválida.");
+            return false;
+        }
+    }
+    
+    void nextStep() {
+        if (!verificarSenha()) {
+            return;
+        }
+        if (fonemasCorretos == null) {
+            System.out.println("Ir para confirmacao");
+            TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
+            FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
+            return;
+        }
+        if (fonemasCorretos.equals(fonemasDigitados) == false) {
+            fonemasDigitados.clear();
+            updateInterface();
+            System.out.println("Confirmacao invalida");
+            errorLabel.setText("Confirmação de senha incorreta");
+            return;
+        }
+        System.out.println("Confirmado");
+        if (goal == PasswordGoal.CADASTRAR) {
+            LogHandler.logWithUser(6002);
+            String newUserPassword = String.join("", fonemasDigitados);
+            UserState.newUserPassword = newUserPassword;
+            FrameHandler.showPanel(new ConfirmacaoCadastroPanel());
+            return;
+        } else {
+            String salt = PasswordHandler.generateSalt();
+            String senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
+            try {
+                DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha, salt);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
         }
     }
   }
