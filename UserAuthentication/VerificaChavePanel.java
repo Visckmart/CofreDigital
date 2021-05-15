@@ -135,6 +135,7 @@ public class VerificaChavePanel extends JPanel {
             validPrivateKey = authHandler.verifyUserPrivateKey(chosenFile.toPath(), fraseSecreta, emailAddress);
             if (validPrivateKey) {
                 LogHandler.logWithUser(4002);
+                DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();
