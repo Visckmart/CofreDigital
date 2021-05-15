@@ -16,4 +16,5 @@ public class UserState {
 
     public static Certificate newUserCertificate;
     public static String newUserGroup;
+    public static String newUserPassword;
 }

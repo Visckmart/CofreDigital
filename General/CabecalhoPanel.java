@@ -2,6 +2,7 @@ package General;
 import javax.swing.*;
 
 import Authentication.UserState;
+import Database.DatabaseHandler;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -10,7 +11,6 @@ public class CabecalhoPanel extends JPanel {
     
     public static CabecalhoPanel panel = new CabecalhoPanel();
 
-    
     private static String composeLabelText(String fieldName, String content) {
         return "<html>" + "<b>" + fieldName + ": " + "</b>" + content + "</html>";
     }
@@ -19,6 +19,20 @@ public class CabecalhoPanel extends JPanel {
     private JLabel groupLabel;
     private JLabel usernameLabel;
     private JLabel extraInfoLabel = new JLabel();
+    
+    CabecalhoInfo informacaoAdicional = CabecalhoInfo.TOTAL_ACESSOS;
+
+    void setInformacaoAdicional(CabecalhoInfo info) {
+        informacaoAdicional = info;
+        DatabaseHandler.getInstance().updateUserState(UserState.emailAddress);
+        if (info == CabecalhoInfo.TOTAL_ACESSOS) {
+            updateExtraInfo("Total de acessos do usuário", "10");
+        } else if (info == CabecalhoInfo.TOTAL_CONSULTAS) {
+            updateExtraInfo("Total de consultas do usuário", Integer.toString(UserState.queries));
+        } else if (info == CabecalhoInfo.TOTAL_USUARIOS) {
+            updateExtraInfo("Total de usuários no sistema", Integer.toString(UserState.totalUsers));
+        }
+    }
     
     private CabecalhoPanel() {
         this.setLayout(null);
@@ -45,7 +59,7 @@ public class CabecalhoPanel extends JPanel {
         add(usernameLabel);
 
         extraInfoLabel.setFont(new Font(null, Font.PLAIN, 18));
-        extraInfoLabel.setBounds(0, 100, 350, 25);
+        extraInfoLabel.setBounds(0, 95, 350, 25);
         extraInfoLabel.setBackground(Color.lightGray);
         // extraInfoLabel.setOpaque(true);
         add(extraInfoLabel);

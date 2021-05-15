@@ -226,26 +226,30 @@ public class DatabaseHandler {
         statement.close();
     }
 
-    public void updateUserState(String emailAddress) throws Exception {
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(
-            "SELECT * from USUARIOS where email = '" + emailAddress + "'"
-        );
-        UserState.emailAddress = rs.getString("email");
-        UserState.attempts = rs.getInt("attempts");
-        UserState.group = rs.getInt("gid") == 0 ? UserGroup.USER : UserGroup.ADMIN;
-        UserState.queries = rs.getInt("queries");
-        UserState.accesses = rs.getInt("accesses");
-        rs.close();
+    public void updateUserState(String emailAddress) {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(
+                "SELECT * from USUARIOS where email = '" + emailAddress + "'"
+            );
+            UserState.emailAddress = rs.getString("email");
+            UserState.attempts = rs.getInt("attempts");
+            UserState.group = rs.getInt("gid") == 0 ? UserGroup.USER : UserGroup.ADMIN;
+            UserState.accesses = rs.getInt("accesses");
+            UserState.queries = rs.getInt("queries");
+            rs.close();
 
-        statement = connection.createStatement();
-        rs = statement.executeQuery("SELECT * from USUARIOS");
-        int rowCount=0;
-        while(rs.next())
-        {
-            rowCount++;
+            statement = connection.createStatement();
+            rs = statement.executeQuery("SELECT * from USUARIOS");
+            int rowCount=0;
+            while(rs.next()) {
+                rowCount++;
+            }
+            UserState.totalUsers = rowCount;
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            return;
         }
-        UserState.totalUsers = rowCount;
     }
 
     public static void main(String[] args) throws Exception {

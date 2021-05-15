@@ -33,7 +33,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
   
     // Constructor
     public ConsultarArquivosPanel() {
-        super("Consulta de Arquivos", true);
+        super("Consulta de Arquivos", true, CabecalhoInfo.TOTAL_CONSULTAS);
         prepararDirChooser(175, 180, 360, 35);
         prepareListButton(560, 180, 120, 35);
 

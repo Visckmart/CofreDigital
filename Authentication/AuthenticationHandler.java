@@ -12,6 +12,7 @@ import java.security.cert.X509Certificate;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -119,7 +120,26 @@ public class AuthenticationHandler {
         return (String)fullName.subSequence(usernameStart, usernameEnd);
     }
 
-    static String getEmailFromCertificate(Certificate cert) {
+    public static String[] getCertificateInfo(Certificate certificate) {
+        X509Certificate cert = (X509Certificate)certificate;
+        int version = cert.getVersion();
+        BigInteger serialNumber = cert.getSerialNumber();
+        Date notBefore = cert.getNotBefore();
+        Date notAfter = cert.getNotAfter();
+        String algorithm = cert.getSigAlgName();
+        String nameIssuer = cert.getIssuerDN().getName();
+        int issuerNameIndex = nameIssuer.indexOf("CN=")+3;
+        String issuerName = nameIssuer.substring(issuerNameIndex, nameIssuer.indexOf(',', issuerNameIndex));
+
+        String nameSubject = cert.getSubjectDN().getName();
+        int nameIndex = nameSubject.indexOf("CN=")+3;
+        String subjectName = nameSubject.substring(nameIndex, nameSubject.indexOf(',', nameIndex));
+        int emailIndex = nameSubject.indexOf("EMAILADDRESS=")+13;
+        String emailName = nameSubject.substring(emailIndex, nameSubject.indexOf(',', emailIndex));
+        String[] r = {Integer.toString(version), serialNumber.toString(), notBefore.toString(), notAfter.toString(), algorithm, issuerName, subjectName, emailName};
+        return r;
+    }
+    public static String getEmailFromCertificate(Certificate cert) {
         X509Certificate certNovo = (X509Certificate) cert;
         String fullName = ((X509Certificate)cert).getSubjectDN().getName();
         int emailIndex = fullName.indexOf("EMAILADDRESS=") + 13;
