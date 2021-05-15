@@ -83,6 +83,17 @@ public class DatabaseHandler {
         }
     }
 
+    public void registerAccess(String email) throws Exception {
+        PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
+        statement.setString(1, email);
+        ResultSet rs = statement.executeQuery();
+        int accesses = rs.getInt("accesses");
+        statement = connection.prepareStatement("UPDATE USUARIOS SET accesses=?, timeout=null where email=?");
+        statement.setInt(1, accesses + 1);
+        statement.setString(2, email);
+        statement.executeUpdate();
+        statement.close();
+    }
 
     public void registerAttempts(String email, boolean success) throws Exception {
         PreparedStatement statement = connection.prepareStatement("select * from USUARIOS where email=?");
@@ -224,6 +235,7 @@ public class DatabaseHandler {
             UserState.emailAddress = rs.getString("email");
             UserState.attempts = rs.getInt("attempts");
             UserState.group = rs.getInt("gid") == 0 ? UserGroup.USER : UserGroup.ADMIN;
+            UserState.accesses = rs.getInt("accesses");
             UserState.queries = rs.getInt("queries");
             rs.close();
 
