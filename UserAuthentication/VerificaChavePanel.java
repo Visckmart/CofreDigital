@@ -29,6 +29,8 @@ public class VerificaChavePanel extends LoginPanel {
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(210, 350, 280, 30);
+
+        LogHandler.logWithUser(4001);
     }
     
     JPasswordField passwordTF;
@@ -109,7 +111,7 @@ public class VerificaChavePanel extends LoginPanel {
         byte[] privateKeyContent;
         try {
             privateKeyContent = Files.readAllBytes(chosenFile.toPath());
-        } catch (Exception exc) {
+        } catch (Exception e) {
             LogHandler.log(4004);
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
             errorLabel.setText("Caminho para a chave privada incorreto.");
@@ -117,18 +119,19 @@ public class VerificaChavePanel extends LoginPanel {
         }
         boolean validPrivateKey = authHandler.verifyUserPrivateKey(privateKeyContent, fraseSecreta, emailAddress);
         if (validPrivateKey) {
+            LogHandler.logWithUser(4003);
             LogHandler.logWithUser(4002);
             DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
             FrameHandler.showPanel(new MenuPrincipalPanel());
         }
         else {
             errorLabel.setText("Assinatura digital ou chave secreta inválida.");
+            DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
             UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (newState == UserLoginState.BLOCKED) {
                 LogHandler.logWithUser(4007);
                 IdentUsuPanel firstStep = new IdentUsuPanel();
                 FrameHandler.showPanel(firstStep, firstStep.loginButton);
-                return;
             }
         }
     }
