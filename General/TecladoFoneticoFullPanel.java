@@ -207,9 +207,9 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                             return;
                         } else {
                             String salt = PasswordHandler.generateSalt();
-                            Optional<String> senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
+                            String senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
                             try {
-                                DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha.get(), salt);
+                                DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha, salt);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 return;

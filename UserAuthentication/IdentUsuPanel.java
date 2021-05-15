@@ -32,24 +32,6 @@ public class IdentUsuPanel extends LoginPanel {
         emailTF.setText("user01@inf1416.puc-rio.br");
         this.add(emailTF);
     }
-    
-    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.red);
-        errorLabel.setBounds(offsetX, offsetY, width, height);
-        this.add(errorLabel);
-    }
-    
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        loginButton = new JButton("Continuar   >");
-        loginButton.setBounds(offsetX, offsetY, width, height);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                nextStep();
-            }
-        });
-        this.add(loginButton);
-    }
 
     void nextStep() {
         String emailAddress = emailTF.getText();

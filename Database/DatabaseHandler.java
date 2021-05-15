@@ -41,7 +41,7 @@ public class DatabaseHandler {
         String userEmail = "user01@inf1416.puc-rio.br";
         if(verifyUserEmail(userEmail) == UserLoginState.INVALID) {
             byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-            String password = PasswordHandler.encodePassword("BABABABA", "232").get();
+            String password = PasswordHandler.encodePassword("BABABABA", "232");
             registerUser(userEmail, certificate, password, "232", 0);
         }
     }

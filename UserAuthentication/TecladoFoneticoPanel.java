@@ -1,15 +1,10 @@
 package UserAuthentication;
 import javax.swing.*;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
@@ -20,7 +15,7 @@ import Utilities.UserLoginState;
 public class TecladoFoneticoPanel extends LoginPanel {
     
     JButton[] keys = new JButton[6];
-    JTextPane feedbackField = new JTextPane();
+    PasswordField feedbackField = new PasswordField();
 
     String emailAddress;
     TecladoFonetico tecladoFonetico;
@@ -32,7 +27,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
         this.prepararLabelErro(225, 240, 250, 20);
         this.prepararBotoes(150, 270, 400, 115);
         
-        updatePasswordFeedback(0);
+        feedbackField.updatePasswordFeedback(0);
         tecladoFonetico = new TecladoFonetico();
         this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
         
@@ -41,9 +36,6 @@ public class TecladoFoneticoPanel extends LoginPanel {
     
     private void prepararCampoDeSenha(int offsetX, int offsetY, int width, int height) {
         feedbackField.setBounds(offsetX, offsetY, width, height);
-        feedbackField.setFont(new Font(null, Font.PLAIN, 25));
-        feedbackField.setBackground(Color.black);
-        feedbackField.setForeground(Color.white);
         add(feedbackField);
         JButton clearButton = new JButton("X");
         clearButton.setBounds(offsetX + width + 10, offsetY, height, height);
@@ -80,14 +72,18 @@ public class TecladoFoneticoPanel extends LoginPanel {
             }
         }
     }
-    
-    JLabel errorLabel;
-    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
-        errorLabel = new JLabel();
-        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        errorLabel.setForeground(Color.red);
-        errorLabel.setBounds(offsetX, offsetY, width, height);
-        this.add(errorLabel);
+
+    void buttonPressed(int index) {
+        errorLabel.setText("");
+        tecladoFonetico.registrarDigitacao(index);
+        updateInterface();
+    }
+
+    void updateInterface() {
+        int totalDigitados = tecladoFonetico.getFonemasDigitados();
+        feedbackField.updatePasswordFeedback(totalDigitados * 2);
+        this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
+        this.loginButton.setEnabled(totalDigitados >= 4 && totalDigitados <= 6);
     }
 
     void atualizarBotoes(List<String> fonemas) {
@@ -102,85 +98,41 @@ public class TecladoFoneticoPanel extends LoginPanel {
             }
         }
     }
-
-    private void updatePasswordFeedback(int filledCharacters) {
-        SimpleAttributeSet attributeSet;
-        StyledDocument doc;
-        try {
-            attributeSet = new SimpleAttributeSet();
-            feedbackField.setCharacterAttributes(attributeSet, true);
-
-            feedbackField.setText("•".repeat(filledCharacters));
-            
-            int remaining = 8-filledCharacters;
-            if (remaining > 0) {
-                doc = feedbackField.getStyledDocument();
-                attributeSet = new SimpleAttributeSet();  
-                StyleConstants.setForeground(attributeSet, Color.gray);
-                doc.insertString(doc.getLength(), "•".repeat(remaining), attributeSet);  
-            }
-            
-            int remainingExtra;
-            if (remaining > 0) {
-                remainingExtra = 4;
-            } else {
-                remainingExtra = 12-filledCharacters;
-            }
-            if (remainingExtra > 0) {
-                attributeSet = new SimpleAttributeSet();  
-                StyleConstants.setForeground(attributeSet, Color.DARK_GRAY);
-                doc = feedbackField.getStyledDocument();  
-                doc.insertString(doc.getLength(), "•".repeat(remainingExtra), attributeSet); 
-            }
-
-            doc = feedbackField.getStyledDocument(); 
-            SimpleAttributeSet center = new SimpleAttributeSet();
-            StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-            doc.setParagraphAttributes(0, doc.getLength(), center, false);
-            
-            loginButton.setEnabled(remaining <= 0);
-        } catch (Exception e) {
-
-        }
-    }
-    
-    void updateInterface() {
-        updatePasswordFeedback(tecladoFonetico.getFonemasDigitados() * 2);
-        this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
-    }
-    void buttonPressed(int index) {
-        errorLabel.setText("");
-        tecladoFonetico.registrarDigitacao(index);
-        updateInterface();
-    }
     
     void nextStep() {
         boolean correctPassword;
+        UserLoginState newState;
         try {
             correctPassword = PasswordHandler.checkPhoneticPassword(tecladoFonetico.gruposDigitados, emailAddress);
-            if (correctPassword == true) {
-                LogHandler.log(3003);
-
-                VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
-                FrameHandler.showPanel(vcp, vcp.loginButton);
-
-                LogHandler.log(3002);
-            } else {
-                UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-                if (newState == UserLoginState.BLOCKED) {
-                    IdentUsuPanel firstPanel = new IdentUsuPanel();
-                    FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
-                    return;
-                } else {
-                    errorLabel.setText("Senha incorreta.");
-                    tecladoFonetico.limparDigitacao();
-                    tecladoFonetico.renovarCombinacoes();
-                    updatePasswordFeedback(0);
-                    atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
+        if (correctPassword == true) {
+            LogHandler.log(3003);
+
+            VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
+            FrameHandler.showPanel(vcp, vcp.loginButton);
+
+            LogHandler.log(3002);
+        } else {
+            try {
+                newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+            } catch (Exception exc) {
+                return;
+            }
+            if (newState == UserLoginState.BLOCKED) {
+                IdentUsuPanel firstPanel = new IdentUsuPanel();
+                FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
+                return;
+            } else {
+                errorLabel.setText("Senha incorreta.");
+                tecladoFonetico.limparDigitacao();
+                tecladoFonetico.renovarCombinacoes();
+                feedbackField.updatePasswordFeedback(0);
+                atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
+            }
+        }
+        
     }
   }

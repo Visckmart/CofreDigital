@@ -41,14 +41,6 @@ public class VerificaChavePanel extends LoginPanel {
         this.add(passwordTF);
     }
     
-    JLabel errorLabel;
-    private void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.red);
-        errorLabel.setBounds(offsetX, offsetY, width, height);
-        this.add(errorLabel);
-    }
-    
     File chosenFile = new File("/Users/victormartins/Documents/CofreDigital/./Pacote-T4/Keys/user01-pkcs8-des.key");
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         //Create a file chooser
