@@ -121,6 +121,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
             System.out.println(fileInfos);
             setFileList(fileInfos);
+            DatabaseHandler.getInstance().registerQuery(UserState.emailAddress);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
