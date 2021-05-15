@@ -138,7 +138,8 @@ public class AuthenticationHandler {
         String emailName = nameSubject.substring(emailIndex, nameSubject.indexOf(',', emailIndex));
         String[] r = {Integer.toString(version), serialNumber.toString(), notBefore.toString(), notAfter.toString(), algorithm, issuerName, subjectName, emailName};
         return r;
-    static String getEmailFromCertificate(Certificate cert) {
+    }
+    public static String getEmailFromCertificate(Certificate cert) {
         X509Certificate certNovo = (X509Certificate) cert;
         String fullName = ((X509Certificate)cert).getSubjectDN().getName();
         int emailIndex = fullName.indexOf("EMAILADDRESS=") + 13;

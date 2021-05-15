@@ -7,7 +7,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import Authentication.AuthenticationHandler;
+import Authentication.PasswordHandler;
 import Authentication.UserState;
+import Database.DatabaseHandler;
 import Utilities.LogHandler;
 
 public class ConfirmacaoCadastroPanel extends GeneralPanel {
@@ -32,7 +34,15 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+                AuthenticationHandler authHandler = new AuthenticationHandler();
+                String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
+                String salt = PasswordHandler.generateSalt();
+                try {
+                String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt).get();
+                DatabaseHandler.getInstance().registerUser(email, User.newUserCertificate, encodedPassword, salt, 1);
+                } catch (Exception exc) {
+                    exc.printStackTrace();
+                }
             }
         });
         this.add(loginButton);

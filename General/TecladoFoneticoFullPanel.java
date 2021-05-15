@@ -198,6 +198,9 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
                     if (fonemasCorretos.equals(fonemasDigitados)) {
                         System.out.println("Confirmado");
                         if (goal == PasswordGoal.CADASTRAR) {
+                            String np = String.join("", (String[])fonemasDigitados.toArray());
+                            System.out.println(np);
+                            UserState.newUserPassword = np;
                             JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(this);
                             ConfirmacaoCadastroPanel vcp = new ConfirmacaoCadastroPanel();
                             frame.setContentPane(vcp);
