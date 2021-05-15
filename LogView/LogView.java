@@ -5,8 +5,6 @@ import javax.swing.JScrollPane;
 import java.awt.GridLayout;
 import java.util.Timer;
 
-import Database.DatabaseHandler;
-
 public class LogView {
 
     static JFrame frame = new JFrame("LogView por Thiago Lamenza e Victor Martins");
@@ -21,7 +19,7 @@ public class LogView {
         try {
             // t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
             Timer timer = new Timer();
-            timer.schedule(new AtualizarRegistros(), 5000, 2000);
+            timer.schedule(new AtualizarRegistros(), 0, 3000);
         } catch (Exception exc) {
             exc.printStackTrace();
         }
