@@ -18,18 +18,15 @@ import Utilities.LogHandler;
 import Utilities.UserLoginState;
 import Authentication.UserState;
 
-public class VerificaChavePanel extends JPanel {
+public class VerificaChavePanel extends LoginPanel {
     
     String emailAddress;
     public VerificaChavePanel(String emailAddress) {
-        this.setLayout(null);
         this.emailAddress = emailAddress;
-        add(TitlePanel.getInstance());
         this.prepararBotaoArquivo(210, 250, 280, 35);
         this.prepararTextoArquivo(210, 280, 280, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(210, 350, 280, 30);
-        this.prepararBotaoLogin(285, 400, 130, 35);
     }
     
     JPasswordField passwordTF;
@@ -104,17 +101,6 @@ public class VerificaChavePanel extends JPanel {
             labelCaminho.setText("Nenhum arquivo escolhido.");
             clearButton.setEnabled(false);
         }
-    }
-    JButton loginButton;
-    void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        loginButton = new JButton("Continuar   >");
-        loginButton.setBounds(offsetX, offsetY, width, height);
-        loginButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                nextStep();
-            }
-        });
-        this.add(loginButton);
     }
     
     void nextStep() {
