@@ -59,8 +59,8 @@ public class DatabaseHandler {
             PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
+            boolean shouldLog = (UserState.emailAddress == null) ||  !email.equals(UserState.emailAddress);
             UserState.emailAddress = email;
-
             if (rs.next()) {
                 String dateString = rs.getString("timeout");
                 rs.close();
@@ -68,15 +68,15 @@ public class DatabaseHandler {
                     LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                     if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
                         LogHandler.logWithUser(2004);
-                        UserState.emailAddress = null;
                         return UserLoginState.BLOCKED;
                     }
                 }
-                LogHandler.logWithUser(2003);
+                if(shouldLog) {
+                    LogHandler.logWithUser(2003);
+                }
                 return UserLoginState.VALID;
             } else {
                 LogHandler.logWithUser(2005);
-                UserState.emailAddress = null;
                 return UserLoginState.INVALID;
             }
         } catch(Exception ignored) {
