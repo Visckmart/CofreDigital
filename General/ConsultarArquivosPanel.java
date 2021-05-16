@@ -168,13 +168,13 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             byte[] fileContent = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
             Files.write(destination.toPath(), fileContent);
         } catch (IOException ignored) {
-            JOptionPane.showInputDialog(this, "Arquivo não encontrado.", null);
+            JOptionPane.showMessageDialog(this, "Arquivo não encontrado.");
         } catch (InvalidKeyException ignored) {
-            JOptionPane.showInputDialog(this, "Não foi possível ler arquivo.", null);
+            JOptionPane.showMessageDialog(this, "Não foi possível ler arquivo.");
         } catch (SignatureException ignored) {
-            JOptionPane.showInputDialog(this, "Assinatura digital do arquivo inválida.", null);
+            JOptionPane.showMessageDialog(this, "Assinatura digital do arquivo inválida.");
         } catch (Exception ignored) {
-            JOptionPane.showInputDialog(this, "Erro ao ler arquivo.", null);
+            JOptionPane.showMessageDialog(this, "Erro ao ler arquivo.");
         }
     }
 
