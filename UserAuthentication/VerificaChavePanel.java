@@ -38,7 +38,6 @@ public class VerificaChavePanel extends LoginPanel {
         
         passwordTF = new JPasswordField();
         passwordTF.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
-        passwordTF.setText("admin");
         this.add(passwordTF);
     }
 

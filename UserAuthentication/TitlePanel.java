@@ -19,7 +19,7 @@ public class TitlePanel extends JPanel {
         this.setLayout(null);
         
         JLabel title = new JLabel("Cofre Digital");
-        title.setBounds(175, 25, 350, 75);
+        title.setBounds(0, 25, 700, 75);
         title.setFont(new Font(null, Font.BOLD, 50));
         title.setHorizontalAlignment(SwingConstants.CENTER);
         add(title);
