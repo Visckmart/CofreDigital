@@ -78,7 +78,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         pathLabel.setEditable(false);
         pathLabel.setWrapStyleWord(true);
         pathLabel.setFocusable(false);
-        pathLabel.setFont(new Font(null, Font.PLAIN, 15));
+        // pathLabel.setFont(new Font(null, Font.PLAIN, 15));
         pathLabel.setBounds(xOffset, yOffset, width, height);
         add(pathLabel);
     }
@@ -165,9 +165,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
                 LogHandler.logWithUser(7005);
                 return;
             }
-
-            DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, certificateContent);
-            LogHandler.logWithUser(7004);
+            UserState.newUserCertificateContent = certificateContent;
         }
         TecladoFoneticoFullPanel tecladoNovaSenhaPanel = new TecladoFoneticoFullPanel("Nova Senha", null, PasswordGoal.ALTERAR);
         FrameHandler.showPanel(tecladoNovaSenhaPanel);

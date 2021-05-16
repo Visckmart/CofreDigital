@@ -38,7 +38,7 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
 
     JButton loginButton;
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
-        loginButton = new JButton("Continuar   >");
+        loginButton = new JButton("Cadastrar");
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -48,8 +48,12 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
                 String salt = PasswordHandler.generateSalt();
                 String encodedPassword = PasswordHandler.encodePassword(UserState.newUserPassword, salt);
                 try {
-                    DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, UserState.newUserGroup == UserGroup.ADMIN ? 1 : 0);
+                    DatabaseHandler.getInstance().registerUser(email, UserState.newUserCertificateContent, encodedPassword, salt, UserState.newUserGroup.ordinal());
                     FrameHandler.showPanel(new CadastroPanel());
+                    UserState.newUserCertificate = null;
+                    UserState.newUserGroup = null;
+                    UserState.newUserCertificateContent = null;
+                    UserState.newUserPassword = null;
                 } catch (Exception exc) {
                     errorLabel.setText("Usuário já está cadastrado.");
                 }
@@ -73,9 +77,7 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         for (int i = 0; i < nomesCampos.length; i++) {
             JLabel newLabel = new JLabel(composeLabelText(nomesCampos[i], valoresCampos[i]));
             newLabel.setFont(new Font(null, Font.PLAIN, 15));
-            newLabel.setBounds(125, 200 + i * 25, 450, 20);
-            // newLabel.setBackground(Color.red);
-            // groupLabel.setOpaque(true);
+            newLabel.setBounds(120, 210 + i * 25, 500, 20);
             add(newLabel);
         }
     }

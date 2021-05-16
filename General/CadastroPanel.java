@@ -159,7 +159,8 @@ public class CadastroPanel extends GeneralPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        UserState.newUserGroup = groupList.getSelectedIndex() == 0 ? UserGroup.USER : UserGroup.ADMIN;
+        System.out.println(groupList.getSelectedIndex());
+        UserState.newUserGroup = groupList.getSelectedIndex() == 1 ? UserGroup.USER : UserGroup.ADMIN;
         TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         FrameHandler.showPanel(tecladoNovaSenhaCadastro);
     }
