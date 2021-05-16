@@ -150,6 +150,7 @@ public class CadastroPanel extends GeneralPanel {
         }
 
         UserState.newUserCertificate = cert;
+        UserState.newUserCertificateContent = certificateContent;
         UserState.newUserGroup = groupList.getSelectedIndex() == 1 ? UserGroup.USER : UserGroup.ADMIN;
         TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         FrameHandler.showPanel(tecladoNovaSenhaCadastro);
