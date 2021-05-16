@@ -8,7 +8,10 @@ public class AtualizarRegistros extends TimerTask {
     @Override
     public void run() {
         try {
-            LogView.t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
+            if (LogView.sp.getViewport().getViewRect().getY() < 50) {
+                System.out.println("Atualizando");
+                LogView.t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
