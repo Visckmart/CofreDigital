@@ -38,7 +38,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
         feedbackField.setBounds(offsetX, offsetY, width, height);
         add(feedbackField);
         JButton clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 10, offsetY, height + 10, height);
+        clearButton.setBounds(offsetX + width + 10, offsetY, height + 35, height);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tecladoFonetico.limparDigitacao();
