@@ -1,23 +1,7 @@
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.File;
-import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.security.PrivateKey;
-import java.util.List;
 
-import Authentication.AuthenticationHandler;
-import Authentication.PasswordHandler;
 import Database.DatabaseHandler;
-import General.AlterarCertificadoPanel;
-import General.CadastroPanel;
-import General.ConfirmacaoSaidaPanel;
-import General.ConsultarArquivosPanel;
-import General.FileHandler;
-import General.MenuPrincipalPanel;
-import General.TecladoFoneticoFullPanel;
 import UserAuthentication.IdentUsuPanel;
 import Utilities.FrameHandler;
 import Utilities.LogHandler;

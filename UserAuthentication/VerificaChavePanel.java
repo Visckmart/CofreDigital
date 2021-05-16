@@ -61,7 +61,7 @@ public class VerificaChavePanel extends LoginPanel {
         this.add(input);
         
         clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 5, offsetY, height, height);
+        clearButton.setBounds(offsetX + width + 5, offsetY, height + 10, height);
         clearButton.setEnabled(false);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
