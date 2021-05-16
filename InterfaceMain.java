@@ -58,7 +58,6 @@ class InterfaceMain {
 
   public static void main(String args[]) {
     LogHandler.log(1001);
-    DatabaseHandler.getInstance().seedUsers();
     prepararInterfaceAutenticacao();
     mostrarTela();
   }

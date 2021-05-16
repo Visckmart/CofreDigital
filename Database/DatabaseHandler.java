@@ -36,20 +36,6 @@ public class DatabaseHandler {
         connection = DriverManager.getConnection("jdbc:sqlite:Database/database.db");
     }
 
-    public void seedUsers() {
-        try {
-            // Criando usuário padrão
-            String userEmail = "admin@inf1416.puc-rio.br";
-            if(verifyUserEmail(userEmail) == UserLoginState.INVALID) {
-                byte[] certificate = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/admin-x509.crt"));
-                String password = PasswordHandler.encodePassword("BADACADA", "232");
-                registerUser(userEmail, certificate, password, "232", UserGroup.ADMIN.ordinal());
-            }
-        } catch (Exception ignored) {
-
-        }
-    }
-
     public void registerUser(String email, byte[] certificate, String encryptedPassword, String salt, int gid) throws  Exception {
         PreparedStatement statement = connection.prepareStatement("insert into USUARIOS(email, senha, salt, certificado, gid) values(?, ?, ?, ?, ?);");
         if(verifyUserEmail(email) != UserLoginState.INVALID) {
