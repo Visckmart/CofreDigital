@@ -60,7 +60,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         feedbackField.setForeground(Color.white);
         add(feedbackField);
         JButton clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 10, offsetY, height + 35, height);
+        clearButton.setBounds(offsetX + width + 10, offsetY, height + 25, height);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 fonemasDigitados.clear();

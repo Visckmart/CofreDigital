@@ -58,7 +58,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         });
         add(chooseButton);
         JButton clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 5, offsetY, height + 35, height);
+        clearButton.setBounds(offsetX + width + 5, offsetY, height + 25, height);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 chosenFile = null;
