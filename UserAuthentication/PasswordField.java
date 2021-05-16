@@ -22,14 +22,15 @@ public class PasswordField extends JTextPane {
             attributeSet = new SimpleAttributeSet();
             this.setCharacterAttributes(attributeSet, true);
 
-            this.setText("•".repeat(filledCharacters));
+
+            this.setText(new String(new char[filledCharacters]).replace("\0", "•"));
             
             int remaining = 8-filledCharacters;
             if (remaining > 0) {
                 doc = this.getStyledDocument();
                 attributeSet = new SimpleAttributeSet();  
                 StyleConstants.setForeground(attributeSet, Color.gray);
-                doc.insertString(doc.getLength(), "•".repeat(remaining), attributeSet);  
+                doc.insertString(doc.getLength(), new String(new char[remaining]).replace("\0", "•"), attributeSet);
             }
             
             int remainingExtra;
@@ -41,8 +42,8 @@ public class PasswordField extends JTextPane {
             if (remainingExtra > 0) {
                 attributeSet = new SimpleAttributeSet();  
                 StyleConstants.setForeground(attributeSet, Color.DARK_GRAY);
-                doc = this.getStyledDocument();  
-                doc.insertString(doc.getLength(), "•".repeat(remainingExtra), attributeSet); 
+                doc = this.getStyledDocument();
+                doc.insertString(doc.getLength(), new String(new char[remainingExtra]).replace("\0", "•"), attributeSet);
             }
 
             doc = this.getStyledDocument(); 

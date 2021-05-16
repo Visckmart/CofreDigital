@@ -126,14 +126,15 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             attributeSet = new SimpleAttributeSet();
             feedbackField.setCharacterAttributes(attributeSet, true);
 
-            feedbackField.setText("•".repeat(filledCharacters));
+            feedbackField.setText(new String(new char[filledCharacters]).replace("\0", "•"));
             
             int remaining = 8-filledCharacters;
             if (remaining > 0) {
                 doc = feedbackField.getStyledDocument();
                 attributeSet = new SimpleAttributeSet();  
                 StyleConstants.setForeground(attributeSet, Color.gray);
-                doc.insertString(doc.getLength(), "•".repeat(remaining), attributeSet);  
+
+                doc.insertString(doc.getLength(),new String(new char[remaining]).replace("\0", "•"), attributeSet);
             }
             
             int remainingExtra;
@@ -145,8 +146,9 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             if (remainingExtra > 0) {
                 attributeSet = new SimpleAttributeSet();  
                 StyleConstants.setForeground(attributeSet, Color.DARK_GRAY);
-                doc = feedbackField.getStyledDocument();  
-                doc.insertString(doc.getLength(), "•".repeat(remainingExtra), attributeSet); 
+                doc = feedbackField.getStyledDocument();
+
+                doc.insertString(doc.getLength(), new String(new char[remainingExtra]).replace("\0", "•"), attributeSet);
             }
 
             doc = feedbackField.getStyledDocument(); 
