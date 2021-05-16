@@ -260,13 +260,17 @@ public class DatabaseHandler {
         }
     }
 
-    public void updateUserPassword(String emailAddress, String senha, String salt)  throws Exception {
-        PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET senha=?, salt=? where email=?");
-        statement.setString(1, senha);
-        statement.setString(2, salt);
-        statement.setString(3, emailAddress);
-        statement.executeUpdate();
-        statement.close();
+    public void updateUserPassword(String emailAddress, String senha, String salt) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE USUARIOS SET senha=?, salt=? where email=?");
+            statement.setString(1, senha);
+            statement.setString(2, salt);
+            statement.setString(3, emailAddress);
+            statement.executeUpdate();
+            statement.close();
+        } catch (Exception ignored) {
+
+        }
     }
 
     public void updateUserState(String emailAddress) {
@@ -277,7 +281,7 @@ public class DatabaseHandler {
             );
             UserState.emailAddress = rs.getString("email");
             UserState.attempts = rs.getInt("attempts");
-            UserState.group = rs.getInt("gid") == 0 ? UserGroup.USER : UserGroup.ADMIN;
+            UserState.group = UserGroup.values()[rs.getInt("gid")];
             UserState.accesses = rs.getInt("accesses");
             UserState.queries = rs.getInt("queries");
             rs.close();
