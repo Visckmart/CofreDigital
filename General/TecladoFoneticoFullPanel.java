@@ -107,6 +107,9 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     JButton loginButton;
     void prepararBotaoLogin(int offsetX, int offsetY, int width, int height) {
         loginButton = new JButton("Continuar   >");
+        if (fonemasCorretos != null && goal == PasswordGoal.ALTERAR) {
+            loginButton.setText("Confirmar alterações");
+        }
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -151,7 +154,7 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
             doc.setParagraphAttributes(0, doc.getLength(), center, false);
             
-            loginButton.setEnabled(remaining <= 0);
+            loginButton.setEnabled(remaining <= 0 || goal == PasswordGoal.ALTERAR);
         } catch (Exception e) {
 
         }
@@ -188,13 +191,18 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     }
     
     boolean verificarSenha() {
+        if (goal == PasswordGoal.ALTERAR && ignorarConfirmacao == true) {
+            if (fonemasDigitados.size() == 0) {
+                return true;
+            }
+        }
         if (!(fonemasDigitados.size() >= 4 && fonemasDigitados.size() <= 6)) {
             if (goal == PasswordGoal.CADASTRAR) {
                 LogHandler.logWithUser(6003);
             } else {
                 LogHandler.logWithUser(7002);
             }
-            errorLabel.setText("Não use fonemas iguais em sequência.");
+            errorLabel.setText("Quantidade de fonemas inválida.");
             return false;
         }
         boolean noSequentialDuplicates = true;
@@ -215,18 +223,27 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             } else {
                 LogHandler.logWithUser(7002);
             }
-            errorLabel.setText("Quantidade de fonemas inválida.");
+            errorLabel.setText("Não use fonemas iguais em sequência.");
             return false;
         }
     }
-    
+    boolean ignorarConfirmacao = false;
     void nextStep() {
+        if (goal == PasswordGoal.ALTERAR) {
+            if (fonemasDigitados.size() == 0 && ignorarConfirmacao == false) {
+                System.out.println("Ir para confirmacao X");
+                TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
+                confirmarSenhaPanel.ignorarConfirmacao = true;
+                FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
+                return;
+            }
+        }
         if (!verificarSenha()) {
             fonemasDigitados.clear();
             updateInterface();
             return;
         }
-        if (fonemasCorretos == null) {
+        if (fonemasCorretos == null && ignorarConfirmacao == false) {
             System.out.println("Ir para confirmacao");
             TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
             FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
@@ -247,14 +264,17 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             FrameHandler.showPanel(new ConfirmacaoCadastroPanel());
             return;
         } else {
-            String salt = PasswordHandler.generateSalt();
-            String senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
-            try {
+            if (ignorarConfirmacao == false) {
+                if (UserState.newUserCertificateContent != null) {
+                    DatabaseHandler.getInstance().updateUserCertificate(UserState.emailAddress, UserState.newUserCertificateContent);
+                    UserState.newUserCertificateContent = null;
+                }
+                LogHandler.logWithUser(7004);
+                String salt = PasswordHandler.generateSalt();
+                String senha = PasswordHandler.encodePassword(String.join("", fonemasDigitados), salt);
                 DatabaseHandler.getInstance().updateUserPassword(UserState.emailAddress, senha, salt);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
             }
+            FrameHandler.showPanel(new MenuPrincipalPanel());
         }
     }
   }
