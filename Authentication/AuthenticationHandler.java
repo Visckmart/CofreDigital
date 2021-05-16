@@ -164,14 +164,4 @@ public class AuthenticationHandler {
 
         return fullName.substring(emailIndex, emailEnd);
     }
-
-    public static void main(String[] args) throws Exception {
-        byte[] fileContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-pkcs8-des.key"));
-        AuthenticationHandler handler = new AuthenticationHandler();
-        PrivateKey privateKey = handler.privateKeyFromFile(fileContent, "user01".getBytes());
-
-        byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
-        Certificate certificate = handler.certificateFromFile(certificateContent);
-        getUsernameFromCertificate(certificate);
-    }
 }
