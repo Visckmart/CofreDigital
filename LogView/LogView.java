@@ -9,6 +9,7 @@ public class LogView {
 
     static JFrame frame = new JFrame("LogView por Thiago Lamenza e Victor Martins");
     static ListaRegistrosTable t = new ListaRegistrosTable();
+    static JScrollPane sp;
     LogView() {
         
         JPanel p = new JPanel();
@@ -17,11 +18,11 @@ public class LogView {
         p.add(t);
         try {
             Timer timer = new Timer();
-            timer.schedule(new AtualizarRegistros(), 0, 3000);
+            timer.schedule(new AtualizarRegistros(), 0, 5000);
         } catch (Exception exc) {
             exc.printStackTrace();
         }
-        JScrollPane sp = new JScrollPane(t);
+        sp = new JScrollPane(t);
         sp.setBounds(0, 0, 700, 550);
         p.add(sp);
         frame.add(p);

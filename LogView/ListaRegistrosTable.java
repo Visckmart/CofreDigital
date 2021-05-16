@@ -49,7 +49,7 @@ public class ListaRegistrosTable extends JTable {
             tableModel.addRow(registerInfoList.get(i));
         }
         tableModel.setRowCount(registerInfoList.size());
-        if (selectedRow != -1) {
+        if (selectedRow != -1 && selectedRow < registerInfoList.size()) {
             setRowSelectionInterval(selectedRow, selectedRow);
         }
     }
