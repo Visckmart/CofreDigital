@@ -22,8 +22,8 @@ public class VerificaChavePanel extends LoginPanel {
     String emailAddress;
     public VerificaChavePanel(String emailAddress) {
         this.emailAddress = emailAddress;
-        this.prepararBotaoArquivo(210, 250, 280, 35);
-        this.prepararTextoArquivo(210, 280, 280, 35);
+        this.prepararBotaoArquivo(175, 250, 350, 35);
+        this.prepararTextoArquivo(175, 280, 350, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(175, 355, 400, 30);
 
@@ -61,7 +61,7 @@ public class VerificaChavePanel extends LoginPanel {
         this.add(input);
         
         clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 5, offsetY, height, height);
+        clearButton.setBounds(offsetX + width + 5, offsetY, height + 25, height);
         clearButton.setEnabled(false);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

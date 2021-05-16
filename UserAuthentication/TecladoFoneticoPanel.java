@@ -23,7 +23,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
     public TecladoFoneticoPanel(String emailAddress) {
         this.emailAddress = emailAddress;
 
-        this.prepararCampoDeSenha(257, 200, 185, 35);
+        this.prepararCampoDeSenha(225, 200, 250, 35);
         this.prepararLabelErro(225, 240, 250, 20);
         this.prepararBotoes(150, 270, 400, 115);
         
@@ -38,7 +38,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
         feedbackField.setBounds(offsetX, offsetY, width, height);
         add(feedbackField);
         JButton clearButton = new JButton("X");
-        clearButton.setBounds(offsetX + width + 10, offsetY, height, height);
+        clearButton.setBounds(offsetX + width + 10, offsetY, height + 25, height);
         clearButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tecladoFonetico.limparDigitacao();
