@@ -12,8 +12,10 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import Authentication.UserState;
@@ -21,7 +23,9 @@ import Database.DatabaseHandler;
 import Utilities.FileInfo;
 import Utilities.LogHandler;
 
+import java.awt.Font;
 import java.awt.event.*;
+import java.awt.Color;
 
 public class ConsultarArquivosPanel extends GeneralPanel {
     
@@ -36,6 +40,8 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         super("Consulta de Arquivos", true, CabecalhoInfo.TOTAL_CONSULTAS);
         prepararDirChooser(20, 190, 530, 35);
         prepareListButton(560, 190, 120, 35);
+
+        prepararLabelErro(150, 350, 400, 30);
 
         listaArquivos = new ListaArquivosTable();
         add(listaArquivos);
@@ -53,7 +59,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         JScrollPane scrollPane = new JScrollPane(listaArquivos);
         scrollPane.setBounds(20, 230, 660, 275);
         add(scrollPane);
-
+        
         LogHandler.logWithUser(8001);
     }
 
@@ -66,6 +72,16 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             }
         });
         add(listButton);
+    }
+    
+    JLabel errorLabel;
+    void prepararLabelErro(int offsetX, int offsetY, int width, int height) {
+        errorLabel = new JLabel();
+        errorLabel.setFont(new Font(null, Font.BOLD, 14));
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        errorLabel.setForeground(Color.red);
+        errorLabel.setBounds(offsetX, offsetY, width, height);
+        this.add(errorLabel);
     }
 
     File chosenDirectory;
@@ -110,14 +126,19 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             LogHandler.logWithUser(8009);
             DatabaseHandler.getInstance().registerQuery(UserState.emailAddress);
             CabecalhoPanel.panel.atualizarInformacaoAdicional();
+            errorLabel.setText("");
         } catch (IOException ignored) {
-            // TODO: Avisar para o usuário
+            setFileList(new ArrayList<FileInfo>());
+            errorLabel.setText("Index não encontrado.");
         } catch (InvalidKeyException ignored) {
-            // TODO: Avisar para o usuário
+            setFileList(new ArrayList<FileInfo>());
+            errorLabel.setText("Não foi possível ler index.");
         } catch (SignatureException ignored) {
-            // TODO: Avisar para o usuário
+            setFileList(new ArrayList<FileInfo>());
+            errorLabel.setText("Assinatura digital do index inválida.");
         } catch (Exception ignored) {
-            // TODO: Avisar para o usuário
+            setFileList(new ArrayList<FileInfo>());
+            errorLabel.setText("Erro ao consultar.");
         }
     }
 
@@ -146,8 +167,14 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         try {
             byte[] fileContent = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
             Files.write(destination.toPath(), fileContent);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
+            JOptionPane.showInputDialog(this, "Arquivo não encontrado.", null);
+        } catch (InvalidKeyException ignored) {
+            JOptionPane.showInputDialog(this, "Não foi possível ler arquivo.", null);
+        } catch (SignatureException ignored) {
+            JOptionPane.showInputDialog(this, "Assinatura digital do arquivo inválida.", null);
+        } catch (Exception ignored) {
+            JOptionPane.showInputDialog(this, "Erro ao ler arquivo.", null);
         }
     }
 
