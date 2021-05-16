@@ -45,30 +45,25 @@ public class CabecalhoPanel extends JPanel {
         loginLabel.setFont(new Font(null, Font.PLAIN, 18));
         loginLabel.setBounds(0, 0, 350, 25);
         loginLabel.setBackground(Color.pink);
-        // loginLabel.setOpaque(true);
         add(loginLabel);
 
         groupLabel = new JLabel(composeLabelText("Grupo", UserState.group == UserGroup.ADMIN ? "Administrador" : "Usuário"));
         groupLabel.setFont(new Font(null, Font.PLAIN, 18));
         groupLabel.setBounds(0, 30, 350, 25);
         groupLabel.setBackground(Color.red);
-        // groupLabel.setOpaque(true);
         add(groupLabel);
 
         usernameLabel = new JLabel(composeLabelText("Nome de usuário", UserState.username));
         usernameLabel.setFont(new Font(null, Font.PLAIN, 18));
         usernameLabel.setBounds(0, 60, 350, 25);
         usernameLabel.setBackground(Color.green);
-        // usernameLabel.setOpaque(true);
         add(usernameLabel);
 
         extraInfoLabel.setFont(new Font(null, Font.PLAIN, 18));
         extraInfoLabel.setBounds(0, 95, 350, 25);
         extraInfoLabel.setBackground(Color.lightGray);
-        // extraInfoLabel.setOpaque(true);
         add(extraInfoLabel);
-        
-        // setBackground(Color.black);
+
         setBounds(0, 0, 350, 125);
     }
 

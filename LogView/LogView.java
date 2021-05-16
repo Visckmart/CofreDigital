@@ -13,11 +13,9 @@ public class LogView {
         
         JPanel p = new JPanel();
         p.setBounds(0, 0, 700, 550);
-        // p.setLayout(null);
         p.setLayout(new GridLayout());
         p.add(t);
         try {
-            // t.setRegisterList(DatabaseHandler.getInstance().getAllRegisters());
             Timer timer = new Timer();
             timer.schedule(new AtualizarRegistros(), 0, 3000);
         } catch (Exception exc) {
@@ -39,9 +37,5 @@ public class LogView {
 
     public static void main(String args[]) {
         new LogView();
-        // ArrayList<String[]> l = new ArrayList<String[]>();
-        // String[] a = {"a", "b", "c", "d"};
-        // l.add(a);
-        // lv.t.setRegisterList(l);
     }
 }

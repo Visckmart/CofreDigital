@@ -231,7 +231,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
     void nextStep() {
         if (goal == PasswordGoal.ALTERAR) {
             if (fonemasDigitados.size() == 0 && ignorarConfirmacao == false) {
-                System.out.println("Ir para confirmacao X");
                 TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
                 confirmarSenhaPanel.ignorarConfirmacao = true;
                 FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
@@ -244,7 +243,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             return;
         }
         if (fonemasCorretos == null && ignorarConfirmacao == false) {
-            System.out.println("Ir para confirmacao");
             TecladoFoneticoFullPanel confirmarSenhaPanel = new TecladoFoneticoFullPanel("Confirmar Senha", fonemasDigitados, goal);
             FrameHandler.showPanel(confirmarSenhaPanel, confirmarSenhaPanel.loginButton);
             return;
@@ -252,11 +250,9 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         if (fonemasCorretos.equals(fonemasDigitados) == false) {
             fonemasDigitados.clear();
             updateInterface();
-            System.out.println("Confirmacao invalida");
             errorLabel.setText("Confirmação de senha incorreta");
             return;
         }
-        System.out.println("Confirmado");
         if (goal == PasswordGoal.CADASTRAR) {
             LogHandler.logWithUser(6002);
             String newUserPassword = String.join("", fonemasDigitados);

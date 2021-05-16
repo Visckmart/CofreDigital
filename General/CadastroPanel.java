@@ -61,11 +61,8 @@ public class CadastroPanel extends GeneralPanel {
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     chosenFile = fc.getSelectedFile();
-                    //This is where a real application would open the file.
-                    System.out.println("Opening: " + chosenFile.getName() + ".");
                 } else {
                     chosenFile = null;
-                    System.out.println("Open command cancelled by user.");
                 }
                 atualizarTextoArquivo();
             }

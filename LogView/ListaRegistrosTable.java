@@ -15,7 +15,6 @@ public class ListaRegistrosTable extends JTable {
 
     public ListaRegistrosTable() {
         super(new DefaultTableModel(null, columnNames));
-        // this.setBackground(Color.red);
         this.setBounds(10, 50, 680, 460);
         this.setRowHeight(25);
         

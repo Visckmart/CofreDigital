@@ -47,12 +47,8 @@ class InterfaceTeste {
   }
 
   static JFrame frame = new JFrame("Cofre Digital por Thiago Lamenza e Victor Martins");
-  // static JPanel p1 = new TecladoFoneticoPanel(null);
-  // static JPanel p2 = abc();
-  // static JPanel login = new IdentUsuPanel(new VerificaChavePanel(p1));
 
   static void prepararInterfaceAutenticacao() {
-    // frame.add(new IdentUsuPanel(new TecladoFoneticoPanel(new VerificaChavePanel(new MenuPrincipalPanel()))));
     IdentUsuPanel iup = new IdentUsuPanel();
     frame.add(iup);
     frame.getRootPane().setDefaultButton(iup.loginButton);
@@ -76,41 +72,10 @@ class InterfaceTeste {
     FrameHandler.setMainFrame(frame);
   }
 
-  static void testePasswordHandler() {
-    for (int i = 0; i < 5; i++) {
-      System.out.println(PasswordHandler.generateSalt());
-      System.out.println(PasswordHandler.encodePassword("abc", PasswordHandler.generateSalt()));
-    }
-  }
-
   public static void main(String args[]) {
     LogHandler.log(1001);
     DatabaseHandler.getInstance().seedUsers();
-    // DatabaseHandler.createNewDatabase("test.db");
-    // System.out.println(PasswordHandler.encodePassword("DABECADA", "sal99"));
-    // 064f3b5c5e8ea7a79a27a87cdc0ec8dacd0c9741
-    // Path privateKeyFilePath = FileSystems.getDefault().getPath("Pacote-T4/Keys/", "admin-pkcs8-des.key");
-    // try {
-    //   AuthenticationHandler ah = new AuthenticationHandler();
-    //   byte[] content = Files.readAllBytes(privateKeyFilePath);
-    //   PrivateKey pk = ah.privateKeyFromFile(content, "admin".getBytes());
-    //   System.out.println(pk);
-    //   System.out.println(DatabaseHandler.getInstance().getEncodedCertificate("aa"));
-    // } catch (Exception e) {
-    //   e.printStackTrace();
-    // }
-    // try {
-    //
-    // //   new FileHandler().decryptAndVerifyFile("./Pacote-T4/Files/", "index.enc");
-    // } catch (Exception e) {
-    // //   //TODO: handle exception
-    // }
     prepararInterfaceAutenticacao();
-    // frame.add(new MenuPrincipalPanel());
-    // frame.add(new AlterarCertificadoPanel());
-    // frame.add(new ConfirmacaoSaidaPanel());
-    // frame.add(new CadastroPanel());
-    // frame.add(new ConsultarArquivosPanel());
     mostrarTela();
   }
 }

@@ -173,6 +173,5 @@ public class AuthenticationHandler {
         byte[] certificateContent = Files.readAllBytes(Paths.get("./Pacote-T4/Keys/user01-x509.crt"));
         Certificate certificate = handler.certificateFromFile(certificateContent);
         getUsernameFromCertificate(certificate);
-        System.out.println(handler.verifyPrivateKey(privateKey, certificate));
     }
 }

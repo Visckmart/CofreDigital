@@ -40,7 +40,5 @@ public abstract class LoginPanel extends JPanel {
         });
         this.add(loginButton);
     }
-    void nextStep() {
-        System.out.println("Erro");
-    }
+    abstract void nextStep();
 }

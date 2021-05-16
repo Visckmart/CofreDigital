@@ -95,7 +95,6 @@ public class PasswordHandler {
         String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
         String passwordHash = pwdAndSalt[0];
         String salt = pwdAndSalt[1];
-        System.out.println(passwordHash + " | " + salt);
 
         List<String> allCombinations = generatePasswordCombinations(gruposFoneticosDigitados).get(0);
         for (String phoneticCombination : allCombinations) {

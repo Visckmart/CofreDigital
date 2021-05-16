@@ -21,7 +21,6 @@ public abstract class GeneralPanel extends JPanel {
         
         CabecalhoPanel cabecalho = CabecalhoPanel.panel;
         cabecalho.setBounds(20, 20, cabecalho.getWidth(), cabecalho.getHeight());
-        // cabecalho.updateExtraInfo("Total de acessos", "10");
         cabecalho.setInformacaoAdicional(infoAdicional);
         add(cabecalho);
 

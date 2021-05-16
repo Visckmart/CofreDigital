@@ -19,7 +19,6 @@ public class TecladoFonetico {
 
     public void registrarDigitacao(int indiceBotao) {
         ArrayList<String> grupoDigitado = new ArrayList<String>(combinacoes.get(indiceBotao));
-        // System.out.println("Registrando " + grupoDigitado.toString());
         gruposDigitados.add(grupoDigitado);
         renovarCombinacoes();
     }
@@ -30,7 +29,6 @@ public class TecladoFonetico {
 
     public void limparDigitacao() {
         gruposDigitados.clear();
-        // System.out.println("Limpando senha");
     }
 
     void renovarCombinacoes() {

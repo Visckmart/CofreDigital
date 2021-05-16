@@ -233,7 +233,6 @@ public class DatabaseHandler {
 
     public byte[] getEncodedCertificate(String emailAddress) {
         try {
-            System.out.println(emailAddress);
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(
                 "SELECT certificado from USUARIOS where email = '" + emailAddress + "'"
@@ -298,48 +297,4 @@ public class DatabaseHandler {
             return;
         }
     }
-
-//    public static void main(String[] args) throws Exception {
-//         DatabaseHandler handler = new DatabaseHandler();
-//         handler.seedUsers();
-//         try {
-//            handler.registerUser("th@232.com", "oi".getBytes(), "123", "232", 0);
-//         } catch (Exception e) {
-//             System.out.println(e.getMessage());
-//         }
-//         handler.registerAttempts("th@232.com", true);
-//         // [123, 232]
-//         System.out.println(Arrays.toString(handler.getPasswordAndSalt("th@232.com")));
-//         // VALID (após os 2 minutos de espera)
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         handler.registerAttempts("th@232.com", false);
-//         handler.updateUserState("th@232.com");
-//         System.out.println(UserState.attempts);
-//         handler.registerAttempts("th@232.com", true);
-//         System.out.println(UserState.attempts);
-//         // VALID
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         handler.registerAttempts("th@232.com", false);
-//         // VALID
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", false);
-//         handler.updateUserState("th@232.com");
-//         System.out.println(UserState.attempts);
-//         // BLOCKED
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//         handler.registerAttempts("th@232.com", true);
-//         // BLOCKED
-//         System.out.println(handler.verifyUserEmail("th@232.com"));
-//
-////         Statement statement = handler.connection.createStatement();
-////         ResultSet rs = statement.executeQuery("select * from mensagens");
-////         while(rs.next()) {
-////             System.out.println(rs.getInt("codigo"));
-////             System.out.println(rs.getString("mensagem"));
-////             System.out.printf("%s %s %s %d %d\n", rs.getString("email"), rs.getString("senha"), rs.getString("salt"), rs.getInt("attempts"), rs.getInt("gid"));
-////         }
-////         rs.close();
-//    }
 }

@@ -75,7 +75,6 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         pathLabel.setEditable(false);
         pathLabel.setWrapStyleWord(true);
         pathLabel.setFocusable(false);
-        // pathLabel.setFont(new Font(null, Font.PLAIN, 15));
         pathLabel.setBounds(xOffset, yOffset, width, height);
         add(pathLabel);
     }
@@ -116,13 +115,11 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         add(backButton);
     }
     void updateInterface() {
-        // updatePasswordFeedback(fonemasDigitados.size() * 2);
         if (chosenFile == null) {
             pathLabel.setText("");
             return;
         }
         pathLabel.setText(chosenFile.getAbsolutePath());
-        // this.atualizarBotoes(tecladoFonetico.obterTextoDosBotoes());
     }
     
     

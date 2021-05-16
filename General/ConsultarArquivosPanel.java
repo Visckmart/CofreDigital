@@ -103,8 +103,6 @@ public class ConsultarArquivosPanel extends GeneralPanel {
                 if (openDialogOption == JFileChooser.APPROVE_OPTION) {
                     chosenDirectory = fileChooser.getSelectedFile();
                     directoryLabel.setText(chosenDirectory.getAbsolutePath());
-                } else {
-                    System.out.println("Open command cancelled by user.");
                 }
             }
         });
@@ -154,8 +152,6 @@ public class ConsultarArquivosPanel extends GeneralPanel {
             LogHandler.logWithUserAndFile(8011, defaultName.getName());
             if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
                 decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
-            } else {
-                System.out.println("Open command cancelled by user.");
             }
         } else {
             LogHandler.logWithUserAndFile(8012, defaultName.getName());

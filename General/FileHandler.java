@@ -114,19 +114,4 @@ public class FileHandler {
             throw new SignatureException();
         }
     }
-    //     try {
-    //         byte[] enve = Files.readAllBytes(filePath);
-    //         SecretKey sk = new FileHandler().decryptEnvelope(UserState.privateKey, enve);
-    //         System.out.println(sk);
-    //         byte[] arq = Files.readAllBytes(FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.enc"));
-    //         byte[] fileContent = new FileHandler().decryptFile(sk, arq);
-    //         byte[] asd = Files.readAllBytes(FileSystems.getDefault().getPath(fc.getSelectedFile().getAbsolutePath(), "index.asd"));
-    //         boolean b = new FileHandler().verifyFileAuthenticity(asd, fileContent, new AuthenticationHandler().certificateFromFile(DatabaseHandler.getInstance().getEncodedCertificate(UserState.emailAddress)));
-    //         System.out.println(b);
-
-    //         System.out.println(StandardCharsets.UTF_8.decode(ByteBuffer.wrap(fileContent)));
-    //         List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent)
-    // }
-//
-
 }
