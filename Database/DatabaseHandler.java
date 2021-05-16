@@ -33,7 +33,7 @@ public class DatabaseHandler {
     private final DateTimeFormatter TimestampFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private DatabaseHandler() throws Exception {
         Class.forName("org.sqlite.JDBC");
-        connection = DriverManager.getConnection("jdbc:sqlite:Database/test.db");
+        connection = DriverManager.getConnection("jdbc:sqlite:Database/database.db");
     }
 
     public void seedUsers() {

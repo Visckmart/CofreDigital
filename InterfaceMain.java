@@ -22,7 +22,7 @@ import UserAuthentication.IdentUsuPanel;
 import Utilities.FrameHandler;
 import Utilities.LogHandler;
 
-class InterfaceTeste {
+class InterfaceMain {
 
   static JPanel menuPrincipal = menuPrincipal();
 
