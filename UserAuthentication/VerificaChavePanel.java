@@ -23,7 +23,7 @@ public class VerificaChavePanel extends LoginPanel {
     public VerificaChavePanel(String emailAddress) {
         this.emailAddress = emailAddress;
         this.prepararBotaoArquivo(210, 250, 280, 35);
-        this.prepararTextoArquivo(210, 280, 280, 35);
+        this.prepararTextoArquivo(175, 280, 350, 35);
         this.prepararCampoFraseSecreta(210, 320, 280, 25);
         this.prepararLabelErro(175, 355, 400, 30);
 
