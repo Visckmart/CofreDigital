@@ -38,29 +38,23 @@ public class VerificaChavePanel extends LoginPanel {
         
         passwordTF = new JPasswordField();
         passwordTF.setBounds(offsetX + width*4/10 + 10, offsetY, (width*6/10 - 10), height);
-        passwordTF.setText("user01");
+        passwordTF.setText("admin");
         this.add(passwordTF);
     }
 
-    File chosenFile = new File("./Pacote-T4/Keys/user01-pkcs8-des.key");
+    File chosenFile;
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
-        //Create a file chooser
         final JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
+        fc.setCurrentDirectory(new File("."));
         JButton input = new JButton("Escolher arquivo da chave privada...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int returnVal = fc.showOpenDialog(input);
-
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     chosenFile = fc.getSelectedFile();
-                    System.out.println(chosenFile);
-                    //This is where a real application would open the file.
-                    System.out.println("Opening: " + chosenFile.getName() + ".");
                 } else {
                     chosenFile = null;
-                    System.out.println("Open command cancelled by user.");
                 }
                 atualizarTextoArquivo();
             }
@@ -119,6 +113,7 @@ public class VerificaChavePanel extends LoginPanel {
             LogHandler.logWithUser(4003);
             LogHandler.logWithUser(4002);
             DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
+            DatabaseHandler.getInstance().updateUserState(emailAddress);
             FrameHandler.showPanel(new MenuPrincipalPanel());
         } else {
             errorLabel.setText("<html>Assinatura digital inválida ou frase<br>secreta inválida.</html>");
@@ -129,6 +124,10 @@ public class VerificaChavePanel extends LoginPanel {
                 IdentUsuPanel firstStep = new IdentUsuPanel();
                 firstStep.preencherEmail(emailAddress);
                 FrameHandler.showPanel(firstStep, firstStep.loginButton);
+            } else {
+                chosenFile = null;
+                atualizarTextoArquivo();
+                passwordTF.setText("");
             }
         }
     }

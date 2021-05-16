@@ -1,12 +1,6 @@
 package UserAuthentication;
 import javax.swing.*;
 
-import Authentication.UserState;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Color;
-
 import Database.DatabaseHandler;
 import Utilities.FrameHandler;
 import Utilities.LogHandler;
@@ -33,7 +27,6 @@ public class IdentUsuPanel extends LoginPanel {
         
         emailTF = new JTextField();
         emailTF.setBounds(offsetX + width*2/10 + 10, offsetY, (width*8/10 - 10), height);
-        emailTF.setText("user01@inf1416.puc-rio.br");
         this.add(emailTF);
     }
 

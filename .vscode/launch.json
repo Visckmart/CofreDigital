@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch AuthenticationHandler",
+            "request": "launch",
+            "mainClass": "Authentication.AuthenticationHandler",
+            "projectName": "CofreDigital_1e576736"
+        },
+        {
+            "type": "java",
             "name": "Launch DatabaseHandler",
             "request": "launch",
             "mainClass": "Database.DatabaseHandler",

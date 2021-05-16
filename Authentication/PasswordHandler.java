@@ -92,8 +92,6 @@ public class PasswordHandler {
     }
 
     public static boolean checkPhoneticPassword(List<List<String>> gruposFoneticosDigitados, String emailAddress) {
-        System.out.println("IGNORANDO TECLADO FONETICO");
-        if (true) return true;
         String[] pwdAndSalt = DatabaseHandler.getInstance().getPasswordAndSalt(emailAddress);
         String passwordHash = pwdAndSalt[0];
         String salt = pwdAndSalt[1];

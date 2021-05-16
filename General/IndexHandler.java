@@ -47,7 +47,7 @@ public class IndexHandler {
         List<FileInfo> index = ih.parseIndex(p);
         for (FileInfo fileInfo : index) {
           fileInfo.nomeOriginal += Character.toString((char)(new Random().nextInt(26) + 65));
-          System.out.println(fileInfo);
+        //   System.out.println(fileInfo);
           //System.out.println(fileInfo.checkAccess("Joao", "0"));
         }
         return index;

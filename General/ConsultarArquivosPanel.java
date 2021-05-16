@@ -92,7 +92,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         add(directoryLabel);
         
         JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("./Pacote-T4"));
+        fileChooser.setCurrentDirectory(new File("."));
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 
         JButton input = new JButton("Escolher caminho...");

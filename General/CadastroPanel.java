@@ -52,7 +52,7 @@ public class CadastroPanel extends GeneralPanel {
     File chosenFile;
     void prepararBotaoArquivo(int offsetX, int offsetY, int width, int height) {
         final JFileChooser fc = new JFileChooser();
-        fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
+        fc.setCurrentDirectory(new File("."));
         JButton input = new JButton("Escolher arquivo do certificado...");
         input.setBounds(offsetX, offsetY, width, height);
         input.addActionListener(new ActionListener() {
@@ -152,18 +152,9 @@ public class CadastroPanel extends GeneralPanel {
             return;
         }
 
-        try {
-            UserState.newUserCertificate = new AuthenticationHandler().certificateFromFile(certificateContent);
-            UserState.newUserCertificateContent = certificateContent;
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println(groupList.getSelectedIndex());
+        UserState.newUserCertificate = cert;
         UserState.newUserGroup = groupList.getSelectedIndex() == 1 ? UserGroup.USER : UserGroup.ADMIN;
         TecladoFoneticoFullPanel tecladoNovaSenhaCadastro = new TecladoFoneticoFullPanel("Senha do Novo Usuário", null, PasswordGoal.CADASTRAR);
         FrameHandler.showPanel(tecladoNovaSenhaCadastro);
     }
-    
-    
   }

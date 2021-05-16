@@ -9,7 +9,6 @@ import javax.swing.*;
 
 import Authentication.AuthenticationHandler;
 import Authentication.PasswordHandler;
-import Authentication.UserGroup;
 import Authentication.UserState;
 import Database.DatabaseHandler;
 import Utilities.FrameHandler;

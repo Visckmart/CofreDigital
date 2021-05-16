@@ -2,7 +2,6 @@ package General;
 import javax.swing.*;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -15,7 +14,6 @@ import java.util.Optional;
 
 import Authentication.AuthenticationHandler;
 import Authentication.UserState;
-import Database.DatabaseHandler;
 import General.TecladoFoneticoFullPanel.PasswordGoal;
 import Utilities.FrameHandler;
 import Utilities.LogHandler;
@@ -47,7 +45,7 @@ public class AlterarCertificadoPanel extends GeneralPanel {
         chooseButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 final JFileChooser fc = new JFileChooser();
-                fc.setCurrentDirectory(new File("./Pacote-T4/Keys"));
+                fc.setCurrentDirectory(new File("."));
                 int returnVal = fc.showOpenDialog(chooseButton);
 
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -72,7 +70,6 @@ public class AlterarCertificadoPanel extends GeneralPanel {
 
     private void prepararPathLabel(int xOffset, int yOffset, int width, int height) {
         pathLabel = new JTextArea();
-        // pathLabel.setText("<html>asdadasdfasfsafsXdafasfsafsafsadfdasdasdXasdasdadadsadaXsdadsadas</html>");
         pathLabel.setLineWrap(true);
         pathLabel.setOpaque(false);
         pathLabel.setEditable(false);
