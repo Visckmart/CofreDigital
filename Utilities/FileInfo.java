@@ -21,9 +21,10 @@ public class FileInfo {
     
     public boolean checkAccess() {
         DatabaseHandler.getInstance().updateUserState(UserState.emailAddress);
-        boolean groupCorrect = (this.grupo.equals("usuario") && UserState.group == UserGroup.USER) ||
-            (this.grupo.equals("administrador") && UserState.group == UserGroup.ADMIN);
-        return UserState.username.equals(this.dono) && groupCorrect;
+        boolean usuarioAllowed = this.grupo.equals("usuario") && UserState.group == UserGroup.USER;
+        boolean adminAllowed = this.grupo.equals("administrador") && UserState.group == UserGroup.ADMIN;
+        boolean correctGroup = usuarioAllowed || adminAllowed;
+        return UserState.username.equals(this.dono) || correctGroup;
     }
 
     public String toString() {
