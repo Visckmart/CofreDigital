@@ -18,7 +18,7 @@ public class LogView {
         p.add(t);
         try {
             Timer timer = new Timer();
-            timer.schedule(new AtualizarRegistros(), 0, 5000);
+            timer.schedule(new AtualizarRegistros(), 500, 5000);
         } catch (Exception exc) {
             exc.printStackTrace();
         }

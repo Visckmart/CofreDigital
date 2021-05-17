@@ -50,7 +50,7 @@ public class FileHandler {
     }
 
 
-    public byte[] decryptAndVerifyFile(String directory, String fileName) throws IOException, InvalidKeyException, SignatureException,  Exception {
+    public byte[] decryptAndVerifyFile(String directory, String fileName, String realName) throws IOException, InvalidKeyException, SignatureException,  Exception {
         Path directoryPath = FileSystems.getDefault().getPath(directory);
         FileHandler fileHandler;
 
@@ -81,14 +81,14 @@ public class FileHandler {
             if (fileName.equals("index")) {
                 LogHandler.logWithUser(8007);
             } else {
-                LogHandler.logWithUserAndFile(8015, fileName);
+                LogHandler.logWithUserAndFile(8015, realName);
             }
             throw new InvalidKeyException();
         }
         if (fileName.equals("index")) {
             LogHandler.logWithUser(8005);
         } else {
-            LogHandler.logWithUserAndFile(8013, fileName);
+            LogHandler.logWithUserAndFile(8013, realName);
         }
 
         try {
@@ -102,14 +102,14 @@ public class FileHandler {
             if (fileName.equals("index")) {
                 LogHandler.logWithUser(8006);
             } else {
-                LogHandler.logWithUserAndFile(8014, fileName);
+                LogHandler.logWithUserAndFile(8014, realName);
             }
             return fileContent;
         } catch (Exception e) {
             if(fileName.equals("index")) {
                 LogHandler.logWithUser(8008);
             } else {
-                LogHandler.logWithUserAndFile(8016, fileName);
+                LogHandler.logWithUserAndFile(8016, realName);
             }
             throw new SignatureException();
         }

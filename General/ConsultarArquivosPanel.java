@@ -117,7 +117,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         }
         String directory = chosenDirectory.getAbsolutePath();
         try {
-            byte[] fileContent = new FileHandler().decryptAndVerifyFile(directory, "index");
+            byte[] fileContent = new FileHandler().decryptAndVerifyFile(directory, "index", "index");
 
             List<FileInfo> fileInfos = new IndexHandler().parseIndexContent(fileContent);
             setFileList(fileInfos);
@@ -148,20 +148,20 @@ public class ConsultarArquivosPanel extends GeneralPanel {
         LogHandler.logWithUserAndFile(8010, defaultName.getName());
         int saveDialogOption = fc.showSaveDialog(this);
 
-        if(fileInfoList.get(row).checkAccess()) {
-            LogHandler.logWithUserAndFile(8011, defaultName.getName());
-            if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
-                decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile());
+        if (saveDialogOption == JFileChooser.APPROVE_OPTION) {
+            if(fileInfoList.get(row).checkAccess()) {
+                LogHandler.logWithUserAndFile(8011, defaultName.getName());
+                decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile(), defaultName.getName());
+            } else {
+                LogHandler.logWithUserAndFile(8012, defaultName.getName());
             }
-        } else {
-            LogHandler.logWithUserAndFile(8012, defaultName.getName());
         }
 
     }
 
-    void decryptFileAndSaveAs(File file, File destination) {
+    void decryptFileAndSaveAs(File file, File destination, String realName) {
         try {
-            byte[] fileContent = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName());
+            byte[] fileContent = new FileHandler().decryptAndVerifyFile(chosenDirectory.getAbsolutePath(), file.getName(), realName);
             Files.write(destination.toPath(), fileContent);
         } catch (IOException ignored) {
             JOptionPane.showMessageDialog(this, "Arquivo não encontrado.");

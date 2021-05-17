@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.event.*;
 
-import Database.DatabaseHandler;
 import UserAuthentication.IdentUsuPanel;
 import Utilities.FrameHandler;
 import Utilities.LogHandler;

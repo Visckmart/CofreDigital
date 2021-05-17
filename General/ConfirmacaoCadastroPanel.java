@@ -41,7 +41,7 @@ public class ConfirmacaoCadastroPanel extends GeneralPanel {
         loginButton.setBounds(offsetX, offsetY, width, height);
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                
+                LogHandler.logWithUser(6002);
                 LogHandler.logWithUser(6005);
                 String email = AuthenticationHandler.getEmailFromCertificate(UserState.newUserCertificate);
                 String salt = PasswordHandler.generateSalt();

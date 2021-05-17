@@ -109,15 +109,13 @@ public class TecladoFoneticoPanel extends LoginPanel {
             return;
         }
         if (correctPassword) {
+            LogHandler.logWithUser(3002);
             VerificaChavePanel vcp = new VerificaChavePanel(emailAddress);
             FrameHandler.showPanel(vcp, vcp.loginButton);
-
-            LogHandler.log(3002);
         } else {
             newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (newState == UserLoginState.BLOCKED) {
-                IdentUsuPanel firstPanel = new IdentUsuPanel();
-                firstPanel.preencherEmail(emailAddress);
+                IdentUsuPanel firstPanel = new IdentUsuPanel(emailAddress);
                 FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
             } else {
                 errorLabel.setText("Senha incorreta.");

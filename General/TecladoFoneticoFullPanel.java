@@ -41,8 +41,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
         this.prepararBotoes(250, 245, 200, 200);
         this.prepararBotaoLogin(285, 450, 130, 35);
         updatePasswordFeedback(0);
-        
-        LogHandler.logWithUser(3001);
     }
 
     @Override protected int getBackCode() {
@@ -256,7 +254,6 @@ public class TecladoFoneticoFullPanel extends GeneralPanel {
             return;
         }
         if (goal == PasswordGoal.CADASTRAR) {
-            LogHandler.logWithUser(6002);
             String newUserPassword = String.join("", fonemasDigitados);
             UserState.newUserPassword = newUserPassword;
             FrameHandler.showPanel(new ConfirmacaoCadastroPanel());

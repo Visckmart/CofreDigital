@@ -59,24 +59,17 @@ public class DatabaseHandler {
             PreparedStatement statement = connection.prepareStatement("SELECT * from USUARIOS WHERE email =?");
             statement.setString(1, email);
             ResultSet rs = statement.executeQuery();
-            boolean shouldLog = (UserState.emailAddress == null) ||  !email.equals(UserState.emailAddress);
-            UserState.emailAddress = email;
             if (rs.next()) {
                 String dateString = rs.getString("timeout");
                 rs.close();
                 if (dateString != null) {
                     LocalDateTime timestamp = LocalDateTime.parse(dateString, TimestampFormatter);
                     if (timestamp.compareTo(LocalDateTime.now(ZoneId.of("UTC"))) > 0) {
-                        LogHandler.logWithUser(2004);
                         return UserLoginState.BLOCKED;
                     }
                 }
-                if(shouldLog) {
-                    LogHandler.logWithUser(2003);
-                }
                 return UserLoginState.VALID;
             } else {
-                LogHandler.logWithUser(2005);
                 return UserLoginState.INVALID;
             }
         } catch(Exception ignored) {
@@ -198,7 +191,7 @@ public class DatabaseHandler {
                 if (usuario != null) {
                     mensagem = mensagem.replace("<login_name>", usuario);
                 }
-                String arquivo = "<u><b>" + rs.getString("usuario") + "</b></u>";
+                String arquivo = "<u><b>" + rs.getString("arquivo") + "</b></u>";
                 if (arquivo != null) {
                     mensagem = mensagem.replace("<arq_name>", arquivo);
                 }

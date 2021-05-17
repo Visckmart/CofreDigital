@@ -89,6 +89,18 @@ public class VerificaChavePanel extends LoginPanel {
         }
     }
     
+    boolean checkUserBlocked(String emailAddress) {
+        UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
+        if (newState == UserLoginState.BLOCKED) {
+            LogHandler.logWithUser(4007);
+            IdentUsuPanel firstStep = new IdentUsuPanel(emailAddress);
+            FrameHandler.showPanel(firstStep, firstStep.loginButton);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     void nextStep() {
         AuthenticationHandler authHandler;
         try {
@@ -102,9 +114,14 @@ public class VerificaChavePanel extends LoginPanel {
         try {
             privateKeyContent = Files.readAllBytes(chosenFile.toPath());
         } catch (Exception e) {
-            LogHandler.log(4004);
+            LogHandler.logWithUser(4004);
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
-            errorLabel.setText("Caminho da chave privada inválido.");
+            if (checkUserBlocked(emailAddress) == false) {
+                errorLabel.setText("Caminho da chave privada inválido.");
+                chosenFile = null;
+                atualizarTextoArquivo();
+                passwordTF.setText("");
+            }
             return;
         }
         boolean validPrivateKey = authHandler.verifyUserPrivateKey(privateKeyContent, fraseSecreta, emailAddress);
@@ -112,18 +129,14 @@ public class VerificaChavePanel extends LoginPanel {
             LogHandler.logWithUser(4003);
             LogHandler.logWithUser(4002);
             DatabaseHandler.getInstance().registerAccess(UserState.emailAddress);
+            DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, true);
             DatabaseHandler.getInstance().updateUserState(emailAddress);
             FrameHandler.showPanel(new MenuPrincipalPanel());
         } else {
-            errorLabel.setText("<html>Assinatura digital inválida ou frase<br>secreta inválida.</html>");
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
-            UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
-            if (newState == UserLoginState.BLOCKED) {
-                LogHandler.logWithUser(4007);
-                IdentUsuPanel firstStep = new IdentUsuPanel();
-                firstStep.preencherEmail(emailAddress);
-                FrameHandler.showPanel(firstStep, firstStep.loginButton);
-            } else {
+            LogHandler.logWithUser(4005);
+            if (checkUserBlocked(emailAddress) == false) {
+                errorLabel.setText("<html>Assinatura digital inválida ou frase<br>secreta inválida.</html>");
                 chosenFile = null;
                 atualizarTextoArquivo();
                 passwordTF.setText("");

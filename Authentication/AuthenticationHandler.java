@@ -79,8 +79,6 @@ public class AuthenticationHandler {
             privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
         }
         catch (Exception e) {
-            DatabaseHandler.getInstance().registerAttempts(emailAddress, false);
-            LogHandler.logWithUser(4005);
             return false;
         }
 

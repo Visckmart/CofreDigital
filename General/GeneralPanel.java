@@ -40,6 +40,9 @@ public abstract class GeneralPanel extends JPanel {
         backButton.setBounds(offsetX, offsetY, width, height);
         backButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(getBackCode() >= 0) {
+                    LogHandler.logWithUser(getBackCode());
+                }
                 JFrame frame = (JFrame)SwingUtilities.getWindowAncestor(backButton);
                 frame.setContentPane(new MenuPrincipalPanel());
                 frame.invalidate();
@@ -47,9 +50,6 @@ public abstract class GeneralPanel extends JPanel {
             }
         });
         add(backButton);
-        if(getBackCode() >= 0) {
-            LogHandler.logWithUser(getBackCode());
-        }
     }
 
     GeneralPanel(String title, boolean canGoBack) {

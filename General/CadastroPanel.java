@@ -32,7 +32,7 @@ public class CadastroPanel extends GeneralPanel {
 
         
         this.prepararLabelErro(150, 370, 400, 30);
-        LogHandler.log(6001);
+        LogHandler.logWithUser(6001);
     }
     
     JList<String> groupList;
