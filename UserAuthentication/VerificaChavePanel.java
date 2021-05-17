@@ -93,6 +93,7 @@ public class VerificaChavePanel extends LoginPanel {
         UserLoginState newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
         if (newState == UserLoginState.BLOCKED) {
             LogHandler.logWithUser(4007);
+            LogHandler.logWithUser(4002);
             IdentUsuPanel firstStep = new IdentUsuPanel(emailAddress);
             FrameHandler.showPanel(firstStep, firstStep.loginButton);
             return true;
@@ -134,7 +135,6 @@ public class VerificaChavePanel extends LoginPanel {
             FrameHandler.showPanel(new MenuPrincipalPanel());
         } else {
             DatabaseHandler.getInstance().registerAttempts(UserState.emailAddress, false);
-            LogHandler.logWithUser(4005);
             if (checkUserBlocked(emailAddress) == false) {
                 errorLabel.setText("<html>Assinatura digital inválida ou frase<br>secreta inválida.</html>");
                 chosenFile = null;

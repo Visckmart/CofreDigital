@@ -115,6 +115,7 @@ public class TecladoFoneticoPanel extends LoginPanel {
         } else {
             newState = DatabaseHandler.getInstance().verifyUserEmail(emailAddress);
             if (newState == UserLoginState.BLOCKED) {
+                LogHandler.logWithUser(3002);
                 IdentUsuPanel firstPanel = new IdentUsuPanel(emailAddress);
                 FrameHandler.showPanel(firstPanel, firstPanel.loginButton);
             } else {

@@ -79,6 +79,7 @@ public class AuthenticationHandler {
             privateKey = this.privateKeyFromFile(privateKeyContent, secretKey.getBytes(StandardCharsets.UTF_8));
         }
         catch (Exception e) {
+            LogHandler.logWithUser(4005);
             return false;
         }
 
@@ -94,7 +95,7 @@ public class AuthenticationHandler {
                 throw new Exception("Chave inválida");
             }
         } catch (Exception exc) {
-            LogHandler.log(4006);
+            LogHandler.logWithUser(4006);
             return false;
         }
     }

@@ -154,6 +154,7 @@ public class ConsultarArquivosPanel extends GeneralPanel {
                 decryptFileAndSaveAs(new File(fileInfoList.get(row).nomeProtegido), fc.getSelectedFile(), defaultName.getName());
             } else {
                 LogHandler.logWithUserAndFile(8012, defaultName.getName());
+                JOptionPane.showMessageDialog(this, "Arquivo não pode ser lido por esse usuário.");
             }
         }
 
